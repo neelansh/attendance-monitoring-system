@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Faculty Feedback System</title>
+
+        <!-- jQuery -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+
+        <!-- Compiled and minified CSS -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/css/materialize.min.css">
+
+        <!-- Compiled and minified JavaScript -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/js/materialize.min.js"></script>
+
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+        <!-- Bootstrap -->
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+
+        <link rel="stylesheet" href="css/style.css" media="screen" title="no title">
+
+        <script src="data.js" type="application/javascript"></script>
+    </head>
+    <body>
+        <header>
+            <nav>
+                <div class="nav-wrapper container">
+                    <a href="#" class="brand-logo center main-title">GURU GOBIND SINGH INDRAPRASTHA UNIVERSITY</a>
+                </div>
+            </nav>
+
+
+            <nav>
+                <div class="nav-wrapper sub-nav">
+                    <a href="#" class="brand-logo center sub-title">FACULTY FEEDBACK SYSTEM</a>
+                </div>
+            </nav>
+        </header>
+        <main>
+
+            <div class="container-fluid">
+                <br>
+                <div class="card student-welcome-card">
+                    <div class="container-fluid student-welcome-container">
+                        <div class="row">
+                            <div class="col-md-4 welcome-student-col">
+                                <div class="welcome-student">
+                                    Hello, <br><span class="student-name-welcome">John Doe</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4 email-id-col">
+
+                                <div class="row">
+                                    <div class="input-field col-md-8">
+                                        <input value="" id="first_name2" type="text" class="validate">
+                                        <label class="active" for="first_name2">Update Email ID</label>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <BR>
+                                            <a class="waves-effect waves-light btn">SAVE</a>
+                                            </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="student-email-id">
+                                            <center>  <strong>  Email id not added yet! </strong></center>
+                                        </div>
+                                    </div>
+                                    
+                                     <div class="row">
+                                        <div class="student-pwd">
+                                            <center>  <a class="waves-effect waves-light btn">CHANGE PASSWORD</a> </center>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                                <div class="col-md-4">
+                                    <center>
+                                        <div class="student-image">
+                                            <div class="row">
+                                                <img class="student-main-image" src="http://placehold.it/150x175">
+                                            </div>
+
+                                            <div  style="margin-bottom: 0px !important;" class="row">
+                                                <a class="center  waves-effect waves-light btn student-image-update-btn">UPLOAD</a>
+                                            </div>
+
+                                        </div>
+
+                                    </center>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="card">
+                        <div class="container-fluid">
+                            <div class="row feedback">
+
+
+
+                            </div>
+                            
+                            <div class="row teachers teacher">
+                              
+        
+                            
+                            </div>
+                            <div class="row">
+                               
+                            <div class="col s4">
+                                <a style = "margin:1em;"class="waves-effect waves-light btn left">JUMP TO PRACTICAL SECTION</a>
+                                </div>
+                                
+                             <div class="col s4">
+                                 
+                                </div>
+                                
+                                 <div class="col s4">
+                                 <a style = "margin:1em;"class="nextQuestion waves-effect waves-light btn right">NEXT QUESTION</a>
+                                </div>
+                            </div>
+                           
+
+                        </div>
+
+                    </div>
+
+                </div>
+                </main>
+            <footer class="page-footer">
+
+
+                <div class="footer-copyright">
+                    <div class="container">
+
+                        <p href="#" class="center footer-title">POWERED BY SOFTWARE DEVELOPMENT CLUB , USICT</p>
+
+                    </div>
+                </div>
+            </footer>
+            </body>
+        </html>
+
+    <script>
+        $(document).ready(function($){
+
+            var count = student_attributes.length;
+            
+            var theoryTeachers = teachers.theory;
+
+            divHtml= '<div class="center">' +
+                '<ul class="tabs">' ;
+
+            ulHtml = "";
+
+            var i = 0;
+
+            while(count > 0){
+                count--;
+                i++;
+                if(i != 1){
+                ulHtml+= '<li class="tab disabled"><a class='+ " attr" + i.toString() +' href="'+ "#attr" + i.toString() +'">' + i.toString() + '</a></li>';       
+                }
+              
+                
+                else{
+                      ulHtml+= '<li class="tab"><a class='+ " attr" + i.toString() +' href="'+ "#attr" + i.toString() +'">' + i.toString() + '</a></li>'; 
+                }
+            }
+
+            divHtml+=ulHtml;
+
+            divHtml+='</ul>' +
+                '</div>';
+
+            dataHtml = "";
+            var flag = 0;
+            while(i > 0){
+                i--;
+                count++;
+
+                dataHtml+='<div class="stud-attribute-text" id="'+ "attr" + count.toString() + '" class="col s12">'+ student_attributes[flag] +'</div>';
+                flag++;
+            }
+
+
+            divHtml += dataHtml
+            console.log(divHtml);
+
+            $('.feedback').html(divHtml)
+            
+            //Creating Teachers
+            
+            var teacherHtml = '<table class="responsive-table centered"><tbody>';
+            
+             teacherHtml+='<tr>';
+          
+            theoryTeachers.forEach(function(t){
+         
+               
+                  teacherHtml+=   '<td>' + '<img src = "' + t.image + '"></img>' + '</td>';
+                    
+                       
+                    
+            });
+            
+        teacherHtml+='</tr><tr>';
+            
+            
+            theoryTeachers.forEach(function(t){
+         
+                teacherHtml+= '<td>' + t.name + '</td>';  
+                    
+            });
+            
+        
+            teacherHtml+='</tr><tr>';
+            
+              var g = 0;            
+            
+                theoryTeachers.forEach(function(t){
+         
+                teacherHtml+= '<td><div class="input-field ">' +
+                    '<input id="digit" type="text" class="validate teacher-input'+  " teacher_score_" + g.toString() +'">' +
+                    '</div></td>';
+                    g++;
+                    
+            });
+            
+             teacherHtml+='</tr></tbody></table>';        
+            console.log(teacherHtml);
+            $('.teacher').html(teacherHtml);
+            
+            $('ul.tabs').tabs();
+
+           
+            
+          /* Button Click Event Function which stores score data
+          in JSON format and then jumps to the next tab*/
+         
+            $('.nextQuestion').on("click", function(){
+                
+                clearInputBoxes();
+                var attribute =   $('.tab').find('.active').attr('href');
+                var regex = /(\d+)/g;
+                var cur = (attribute.match(regex));  
+
+                if(cur >= student_attributes.length){
+                    cur = 1;
+                }
+
+                else if(cur < student_attributes.length){
+                   
+                    
+                    $('.' + 'attr' + cur.toString()).parent().next().removeClass('disabled');
+                   console.log(cur);
+                     cur++;
+                }
+                
+                $('ul.tabs').tabs('select_tab', 'attr' + cur.toString());
+           
+            });
+            
+            function clearInputBoxes(){
+                var len =0
+                while(len < theoryTeachers.length){
+                    $('.teacher_score_' + len.toString()).val('');
+                    console.log('.teacher_score_' + len.toString())
+                    len++;
+                }
+            }
+
+        });
+
+
+
+    </script>
