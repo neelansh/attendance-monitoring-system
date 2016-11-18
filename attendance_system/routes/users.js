@@ -8,18 +8,35 @@ router.get('/', function(req, res, next) {
   	if(err != null){
   		console.log(err);
   	}else{
-      console.log(result);
-  		console.log(result[0].enroll_no);
-  		console.log(result[0].attendance_id);
-  		console.log(result[0].date_17_11_16);
   		res.render('attendance' , {'data': result});
   	}
   });
 });
 
 router.post('/',function(req, res, next){
-	console.log(req);
-	res.send("okay");
+	// console.log(req.body);
+	// res.send("okay");
+	if(req.body.dateofattendance === ""){
+		res.redirect('/users')
+	}else{
+		var date = "date_"+req.body.dateofattendance.split('/').join('_');
+		console.log(date);
+		var att = require('../models/attendance');
+  		att.addDate(date, function(err , result){
+  			
+			var duration = req.body.teachinghours;
+			var enroll_no = [];
+			for(var key in req.body){
+				if(req.body[key] === 'on'){
+					enroll_no.push(key);
+				}
+			}
+			att.addAttendance(enroll_no, duration, date, function(err, result){
+				res.send(result);
+			});
+  			
+  		});
+	}
 });
 
 
