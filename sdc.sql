@@ -16,28 +16,31 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `usms_attendance`
+-- Table structure for table `usms_attendance_1`
 --
 
-DROP TABLE IF EXISTS `usms_attendance`;
+DROP TABLE IF EXISTS `usms_attendance_1`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `usms_attendance` (
-  `attendance_id` int(4) NOT NULL,
+CREATE TABLE `usms_attendance_1` (
   `enroll_no` varchar(20) NOT NULL,
-  `date_17_11_16` int(1) DEFAULT NULL,
-  PRIMARY KEY (`attendance_id`,`enroll_no`)
+  `date_11_11_2016` int(1) DEFAULT '0',
+  `date_18_11_2016` int(1) DEFAULT '0',
+  `date_19_11_2016` int(1) DEFAULT '0',
+  `date_21_11_2016` int(1) DEFAULT '0',
+  `date_` int(1) DEFAULT '0',
+  PRIMARY KEY (`enroll_no`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `usms_attendance`
+-- Dumping data for table `usms_attendance_1`
 --
 
-LOCK TABLES `usms_attendance` WRITE;
-/*!40000 ALTER TABLE `usms_attendance` DISABLE KEYS */;
-INSERT INTO `usms_attendance` VALUES (1,'1016603916',1),(1,'6016603916',1),(1,'6116603916',1),(1,'7116603916',1),(1,'8116603916',1),(1,'9116603916',1);
-/*!40000 ALTER TABLE `usms_attendance` ENABLE KEYS */;
+LOCK TABLES `usms_attendance_1` WRITE;
+/*!40000 ALTER TABLE `usms_attendance_1` DISABLE KEYS */;
+INSERT INTO `usms_attendance_1` VALUES ('1016603916',4,0,1,0,0),('6016603916',0,0,1,0,0),('6116603916',0,0,1,0,0),('7116603916',0,0,1,0,0),('8116603916',0,0,1,0,0),('9116603916',0,0,0,0,0);
+/*!40000 ALTER TABLE `usms_attendance_1` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -283,4 +286,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-11-18 13:47:18
+-- Dump completed on 2016-11-18 21:44:54
