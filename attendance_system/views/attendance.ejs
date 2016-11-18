@@ -61,11 +61,16 @@ $(function() {
             <td><%= data[i].attendance_id %></td>
             <td><%= data[i].enroll_no %></td>
             <td>                        
-              <input type="checkbox" name="attendance" value="att" /> present 
+              <input type="checkbox" id='<%= data[i].enroll_no %>' class="filled-in" /><label  for='<%= data[i].enroll_no %>'></label> 
             </td>
           </tr>    
          <% } %>
       </table>
+
+      <button class="btn waves-effect waves-light" type="submit" name="action">Submit
+        <i class="material-icons right">send</i>
+      </button>
+        
     </form>
 
 
