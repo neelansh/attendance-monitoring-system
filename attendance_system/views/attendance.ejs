@@ -26,6 +26,10 @@
   <script>
 $(function() {
     $( "#datepicker" ).datepicker({ minDate: 0});
+      $( "#number" )
+      .selectmenu()
+      .selectmenu( "menuWidget" )
+        .addClass( "overflow" );
   });
   </script>
 </head>
@@ -48,9 +52,15 @@ $(function() {
 <div class="container drop-down-school">
   <div class="row login-sel-cont">
     <div class="col-md-4 col-md-offset-4">
-      <p>Date: <input type="text" id="datepicker" style="border:solid;"></p>
     <form action = "users" method = "post">
-
+      <p>Date: <input type="text" name="dateofattendance" id="datepicker" style="border:solid;"></p>
+      <label for="number">teachinghours</label>
+      <select name="teachinghours" id="number">
+      <option selected="selected">1</option>
+      <option>2</option>
+      <option>3</option>
+      <option>4</option>
+      </select>
       <table>
          <tr>
             <th>attendanceid</th><th>enroll</th><th>attendance</th>
@@ -61,7 +71,7 @@ $(function() {
             <td><%= data[i].attendance_id %></td>
             <td><%= data[i].enroll_no %></td>
             <td>                        
-              <input type="checkbox" id='<%= data[i].enroll_no %>' class="filled-in" /><label  for='<%= data[i].enroll_no %>'></label> 
+              <input type="checkbox" name='<%= data[i].enroll_no %>' id='<%= data[i].enroll_no %>' class="filled-in" /><label  for='<%= data[i].enroll_no %>'></label> 
             </td>
           </tr>    
          <% } %>
