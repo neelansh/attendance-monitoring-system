@@ -20,7 +20,7 @@ router.post('/',function(req, res, next){
 		res.redirect('/users')
 	}else{
 		var date = "date_"+req.body.dateofattendance.split('/').join('_');
-		console.log(date);
+		// console.log(date);
 		var att = require('../models/attendance');
   		att.addDate(date, function(err , result){
   			
@@ -32,10 +32,11 @@ router.post('/',function(req, res, next){
 				}
 			}
 			att.addAttendance(enroll_no, duration, date, function(err, result){
-				res.send(result);
+				if(err)console.log(err);
 			});
   			
   		});
+  		res.send("okay");
 	}
 });
 

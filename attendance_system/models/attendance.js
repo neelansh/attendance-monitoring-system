@@ -47,16 +47,17 @@ exports.addAttendance = function(enrollment_no, duration, date, done){
   try{
     for(var i=0 ; i<enrollment_no.length ; ++i){
       var q = 'update usms_attendance_1 set '+ date +' = ? where enroll_no = ?;'
-      // console.log(q);
-      console.log(db.get().escape(String(date)));
-      db.get().query(q, [date, parseInt(duration), parseInt(enrollment_no[i])] , function(err, rows){
+      
+      // console.log(db.get().escape(String(date)));
+      var query = db.get().query(q, [parseInt(duration), parseInt(enrollment_no[i])] , function(err, rows){
         if(err){
           console.log(err);
           return done(err);
         }
         done(null, rows);
       });
-      
+      console.log(date);
+      console.log(query.values);
     }
   }catch(err){
     console.log(err);
