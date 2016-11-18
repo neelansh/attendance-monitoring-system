@@ -8,6 +8,7 @@ router.get('/', function(req, res, next) {
   	if(err != null){
   		console.log(err);
   	}else{
+      console.log(result);
   		console.log(result[0].enroll_no);
   		console.log(result[0].attendance_id);
   		console.log(result[0].date_17_11_16);
