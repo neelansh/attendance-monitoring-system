@@ -5,6 +5,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
@@ -22,8 +23,21 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+var db = require('./db')
+
 app.use('/', routes);
 app.use('/users', users);
+
+
+// Connect to MySQL on start
+db.connect(db.MODE_PRODUCTION, function(err) {
+  if (err) {
+    console.log('Unable to connect to MySQL.')
+    process.exit(1)
+  } else {
+    console.log('mysql connection established')
+  }
+})
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
