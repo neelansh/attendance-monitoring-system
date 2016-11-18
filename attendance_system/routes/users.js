@@ -10,7 +10,7 @@ router.get('/', function(req, res, next) {
   	}else{
   		console.log(result[0].enroll_no);
   		console.log(result[0].attendance_id);
-  		console.log(result[0].present_dates.length);
+  		console.log(result[0].date_17_11_16);
   		res.render('attendance' , {'data': result});
   	}
   });
