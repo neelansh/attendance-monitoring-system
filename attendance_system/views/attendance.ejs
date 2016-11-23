@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Faculty Feedback System</title>
+  <title>Attendance Register System</title>
 
   <!-- jQuery -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
@@ -44,26 +44,29 @@ $(function() {
 
    <nav>
     <div class="nav-wrapper sub-nav">
-      <a href="#" class="brand-logo center sub-title">FACULTY FEEDBACK SYSTEM</a>
+      <a href="#" class="brand-logo center sub-title">ATTENDANCE REGISTER SYSTEM</a>
     </div>
   </nav>
 </header><main>
 
 <div class="container drop-down-school">
   <div class="row login-sel-cont">
-    <div class="col-md-4 col-md-offset-4">
+    <!-- <div class="col-md-4 col-md-offset-4"> -->
     <form action = "users" method = "post">
       <!-- <p>Date: <input type="text" name="dateofattendance" id="datepicker" style="border:solid;"></p> -->
-      Date: <input type="date" class="datepicker" name="dateofattendance">
-      
-      <div class="input-field">
-        Teaching Hours:
+      <div class="input-field" style="display:flex; justify-content:space-between;">
+        Date: <input type="date" class="datepicker" name="dateofattendance">
+        <span style="margin-left:20px;">Teaching Hours: </span>
         <select name="teachinghours" id="number">
           <option value="1" selected="selected">1</option>
           <option value="2">2</option>
           <option value="3">3</option>
           <option value="4">4</option>
         </select>
+
+        <div style="margin-left:20px;">
+          Selected students: <span id="counter">0</span>
+        </div>
         <!-- <label>Materialize Select</label> -->
         <!-- <label for="number">Teaching Hours</label> -->
       </div>
@@ -81,7 +84,7 @@ $(function() {
          <% for (var i = 0; i < data.length;i++) { %>
           <tr>
             <td><%= data[i].enroll_no %></td>
-            <td>                        
+            <td  id="container">                        
               <input type="checkbox" name='<%= data[i].enroll_no %>' id='<%= data[i].enroll_no %>'/>
               <label for='<%= data[i].enroll_no %>'></label> 
             </td>
@@ -95,7 +98,7 @@ $(function() {
         
     </form>
 
-</div>
+<!-- </div> -->
 </div>
 
 </div></main>
@@ -128,6 +131,21 @@ $(function() {
       selectYears: 3 // Creates a dropdown of 15 years to control year
     });
   });
+    var inputs;
+    inputs=document.getElementsByTagName('input')
+    console.log(inputs);
+    for (var i = 0; i < inputs.length; i++) {
+      inputs[i].onclick=function(){
+        countpresent();
+      }
+    }
+    countpresent =function(){
+      var count=0;
+      for (var j = 0; j <= inputs.length; j++) {
+        if (inputs[j].checked) { count = count+1;}
+        document.getElementById('counter').innerHTML = count; 
+      }
+    }
 </script>
 </body>
 </html>
