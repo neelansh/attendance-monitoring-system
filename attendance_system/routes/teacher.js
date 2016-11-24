@@ -46,7 +46,7 @@ passport.use(new LocalStrategy(
 	}));
 
 router.post('/login',
-	passport.authenticate('local', {successRedirect:'/users', failureRedirect:'/',failureFlash: true}),
+	passport.authenticate('local', {successRedirect:'/users', failureRedirect:'/'}),
 	function(req, res) {
 		console.log("successfully logged in");
 		res.redirect('/');
