@@ -40,16 +40,17 @@ $(function() {
        <a href="#" class="brand-logo center main-title">GURU GOBIND SINGH INDRAPRASTHA UNIVERSITY</a>
      </div>
    </nav>
-
-
    <nav>
     <div class="nav-wrapper sub-nav">
       <a href="#" class="brand-logo center sub-title">ATTENDANCE REGISTER SYSTEM</a>
     </div>
   </nav>
 </header><main>
-
 <div class="container drop-down-school">
+<br>
+  <div>
+    <strong>Name: </strong> <%= user.name %> <br> <strong>Intstructor ID : </strong><%= user.instructor_id %>
+  </div>
   <div class="row login-sel-cont">
     <!-- <div class="col-md-4 col-md-offset-4"> -->
     <form action = "users" method = "post">
