@@ -13,7 +13,7 @@ router.get('/', function(req, res, next) {
 
 passport.serializeUser(function(user, done) {
 	console.log("password serialized");
-	done(null, user);
+	done(null, user.instructor_id);
 });
 
 passport.deserializeUser(function(id, done) {
