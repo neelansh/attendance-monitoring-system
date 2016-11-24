@@ -1,11 +1,83 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <meta charset="utf-8">
+    <title>Attendance Register System</title>
+
+      <!-- jQuery -->
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+
+      <!-- Compiled and minified CSS -->
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/css/materialize.min.css">
+
+      <!-- Compiled and minified JavaScript -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/js/materialize.min.js"></script>
+
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+      <!-- Bootstrap -->
+      <link rel="stylesheet" href="css/bootstrap.min.css">
+
+      <link rel="stylesheet" href="css/style.css" media="screen" title="no title">
   </head>
   <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
+<header>
+    <nav>
+       <div class="nav-wrapper container">
+
+         <a href="#" class="brand-logo center main-title">GURU GOBIND SINGH INDRAPRASTHA UNIVERSITY</a>
+       </div>
+     </nav>
+
+
+         <nav>
+            <div class="nav-wrapper sub-nav">
+              <a href="#" class="brand-logo center sub-title">ATTENDANCE REGISTER SYSTEM</a>
+            </div>
+          </nav>
+</header>
+<main>
+      <div class="container drop-down-school">
+
+        <div class="row">
+         <div class="page-theme">WELCOME TO ATTENDANCE MONITERING SYSTEM</div>
+         <!-- <div class="page-sub-theme">TO LOGIN USING APPROPRIATE PRIVILEGES</div> -->
+        </div>
+
+        <div class="row log-sel-cont">
+          <center>
+
+          <div class="col-md-4">
+            <a class="waves-effect waves-light btn-large login-select-item">Student</a>
+
+          </div>
+          <div class="col-md-4">
+            <a class="waves-effect waves-light btn-large login-select-item">Teacher</a>
+
+          </div>
+          <div class="col-md-4">
+            <a class="waves-effect waves-light btn-large login-select-item">Dean</a>
+
+          </div>
+          
+        </center>
+
+        </div>
+
+
+      </div>
+    </main>
+      <footer class="page-footer">
+
+
+               <div class="footer-copyright">
+                 <div class="container">
+
+                     <p href="#" class="center footer-title">POWERED BY SOFTWARE DEVELOPMENT CLUB , USICT</p>
+
+                 </div>
+               </div>
+             </footer>
+
   </body>
 </html>
