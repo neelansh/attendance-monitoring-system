@@ -3,14 +3,15 @@ var router = express.Router();
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-  var att = require('../models/attendance');
-  att.getAll(function(err , result){
-  	if(err != null){
-  		console.log(err);
-  	}else{
-  		res.render('attendance' , {'data': result});
-  	}
-  });
+  // var att = require('../models/attendance');
+  // att.getAll(function(err , result){
+  // 	if(err != null){
+  // 		console.log(err);
+  // 	}else{
+  // 		res.render('attendance' , {'data': result});
+  // 	}
+  // });
+  res.send("okay you are logged in as " + req.user.name);
 });
 
 router.post('/',function(req, res, next){

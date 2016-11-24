@@ -4,8 +4,8 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var exphbs = require('express-handlebars');
 var expressValidator = require('express-validator');
+var flash = require('connect-flash');
 var session = require('express-session');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
@@ -60,16 +60,21 @@ app.use(expressValidator({
   }
 }));
 
+// Connect Flash
+app.use(flash());
+
+// Global Vars
+app.use(function (req, res, next) {
+  res.locals.success_msg = req.flash('success_msg');
+  res.locals.error_msg = req.flash('error_msg');
+  res.locals.error = req.flash('error');
+  res.locals.user = req.user || null;
+  next();
+});
+
+
 //setting mysql config
-var db = require('./db')
-
-
-//routes
-app.use('/', routes);
-app.use('/users', users);
-app.use('/teacher',require('./routes/teacher'));
-app.use('/student',require('./routes/student'));
-
+var db = require('./db');
 
 // Connect to MySQL on start
 db.connect(db.MODE_PRODUCTION, function(err) {
@@ -80,6 +85,13 @@ db.connect(db.MODE_PRODUCTION, function(err) {
     console.log('mysql connection established')
   }
 })
+
+
+//routes
+app.use('/', routes);
+app.use('/users', users);
+app.use('/teacher',require('./routes/teacher'));
+app.use('/student',require('./routes/student'));
 
 
 

@@ -1,5 +1,5 @@
 var db = require('../db.js');
-
+var bcrypt = require('bcryptjs');
 // exports.create = function(userId, text, done) {
 //   var values = [userId, text, new Date().toISOString()]
   

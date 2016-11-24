@@ -16,17 +16,17 @@ con.connect(function(err){
   console.log('Connection established');
 });
 
-var start = +new Date();
-for(var i=1 ; i<70 ; ++i){
-  con.query("insert into usms_attendance_2016 (subject_id, student) values (1,?)",
-  [i*1000],
-  function(err, rows){
-    if(err)console.log(err);
-  });
-  console.log("inserted row no.",i);
-}
-var end = +new Date();
-console.log("all users saved in " + (end-start) + " milliseconds");
+// var start = +new Date();
+// for(var i=1 ; i<70 ; ++i){
+//   con.query("insert into usms_attendance_2016 (subject_id, student) values (1,?)",
+//   [i*1000],
+//   function(err, rows){
+//     if(err)console.log(err);
+//   });
+//   console.log("inserted row no.",i);
+// }
+// var end = +new Date();
+// console.log("all users saved in " + (end-start) + " milliseconds");
 
 // con.query("insert into usms_attendance_2016 (subject_id, student) values (?,?)",
 //   [1,i*1000],
@@ -35,7 +35,13 @@ console.log("all users saved in " + (end-start) + " milliseconds");
 //     else console.log(rows);
 //   });
 
-
+con.query("select * from usms_teacher where instructor_id = ?",
+  [30081],
+  function(err, rows){
+    if(err)console.log(err);
+    console.log(rows);
+    console.log(rows[0].name);
+  });
 
 con.end(function(err) {
   // The connection is terminated gracefully
