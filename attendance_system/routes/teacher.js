@@ -88,16 +88,39 @@ router.get('/dashboard', function(req, res){
 	});
 });
 
-router.get('/attendance/:subject_id', function(req, res){
+router.get('/attendance/:batch_id/:subject_id', function(req, res){
 	if(!req.isAuthenticated()){
 		res.redirect("/teacher");
 	}
-	req.check('subject_id', 'invalid url parameter').notEmpty().isInt();
+	req.checkParams('batch_id', 'invalid batch id parameter').notEmpty().isInt();
+	req.checkParams('subject_id', 'invalid subject id parameter').notEmpty().isInt();
 	var sub = require("../models/subjects")
-	var subjects = sub.getSudentsBySubject(req.params.subject_id, function(err, results){
+	var subjects = sub.getStudentsByBatch(req.params.batch_id, function(err, results){
 		if(err) throw err;
-		res.render('teacher_dashboard',{'subjects': results});
+		res.render('attendance',{'students': results});
 	});
 });
+
+router.post('/attendance/:batch_id/:subject_id', function(req, res) {
+	if(!req.isAuthenticated()){
+		res.redirect("/teacher");
+	}
+	req.checkParams('batch_id', 'invalid batch id parameter').notEmpty().isInt();
+	req.checkParams('subject_id', 'invalid subject id parameter').notEmpty().isInt();
+	req.checkBody('teaching_hours','teaching hours invalid').notEmpty().isInt();	
+	req.checkBody('date_of_attendance','attendance date is empty').notEmpty();
+
+	var sub = require("../models/subjects")
+	var subject_id = req.params.subject_id;
+	var date = new Date(req.body.date_of_attendance);
+	var students = req.body.student_present;
+	// console.log(date);
+	console.log(students);
+	var subjects = sub.saveAttendance(subject_id, date, students, function(err, results){
+		if(err) throw err;
+		res.send("okay");
+	});	
+});
+
 
 module.exports = router;

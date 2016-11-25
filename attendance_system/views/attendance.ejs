@@ -1,61 +1,60 @@
 <!DOCTYPE html>
 <% include partials/header %>
-<div class="container drop-down-school">
-  <div class="row login-sel-cont">
-    <!-- <div class="col-md-4 col-md-offset-4"> -->
-    <form action = "users" method = "post">
-      
-      <label for="datepicker" >Date:</label>
-      <input type="date" id="datepicker" class="datepicker" name="dateofattendance">
-      <div class="input-field">
-        <!-- <span style="margin-left:20px;">Teaching Hours: </span> -->
-        <select name="teachinghours" id="number">
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-        </select>
-        <label>Teaching Hours</label>
-        
-      </div>
-      <div style="margin-left:20px;">
-          Selected students: <span id="counter">0</span>
-      </div>
-      
-      <table>
-         <tr>
-            <th>Enrollment Number</th><th>Attendance</th>
-         </tr>
+<div class="container">
 
-         <% for (var i = 0; i < data.length;i++) { %>
-          <tr>
-            <td><%= data[i].enroll_no %></td>
-            <td  id="container">                        
-              <input type="checkbox" name='<%= data[i].enroll_no %>' id='<%= data[i].enroll_no %>'/>
-              <label for='<%= data[i].enroll_no %>'></label> 
-            </td>
-          </tr>    
-         <% } %>
-      </table>
+<form action = "" method = "post" class="card-panel">
+    <div class="row card-panel valign-wrapper">
+      <div class="col s4 valign">
+        <label for="datepicker" >Date:</label>
+        <input type="date" id="datepicker" class="datepicker" name="date_of_attendance" required>
+      </div>
+      <div class="col s4 valign">
+        <div class="input-field">
+          <select name="teaching_hours" id="number">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+          </select>
+          <label>Teaching Hours</label>
 
-      <button class="btn waves-effect waves-light" type="submit" name="action">Submit
-        <i class="material-icons right">send</i>
-      </button>
-        
-    </form>
+        </div>
+      </div>
+      <div class="card-panel col s4 valign red" >Selected students: <span id="counter">0</span></div>
+    </div>
+    <table>
+     <tr>
+      <th>Enrollment Number</th><th>Name</th><th>Attendance</th>
+    </tr>
+
+    <% for (var i = 0; i < students.length ;i++) { %>
+    <tr>
+      <td><%= students[i].enrollment_no %></td>
+      <td><%= students[i].name %></td>
+      <td>                        
+        <input type="checkbox" class="filled-in" id="<%= students[i].enrollment_no %>" name='student_present' value="<%= students[i].enrollment_no %>">
+        <label for="<%= students[i].enrollment_no %>"></label>
+      </td>
+    </tr>    
+    <% } %>
+  </table>
+
+  <button class="btn waves-effect waves-light" type="submit" name="action">Submit
+    <i class="material-icons right">send</i>
+  </button>
+
+</form>
 
 <!-- </div> -->
 </div>
+<script type="text/javascript">
 
-</div><script type="text/javascript">
-  
   $(document).ready(function() {
     $('select').material_select();
     var date = new Date();
     date.setDate(date.getDate());
     $('.datepicker').pickadate({
       min: date,
-      format: 'dd/mm/yyyy',
       today: '',
       clear: '',
       closeOnSelect: true,
@@ -64,21 +63,21 @@
       selectYears: 3 // Creates a dropdown of 15 years to control year
     });
   });
-    var inputs;
-    inputs=document.getElementsByTagName('input')
-    console.log(inputs);
-    for (var i = 0; i < inputs.length; i++) {
-      inputs[i].onclick=function(){
-        countpresent();
-      }
+  var inputs;
+  inputs=document.getElementsByTagName('input')
+  console.log(inputs);
+  for (var i = 0; i < inputs.length; i++) {
+    inputs[i].onclick=function(){
+      countpresent();
     }
-    countpresent =function(){
-      var count=0;
-      for (var j = 0; j <= inputs.length; j++) {
-        if (inputs[j].checked) { count = count+1;}
-        document.getElementById('counter').innerHTML = count; 
-      }
+  }
+  countpresent =function(){
+    var count=0;
+    for (var j = 0; j <= inputs.length; j++) {
+      if (inputs[j].checked) { count = count+1;}
+      document.getElementById('counter').innerHTML = count; 
     }
+  }
 </script>
 
 <% include partials/footer %>
