@@ -35,6 +35,9 @@
   </nav>
 </header><main>
 <div class="container">
+  <% if(user) {%>
+    <div class="center-align card-panel green-text col s4 offset-s4" style="display: flex; justify-content: space-between;"> <span><%=user.instructor_id%></span><span><%=user.designation%></span> <span><%=user.name%></span><span><a href="/teacher/logout/">Logout</a></span></div>
+    <% } %>
   <div class="row">
     <% if(success_msg != "") {%>
     <div class="center-align card-panel green-text col s4 offset-s4"><%=success_msg%></div>

@@ -1,9 +1,14 @@
 
 <% include partials/header %>
-<%= user.instructor_id %>
-<h1>teaches:</h1>
-<% for(var i=0; i<subjects.length ; ++i){ %>
-	<a href="/teacher/attendance/<%=subjects[i].batch_id%>/<%=subjects[i].subject_id%>"><%=subjects[i].subject_code%> <%=subjects[i].course%> <%=subjects[i].stream%> <%=subjects[i].semester%></a><br>
-<% } %>
+<div class="container" style="width:800px; margin:0 auto;">
+  <!-- Dropdown Trigger -->
+  <a class='dropdown-button btn' href='#' data-activates='dropdown1'>Select your class</a>
 
+  <!-- Dropdown Structure -->
+  <ul id='dropdown1' class='dropdown-content'>
+    <% for(var i=0; i<subjects.length ; ++i){ %>
+	<li><a href="/teacher/attendance/<%=subjects[i].batch_id%>/<%=subjects[i].subject_id%>"><%=subjects[i].subject_code%> <%=subjects[i].course%> <%=subjects[i].stream%> <%=subjects[i].semester%></a></li>    <li class="divider"></li>
+	<% } %>
+  </ul>
+  </div>s
 <% include partials/footer %>
