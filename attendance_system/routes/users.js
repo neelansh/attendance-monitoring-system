@@ -11,7 +11,7 @@ router.get('/', function(req, res, next) {
   	if(err != null){
   		console.log(err);
   	}else{
-  		res.render('attendance' , {'data': result});
+  		res.render('attendance' , {'data': result, 'user': req.user});
   	}
   });
   // res.send("okay you are logged in as ");
