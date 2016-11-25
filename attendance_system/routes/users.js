@@ -3,8 +3,11 @@ var router = express.Router();
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-  var att = require('../models/attendance');
-  att.getAll(function(err , result){
+	if(!req.isAuthenticated()){
+		res.redirect("/teacher");
+	}
+	var att = require('../models/attendance');
+	att.getAll(function(err , result){
   	if(err != null){
   		console.log(err);
   	}else{
@@ -23,8 +26,8 @@ router.post('/',function(req, res, next){
 		var date = "date_"+req.body.dateofattendance.split('/').join('_');
 		// console.log(date);
 		var att = require('../models/attendance');
-  		att.addDate(date, function(err , result){
-  			
+		att.addDate(date, function(err , result){
+
 			var duration = req.body.teachinghours;
 			var enroll_no = [];
 			for(var key in req.body){
@@ -35,9 +38,9 @@ router.post('/',function(req, res, next){
 			att.addAttendance(enroll_no, duration, date, function(err, result){
 				if(err)console.log(err);
 			});
-  			
-  		});
-  		res.send("okay");
+
+		});
+		res.send("okay");
 	}
 });
 

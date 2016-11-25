@@ -89,18 +89,18 @@ db.connect(db.MODE_PRODUCTION, function(err) {
 
 //routes
 app.use('/', routes);
-app.use('/users',isLoggedIn, users);
+app.use('/users', users);
 app.use('/teacher',require('./routes/teacher'));
 app.use('/student',require('./routes/student'));
 
-function isLoggedIn(req, res, next) {
+function isLoggedIn(url, req, res, next) {
 
     // if user is authenticated in the session, carry on 
     if (req.isAuthenticated())
         return next();
 
     // if they aren't redirect them to the home page
-    res.redirect('/teacher');
+    res.redirect(url);
 }
 
 // catch 404 and forward to error handler

@@ -1,84 +1,30 @@
 <!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <title>Attendance Register System</title>
-
-  <!-- jQuery -->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-
-  <!-- Compiled and minified CSS -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/css/materialize.min.css">
-
-  <!-- Compiled and minified JavaScript -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/js/materialize.min.js"></script>
-
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
-  <!-- Bootstrap -->
-  <link rel="stylesheet" href="css/bootstrap.min.css">
-
-  <link rel="stylesheet" href="css/style.css" media="screen" title="no title">
-  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-  <link rel="stylesheet" href="/resources/demos/style.css">
-  <!-- <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script> -->
-  <!-- <script>
-$(function() {
-    $( "#datepicker" ).datepicker({ minDate: 0});
-      $( "#number" )
-      .selectmenu()
-      .selectmenu( "menuWidget" )
-        .addClass( "overflow" );
-  });
-  </script> -->
-</head>
-<body>
-  <header>
-    <nav>
-     <div class="nav-wrapper container">
-       <a href="#" class="brand-logo center main-title">GURU GOBIND SINGH INDRAPRASTHA UNIVERSITY</a>
-     </div>
-   </nav>
-
-
-   <nav>
-    <div class="nav-wrapper sub-nav">
-      <a href="#" class="brand-logo center sub-title">ATTENDANCE REGISTER SYSTEM</a>
-    </div>
-  </nav>
-</header><main>
-
+<% include partials/header %>
 <div class="container drop-down-school">
   <div class="row login-sel-cont">
     <!-- <div class="col-md-4 col-md-offset-4"> -->
     <form action = "users" method = "post">
-      <!-- <p>Date: <input type="text" name="dateofattendance" id="datepicker" style="border:solid;"></p> -->
-      <div class="input-field" style="display:flex; justify-content:space-between;">
-        Date: <input type="date" class="datepicker" name="dateofattendance">
-        <span style="margin-left:20px;">Teaching Hours: </span>
+      
+      <label for="datepicker" >Date:</label>
+      <input type="date" id="datepicker" class="datepicker" name="dateofattendance">
+      <div class="input-field">
+        <!-- <span style="margin-left:20px;">Teaching Hours: </span> -->
         <select name="teachinghours" id="number">
-          <option value="1" selected="selected">1</option>
+          <option value="1">1</option>
           <option value="2">2</option>
           <option value="3">3</option>
           <option value="4">4</option>
         </select>
-
-        <div style="margin-left:20px;">
-          Selected students: <span id="counter">0</span>
-        </div>
-        <!-- <label>Materialize Select</label> -->
-        <!-- <label for="number">Teaching Hours</label> -->
+        <label>Teaching Hours</label>
+        
       </div>
-      <!-- <select name="teachinghours" id="number">
-      <option selected="selected">1</option>
-      <option>2</option>
-      <option>3</option>
-      <option>4</option>
-      </select> -->
+      <div style="margin-left:20px;">
+          Selected students: <span id="counter">0</span>
+      </div>
+      
       <table>
          <tr>
-            <th>enroll</th><th>attendance</th>
+            <th>Enrollment Number</th><th>Attendance</th>
          </tr>
 
          <% for (var i = 0; i < data.length;i++) { %>
@@ -101,20 +47,7 @@ $(function() {
 <!-- </div> -->
 </div>
 
-</div></main>
-
-<footer class="page-footer">
-
-
- <div class="footer-copyright">
-   <div class="container">
-
-     <p href="#" class="center footer-title">POWERED BY SOFTWARE DEVELOPMENT CLUB , USICT</p>
-
-   </div>
- </div>
-</footer>
-<script type="text/javascript">
+</div><script type="text/javascript">
   
   $(document).ready(function() {
     $('select').material_select();
@@ -147,5 +80,5 @@ $(function() {
       }
     }
 </script>
-</body>
-</html>
+
+<% include partials/footer %>

@@ -1,0 +1,9 @@
+
+<% include partials/header %>
+<%= user.instructor_id %>
+<h1>teaches:</h1>
+<% for(var i=0; i<subjects.length ; ++i){ %>
+	<a href="/teacher/attendance/<%=subjects[i].subject_id%>"><%=subjects[i].subject_code%> <%=subjects[i].course%> <%=subjects[i].stream%> <%=subjects[i].semester%></a><br>
+<% } %>
+
+<% include partials/footer %>

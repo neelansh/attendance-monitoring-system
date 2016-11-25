@@ -25,10 +25,4 @@ module.exports.comparePassword = function(candidatePassword, hash, callback){
     	console.log("comparing passwords");
     	callback(null, isMatch);
 	});
-
-	// if(candidatePassword === 'test'){
-	// 	callback(null, true);
-	// }else{
-	// 	callback(null, false);
-	// }
 }

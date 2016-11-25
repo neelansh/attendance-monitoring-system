@@ -1,61 +1,13 @@
 <!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <title>Faculty Feedback System</title>
+<% include partials/header %>
 
-  <!-- jQuery -->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-
-  <!-- Compiled and minified CSS -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/css/materialize.min.css">
-
-  <!-- Compiled and minified JavaScript -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/js/materialize.min.js"></script>
-
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
-  <!-- Bootstrap -->
-  <link rel="stylesheet" href="css/bootstrap.min.css">
-
-  <link rel="stylesheet" href="css/style.css" media="screen" title="no title">
-</head>
-<body>
-  <header>
-    <nav>
-     <div class="nav-wrapper container">
-       <a href="#" class="brand-logo center main-title">GURU GOBIND SINGH INDRAPRASTHA UNIVERSITY</a>
-     </div>
-   </nav>
-
-
-   <nav>
-    <div class="nav-wrapper sub-nav">
-      <a href="#" class="brand-logo center sub-title">FACULTY FEEDBACK SYSTEM</a>
-    </div>
-  </nav>
-</header><main>
-
+        
 <div class="container drop-down-school">
   <div class="row login-sel-cont">
     <div class="col-md-4 col-md-offset-4">
       <div class="card">
       <div class="row">
         <div class="col-lg-12">
-        <% if(success_msg) {%>
-          <!-- {{#if success_msg}} -->
-          <div class="alert alert-success"><%=success_msg%></div>
-        <% } %>
-        <% if(error_msg) {%>
-          <!-- {{#if success_msg}} -->
-          <div class="alert alert-danger"><%= error_msg %></div>
-        <% } %>
-        <% if(error) {%>
-          <!-- {{#if success_msg}} -->
-          <div class="alert alert-danger"><%= error %></div>
-        <% } %>
-          
-
         </div>
        <!-- Card Content -->
        <div class="container-fluid custom-container">
@@ -75,7 +27,7 @@
         <div class="container-fluid">
           <div class="row">
            <div class="input-field col s12">
-             <input name="username" id="enroll" type="text" class="validate">
+             <input name="employee_id" id="enroll" type="text" class="validate">
              <label class="active" for="enroll">Employee ID</label>
            </div>
          </div>
@@ -99,18 +51,7 @@
 </div>
 </div>
 
-</div></main>
+</div>
+</div>
 
-<footer class="page-footer">
-
-
- <div class="footer-copyright">
-   <div class="container">
-
-     <p href="#" class="center footer-title">POWERED BY SOFTWARE DEVELOPMENT CLUB , USICT</p>
-
-   </div>
- </div>
-</footer>
-</body>
-</html>
+<% include partials/footer %>
