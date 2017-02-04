@@ -39,7 +39,7 @@ app.use(session({
 
 // Passport init
 app.use(passport.initialize());
-app.use(passport.session());
+app.use(passport.session());    //for presistent login sessions
 
 
 // Express Validator
@@ -89,7 +89,7 @@ db.connect(db.MODE_PRODUCTION, function(err) {
 
 //routes
 app.use('/', routes);
-app.use('/users', users);
+// app.use('/users', users);
 app.use('/teacher',require('./routes/teacher'));
 app.use('/student',require('./routes/student'));
 

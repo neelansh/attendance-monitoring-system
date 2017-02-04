@@ -3,7 +3,7 @@
 <% include partials/header %>
 <div class="container">
 
-<form action = "" method = "post" class="card-panel">
+<form name="attendance_form" action = "" method = "post" class="card-panel" onsubmit="return validateForm()">
     <div class="row card-panel valign-wrapper">
       <div class="col s4 valign">
         <label for="datepicker" >Date:</label>
@@ -12,10 +12,10 @@
       <div class="col s4 valign">
         <div class="input-field">
           <select name="teaching_hours" id="number">
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
+            <option value="1">1 Hours</option>
+            <option value="2">2 Hours</option>
+            <option value="3">3 Hours</option>
+            <option value="4">4 Hours</option>
           </select>
           <label>Teaching Hours</label>
 
@@ -29,14 +29,31 @@
     </tr>
 
     <% for (var i = 0; i < students.length ;i++) { %>
+    
     <tr>
       <td><%= students[i].enrollment_no %></td>
       <td><%= students[i].name %></td>
-      <td>                        
-        <input type="checkbox" class="filled-in" id="<%= students[i].enrollment_no %>" name='student_present' value="<%= students[i].enrollment_no %>">
+      <!-- <td>                        
+        <input type="checkbox" class="filled-in" id="present_<%= students[i].enrollment_no %>" name='student_present' value="present_<%= students[i].enrollment_no %>">
         <label for="<%= students[i].enrollment_no %>"></label>
       </td>
-    </tr>    
+      <td>                        
+        <input type="checkbox" class="filled-in" id="absent_<%= students[i].enrollment_no %>" name='student_absent' value="absent_<%= students[i].enrollment_no %>">
+        <label for="<%= students[i].enrollment_no %>"></label>
+      </td>
+      <td>                        
+        <input type="checkbox" class="filled-in" id="notapplicable_<%= students[i].enrollment_no %>" name='student_notApplicable' value="notappicable_<%= students[i].enrollment_no %>">
+        <label for="<%= students[i].enrollment_no %>"></label>
+      </td> -->
+      <td>
+      <select name="<%= students[i].enrollment_no %>">
+        <option value="notapplicable">Not Applicable</option>
+        <option value="present">Present</option>
+        <option value="absent">Absent</option>
+      </select> 
+      </td>
+    </tr>
+       
     <% } %>
   </table>
 
@@ -79,6 +96,13 @@
       document.getElementById('counter').innerHTML = count; 
     }
   }
+  function validateForm() {
+    var x = document.forms["attendance_form"]["date_of_attendance"].value;
+    if (x == "") {
+        alert("Date must be filled out");
+        return false;
+    }
+}
 </script>
 
 <% include partials/footer %>

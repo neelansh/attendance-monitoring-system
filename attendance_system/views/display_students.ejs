@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+
+<% include partials/header %>
+<div class="container">
+  <h4>Students marked present are: </h4>
+  <h4>date: <%=date.getDate()%>/<%=date.getMonth()%>/<%=date.getFullYear()%></h4>
+  <table>
+   <tr>
+    <th>Enrollment Number</th>
+  </tr>
+
+  <% for (var i = 0; i < students_present.length ;i++) { %>
+  <tr>
+    <td><%= students_present[i] %></td>
+  </tr>    
+  <% } %>
+</table>
+
+<h4>Students marked absent are: </h4>
+  <h4>date: <%=date.getDate()%>/<%=date.getMonth()%>/<%=date.getFullYear()%></h4>
+  <table>
+   <tr>
+    <th>Enrollment Number</th>
+  </tr>
+
+  <% for (var i = 0; i < students_absent.length ;i++) { %>
+  <tr>
+    <td><%= students_absent[i] %></td>
+  </tr>    
+  <% } %>
+</table>
+
+<h4>Students marked not applicable are: </h4>
+  <h4>date: <%=date.getDate()%>/<%=date.getMonth()%>/<%=date.getFullYear()%></h4>
+  <table>
+   <tr>
+    <th>Enrollment Number</th>
+  </tr>
+
+  <% for (var i = 0; i < students_notapplicable.length ;i++) { %>
+  <tr>
+    <td><%= students_notapplicable[i] %></td>
+  </tr>    
+  <% } %>
+</table>
+</div>
+
+
+<% include partials/footer %>

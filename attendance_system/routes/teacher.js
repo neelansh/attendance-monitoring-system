@@ -6,7 +6,7 @@ var LocalStrategy = require('passport-local').Strategy;
 var teacher = require('../models/teacher');
 
 /* GET teacher login page. */
-router.get('/', function(req, res, next) {
+router.get('/login', function(req, res, next) {
 	if(req.isAuthenticated()){
 		res.redirect("/teacher/dashboard");
 	}
@@ -26,11 +26,12 @@ passport.deserializeUser(function(id, done) {
 	});
 });
 
-passport.use(new LocalStrategy({
+passport.use('local.teacher',new LocalStrategy({
 	usernameField: 'employee_id',
 	passwordField: 'password'
 },
 function(username, password, done) {
+	console.log("inside local strategy");
 	teacher.getUserById(username, function(err, user){
 		if(err) throw err;
 		if(!user){
@@ -52,11 +53,21 @@ function(username, password, done) {
 }));
 
 router.post('/login',
-	passport.authenticate('local',{successRedirect: "/teacher/dashboard", failureRedirect: "/teacher",failureFlash: true}),
-	function(req, res) {
-		console.log("successfully logged in");
-		res.redirect('/users');
-	});
+	passport.authenticate('local.teacher',{successRedirect: "/teacher/dashboard", failureRedirect: "/teacher/login",failureFlash: true}));
+
+
+// router.post('/login',function(req, res, next){
+	
+// 	passport.authenticate('local', function(err, user, info) {
+// 		console.log("here in post login");
+// 		if (err) { return next(err); }
+// 		if (!user) { return res.redirect('teacher/login'); }
+// 		req.logIn(user, function(err) {
+// 			if (err) { return next(err); }
+// 			return res.redirect("/teacher/dashboard");
+// 		});
+// 	});
+// });
 
 router.get('/logout', function(req, res){
 	req.logout();
@@ -68,7 +79,7 @@ router.get('/logout', function(req, res){
 
 router.get('/dashboard', function(req, res){
 	if(!req.isAuthenticated()){
-		res.redirect("/teacher");
+		res.redirect("/teacher/login");
 	}
 	var sub = require("../models/subjects")
 	var subjects = sub.getSubjectByTeacher(req.user.instructor_id, function(err, results){
@@ -79,7 +90,7 @@ router.get('/dashboard', function(req, res){
 
 router.get('/dashboard', function(req, res){
 	if(!req.isAuthenticated()){
-		res.redirect("/teacher");
+		res.redirect("/teacher/login");
 	}
 	var sub = require("../models/subjects")
 	var subjects = sub.getSubjectByTeacher(req.user.instructor_id, function(err, results){
@@ -90,7 +101,7 @@ router.get('/dashboard', function(req, res){
 
 router.get('/attendance/:batch_id/:subject_id', function(req, res){
 	if(!req.isAuthenticated()){
-		res.redirect("/teacher");
+		res.redirect("/teacher/login");
 	}
 	req.checkParams('batch_id', 'invalid batch id parameter').notEmpty().isInt();
 	req.checkParams('subject_id', 'invalid subject id parameter').notEmpty().isInt();
@@ -101,9 +112,20 @@ router.get('/attendance/:batch_id/:subject_id', function(req, res){
 	});
 });
 
+var findkey = function(obj, value){
+	var res = [];
+	for (var key in obj) {
+    	//console.log(obj.data[i].name);
+    	if (obj[key] === value) {
+    		res.push(key);
+    	}
+	}
+	return res;
+}
+
 router.post('/attendance/:batch_id/:subject_id', function(req, res) {
 	if(!req.isAuthenticated()){
-		res.redirect("/teacher");
+		res.redirect("/teacher/login");
 	}
 	req.checkParams('batch_id', 'invalid batch id parameter').notEmpty().isInt();
 	req.checkParams('subject_id', 'invalid subject id parameter').notEmpty().isInt();
@@ -113,12 +135,21 @@ router.post('/attendance/:batch_id/:subject_id', function(req, res) {
 	var sub = require("../models/subjects")
 	var subject_id = req.params.subject_id;
 	var date = new Date(req.body.date_of_attendance);
-	var students = req.body.student_present;
+	var students_present = findkey(req.body, 'present');
+	var students_absent = findkey(req.body, 'absent');
+	var students_notapplicable = findkey(req.body, 'notapplicable');
+	var duration_of_class = req.body.teaching_hours;
+	console.log(students_present, students_absent, students_notapplicable);
+	// console.log(req.body);
 	// console.log(date);
-	console.log(students);
-	var subjects = sub.saveAttendance(subject_id, date, students, function(err, results){
+	// console.log(students);
+	var subjects = sub.saveAttendance(subject_id, date, students_present, students_absent, students_notapplicable, duration_of_class, function(err, results){
 		if(err) throw err;
-		res.send("okay");
+		res.render('display_students', {'students_present': students_present,
+			'students_notapplicable': students_notapplicable,
+			'students_absent': students_absent,
+			'date': date
+		});
 	});	
 });
 

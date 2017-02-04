@@ -1,11 +1,11 @@
 var mysql = require('mysql')
-  , async = require('async')
+  , async = require('async');
 
 var PRODUCTION_DB = 'sdc'
-  , TEST_DB = 'sdc'
+  , TEST_DB = 'sdc';
 
-exports.MODE_TEST = 'mode_test'
-exports.MODE_PRODUCTION = 'mode_production'
+exports.MODE_TEST = 'mode_test';
+exports.MODE_PRODUCTION = 'mode_production';
 
 var state = {
   pool: null,
@@ -18,10 +18,10 @@ exports.connect = function(mode, done) {
     user: 'root',
     password: 'neelansh5',
     database: mode === exports.MODE_PRODUCTION ? PRODUCTION_DB : TEST_DB
-  })
+  });
 
-  state.mode = mode
-  done()
+  state.mode = mode;
+  done();
 }
 
 exports.get = function() {
