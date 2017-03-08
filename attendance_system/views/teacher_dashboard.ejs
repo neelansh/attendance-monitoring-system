@@ -1,11 +1,13 @@
-
+<!DOCTYPE html>
 <% include partials/header %>
-<div class="container" style="width:800px; margin:0 auto;">
+
+<div class="container" style="text-align: center;">
   <!-- Dropdown Trigger -->
-  <a class='dropdown-button btn' href='#' data-activates='dropdown1'>Select your class</a>
+
+  <a class='dropdown-button btn' href='#' data-activates='subjects'>To Mark Attendance Select Your Class</a>
 
   <!-- Dropdown Structure -->
-  <ul id='dropdown1' class='dropdown-content'>
+  <ul id='subjects' class='dropdown-content'>
     <% for(var i=0; i<subjects.length ; ++i){ %>
 	<li><a href="/teacher/attendance/<%=subjects[i].batch_id%>/<%=subjects[i].subject_id%>"><%=subjects[i].subject_code%> <%=subjects[i].course%> <%=subjects[i].stream%> <%=subjects[i].semester%></a></li>    <li class="divider"></li>
 	<% } %>

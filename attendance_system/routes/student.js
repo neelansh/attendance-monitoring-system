@@ -66,13 +66,32 @@ router.get('/dashboard', function(req, res){
 	if(!req.isAuthenticated()){
 		res.redirect("/student/login");
 	}
-	// var sub = require("../models/subjects")
-	// var subjects = sub.getSubjectByTeacher(req.user.instructor_id, function(err, results){
-	// 	if(err) throw err;
-	// 	res.render('teacher_dashboard',{'subjects': results});
-	// });
-
-	res.send("okay" + req.user.enrollment_no);
+	var present;
+	student.getAttendanceCount(req.user.enrollment_no, 'P', function(err, attendance){
+		if(err){
+			throw err;
+		}
+		present = attendance;
+		var absent;
+		student.getAttendanceCount(req.user.enrollment_no, 'A', function(err, attendance){
+			if(err){
+				throw err;
+			}
+			absent = attendance;
+			var notapplicable;
+			student.getAttendanceCount(req.user.enrollment_no, 'NA', function(err, attendance){
+				if(err){
+					throw err;
+				}
+				console.log(attendance);
+				notapplicable = attendance;
+				res.render('students_dashboard', {'user': req.user, 'present': present, 'absent': absent, 'notapplicable': notapplicable});
+			});
+		});
+	});
+	// console.log(present, absent, notapplicable);
+	
+	// res.send("okay" + req.user.enrollment_no);
 });
 
 module.exports = router;
