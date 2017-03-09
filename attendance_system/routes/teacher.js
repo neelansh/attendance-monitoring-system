@@ -15,13 +15,11 @@ router.get('/login', function(req, res, next) {
 
 
 passport.serializeUser(function(user, done) {
-	console.log("password serialized");
 	done(null, user.instructor_id);
 });
 
 passport.deserializeUser(function(id, done) {
 	teacher.getUserById(id, function(err, user) {
-		console.log("password deserialized");
 		done(err, user);
 	});
 });
@@ -31,7 +29,6 @@ passport.use('local.teacher',new LocalStrategy({
 	passwordField: 'password'
 },
 function(username, password, done) {
-	console.log("inside local strategy");
 	teacher.getUserById(username, function(err, user){
 		if(err) throw err;
 		if(!user){
@@ -108,6 +105,9 @@ router.get('/attendance/:batch_id/:subject_id', function(req, res){
 	var sub = require("../models/subjects")
 	var subjects = sub.getStudentsByBatch(req.params.batch_id, function(err, results){
 		if(err) throw err;
+		if(results == null){
+			res.sendStatus(404);
+		}
 		res.render('attendance',{'students': results});
 	});
 });
@@ -153,5 +153,18 @@ router.post('/attendance/:batch_id/:subject_id', function(req, res) {
 	});	
 });
 
+router.get('/profile', function(req, res){
+	if(!req.isAuthenticated()){
+		res.redirect("/teacher/login");
+	}
+	// console.log('HEYHEY',req.user);
+	var profile = teacher.getUserById(req.user.instructor_id, function(err, results){
+		if(err) throw err;
+		if(results == null){
+			res.sendStatus(404);
+		}
+		res.render('teacher_profile',{'user': results});
+	});
+});
 
 module.exports = router;

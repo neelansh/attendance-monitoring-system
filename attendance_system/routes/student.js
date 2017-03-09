@@ -94,4 +94,18 @@ router.get('/dashboard', function(req, res){
 	// res.send("okay" + req.user.enrollment_no);
 });
 
+router.get('/profile', function(req, res){
+	if(!req.isAuthenticated()){
+		res.redirect("/student/login");
+	}
+	
+	var profile = student.getUserById(req.user.enrollment_no, function(err, results){
+		if(err) throw err;
+		if(results == null){
+			res.sendStatus(404);
+		}
+		res.render('student_profile',{'user': results});
+	});
+});
+
 module.exports = router;
