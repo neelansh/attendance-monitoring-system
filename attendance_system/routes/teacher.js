@@ -132,7 +132,7 @@ router.post('/attendance/:batch_id/:subject_id', function(req, res) {
 	req.checkBody('teaching_hours','teaching hours invalid').notEmpty().isInt();	
 	req.checkBody('date_of_attendance','attendance date is empty').notEmpty();
 
-	var sub = require("../models/subjects")
+	var att = require("../models/attendance")
 	var subject_id = req.params.subject_id;
 	var date = new Date(req.body.date_of_attendance);
 	var students_present = findkey(req.body, 'present');
@@ -143,7 +143,7 @@ router.post('/attendance/:batch_id/:subject_id', function(req, res) {
 	// console.log(req.body);
 	// console.log(date);
 	// console.log(students);
-	var subjects = sub.saveAttendance(subject_id, date, students_present, students_absent, students_notapplicable, duration_of_class, function(err, results){
+	var subjects = att.saveAttendance(subject_id, date, students_present, students_absent, students_notapplicable, duration_of_class, function(err, results){
 		if(err) throw err;
 		res.render('display_students', {'students_present': students_present,
 			'students_notapplicable': students_notapplicable,
@@ -166,5 +166,32 @@ router.get('/profile', function(req, res){
 		res.render('teacher_profile',{'user': results});
 	});
 });
+
+router.get('/attendance_marked/:batch_id/:subject_id', function(req, res){
+	if(!req.isAuthenticated()){
+		res.redirect("/teacher/login");
+	}
+	req.checkParams('batch_id', 'invalid batch id parameter').notEmpty().isInt();
+	req.checkParams('subject_id', 'invalid subject id parameter').notEmpty().isInt();
+	var att = require("../models/attendance")
+
+	var marked_attendance = att.getPresentBySubject(req.params.subject_id, function(err, results){
+		if(err) throw err;
+		if(results == null){
+			res.sendStatus(404);
+		}
+		var present = results;
+		att.getAbsentBySubject(req.params.subject_id, function(err, results){
+			if(err) throw err;
+			if(results == null){
+				res.sendStatus(404);
+			}
+			var absent = results;
+			res.render('view_marked_attendance_teacher',{'present': present, 'absent': absent});
+		});
+	});
+});
+
+
 
 module.exports = router;

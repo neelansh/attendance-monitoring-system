@@ -4,6 +4,7 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 
 var student = require('../models/students');
+var att = require('../models/attendance');
 
 /* GET student login page. */
 router.get('/login', function(req, res, next) {
@@ -67,19 +68,19 @@ router.get('/dashboard', function(req, res){
 		res.redirect("/student/login");
 	}
 	var present;
-	student.getAttendanceCount(req.user.enrollment_no, 'P', function(err, attendance){
+	att.getAttendanceCount(req.user.enrollment_no, 'P', function(err, attendance){
 		if(err){
 			throw err;
 		}
 		present = attendance;
 		var absent;
-		student.getAttendanceCount(req.user.enrollment_no, 'A', function(err, attendance){
+		att.getAttendanceCount(req.user.enrollment_no, 'A', function(err, attendance){
 			if(err){
 				throw err;
 			}
 			absent = attendance;
 			var notapplicable;
-			student.getAttendanceCount(req.user.enrollment_no, 'NA', function(err, attendance){
+			att.getAttendanceCount(req.user.enrollment_no, 'NA', function(err, attendance){
 				if(err){
 					throw err;
 				}

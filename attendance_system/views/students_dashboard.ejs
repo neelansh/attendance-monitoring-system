@@ -5,21 +5,21 @@
 <h5>Present</h5>
 	<% for(var i=0; i < present.length ; ++i){ %>
 		<%=present[i].subject_code%>
-		<%=present[i]['count(attendance)']%> 
+		<%=present[i]['sum(duration_of_class)']%> 
 	<% } %> 
 <% } %>
 <% if(absent){ %>
 <h5>Absent</h5>
 	<% for(var i=0; i < absent.length ; ++i){ %>
 		<%=absent[i].subject_code%>
-		<%=absent[i]['count(attendance)']%> 
+		<%=absent[i]['sum(duration_of_class)']%> 
 	<% } %> 
 <% } %>
 <% if(notapplicable){ %>
 <h5>Not applicable</h5>
 	<% for(var i=0; i < notapplicable.length ; ++i){ %>
 		<%=notapplicable[i].subject_code%>
-		<%=notapplicable[i]['count(attendance)']%> 
+		<%=notapplicable[i]['sum(duration_of_class)']%> 
 	<% } %> 
 <% } %>
 	

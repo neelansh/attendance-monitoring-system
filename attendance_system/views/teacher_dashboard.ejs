@@ -2,15 +2,28 @@
 <% include partials/header %>
 
 <div class="container" style="text-align: center;">
-  <!-- Dropdown Trigger -->
+	<!-- Dropdown Trigger -->
 
-  <a class='dropdown-button btn' href='#' data-activates='subjects'>To Mark Attendance Select Your Class</a>
+	<a class='dropdown-button btn' href='#' data-activates='attendance'>To Mark Attendance Select Your Class</a>
 
-  <!-- Dropdown Structure -->
-  <ul id='subjects' class='dropdown-content'>
-    <% for(var i=0; i<subjects.length ; ++i){ %>
-	<li><a href="/teacher/attendance/<%=subjects[i].batch_id%>/<%=subjects[i].subject_id%>"><%=subjects[i].subject_code%> <%=subjects[i].course%> <%=subjects[i].stream%> <%=subjects[i].semester%></a></li>    <li class="divider"></li>
-	<% } %>
-  </ul>
-  </div>s
+	<!-- Dropdown Structure -->
+	<ul id='attendance' class='dropdown-content'>
+		<% for(var i=0; i<subjects.length ; ++i){ %>
+		<li><a href="/teacher/attendance/<%=subjects[i].batch_id%>/<%=subjects[i].subject_id%>"><%=subjects[i].subject_code%> <%=subjects[i].course%> <%=subjects[i].stream%> <%=subjects[i].semester%></a></li>    <li class="divider"></li>
+		<% } %>
+	</ul>
+</div>
+<br>
+<div class="container" style="text-align: center;">
+	<!-- Dropdown Trigger -->
+
+	<a class='dropdown-button btn' href='#' data-activates='attendance_marked'>To View Marked Attendance Select Your Class</a>
+
+	<!-- Dropdown Structure -->
+	<ul id='attendance_marked' class='dropdown-content'>
+		<% for(var i=0; i<subjects.length ; ++i){ %>
+		<li><a href="/teacher/attendance_marked/<%=subjects[i].batch_id%>/<%=subjects[i].subject_id%>"><%=subjects[i].subject_code%> <%=subjects[i].course%> <%=subjects[i].stream%> <%=subjects[i].semester%></a></li>    <li class="divider"></li>
+		<% } %>
+	</ul>
+</div>
 <% include partials/footer %>
