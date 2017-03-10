@@ -46,7 +46,7 @@
   </nav>
 </header><main>
 <div class="container">
-  <% if(user != null) {%>
+  <% if(user != null && user.instructor_id != null) {%>
     <div class="menu center-align card-panel green-text col s4 offset-s4" style="display: flex; justify-content: space-between; background-color: #283593"> <span>Instructor ID: <%=user.instructor_id%></span><span>Designation: <%=user.designation%></span> <span>Username: <%=user.name%></span><!-- <span><a href="/teacher/logout/">Logout</a></span> -->
     <span>
     <ul id="dropdown1" class="dropdown-content">

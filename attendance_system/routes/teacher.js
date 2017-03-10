@@ -7,7 +7,7 @@ var teacher = require('../models/teacher');
 
 /* GET teacher login page. */
 router.get('/login', function(req, res, next) {
-	if(req.isAuthenticated()){
+	if(req.isAuthenticated() && req.user.instructor_id != null){
 		res.redirect("/teacher/dashboard");
 	}
 	res.render("teacher_login");
@@ -78,6 +78,9 @@ router.get('/dashboard', function(req, res){
 	if(!req.isAuthenticated()){
 		res.redirect("/teacher/login");
 	}
+	if(req.user.instructor_id == null){
+		res.redirect("/teacher/login");
+	}
 	var sub = require("../models/subjects")
 	var subjects = sub.getSubjectByTeacher(req.user.instructor_id, function(err, results){
 		if(err) throw err;
@@ -89,6 +92,9 @@ router.get('/dashboard', function(req, res){
 	if(!req.isAuthenticated()){
 		res.redirect("/teacher/login");
 	}
+	if(req.user.instructor_id == null){
+		res.redirect("/teacher/login");
+	}
 	var sub = require("../models/subjects")
 	var subjects = sub.getSubjectByTeacher(req.user.instructor_id, function(err, results){
 		if(err) throw err;
@@ -98,6 +104,9 @@ router.get('/dashboard', function(req, res){
 
 router.get('/attendance/:batch_id/:subject_id', function(req, res){
 	if(!req.isAuthenticated()){
+		res.redirect("/teacher/login");
+	}
+	if(req.user.instructor_id == null){
 		res.redirect("/teacher/login");
 	}
 	req.checkParams('batch_id', 'invalid batch id parameter').notEmpty().isInt();
@@ -125,6 +134,9 @@ var findkey = function(obj, value){
 
 router.post('/attendance/:batch_id/:subject_id', function(req, res) {
 	if(!req.isAuthenticated()){
+		res.redirect("/teacher/login");
+	}
+	if(req.user.instructor_id == null){
 		res.redirect("/teacher/login");
 	}
 	req.checkParams('batch_id', 'invalid batch id parameter').notEmpty().isInt();
@@ -157,6 +169,9 @@ router.get('/profile', function(req, res){
 	if(!req.isAuthenticated()){
 		res.redirect("/teacher/login");
 	}
+	if(req.user.instructor_id == null){
+		res.redirect("/teacher/login");
+	}
 	// console.log('HEYHEY',req.user);
 	var profile = teacher.getUserById(req.user.instructor_id, function(err, results){
 		if(err) throw err;
@@ -169,6 +184,9 @@ router.get('/profile', function(req, res){
 
 router.get('/attendance_marked/:batch_id/:subject_id', function(req, res){
 	if(!req.isAuthenticated()){
+		res.redirect("/teacher/login");
+	}
+	if(req.user.instructor_id == null){
 		res.redirect("/teacher/login");
 	}
 	req.checkParams('batch_id', 'invalid batch id parameter').notEmpty().isInt();

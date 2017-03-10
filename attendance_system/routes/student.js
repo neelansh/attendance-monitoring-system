@@ -8,7 +8,7 @@ var att = require('../models/attendance');
 
 /* GET student login page. */
 router.get('/login', function(req, res, next) {
-	if(req.isAuthenticated()){
+	if(req.isAuthenticated() && req.user.enrollment_no != null){
 		res.redirect("/student/dashboard");
 	}
 	res.render("student_login");
@@ -67,6 +67,9 @@ router.get('/dashboard', function(req, res){
 	if(!req.isAuthenticated()){
 		res.redirect("/student/login");
 	}
+	if(req.user.enrollment_no == null){
+		res.redirect("/student/login");
+	}
 	var present;
 	att.getAttendanceCount(req.user.enrollment_no, 'P', function(err, attendance){
 		if(err){
@@ -99,7 +102,9 @@ router.get('/profile', function(req, res){
 	if(!req.isAuthenticated()){
 		res.redirect("/student/login");
 	}
-	
+	if(req.user.enrollment_no == null){
+		res.redirect("/student/login");
+	}
 	var profile = student.getUserById(req.user.enrollment_no, function(err, results){
 		if(err) throw err;
 		if(results == null){
