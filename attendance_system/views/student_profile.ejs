@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <% include partials/header_student %>
 
-<div class="container" style="text-align: center;">
+<div class="container" style="display: flex; flex-direction: column; align-items: flex-start; justify-content: center;">
 
-<%= user.enrollment_no %>
-<%= user.name %>
-<%= user.email %>
-<%= user.phone %>
-<%= user.year_of_admission %>
-<%= user.course %>
-<%= user.stream %>
+<h5>Enrollment Number : <%= user.enrollment_no %></h5>
+<h5>Username : <%= user.name %></h5>
+<h5>Email : <%= user.email %></h5>
+<h5>Phone : <%= user.phone %></h5>
+<h5>Year of Admission : <%= user.year_of_admission %></h5>
+<h5>Course : <%= user.course %></h5>
+<h5>Stream : <%= user.stream %></h5>
 
 </div>
 <% include partials/footer %>

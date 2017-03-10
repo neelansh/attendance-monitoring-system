@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <% include partials/header %>
 
-<div class="container" style="text-align: center;">
+<div class="container" style="display: flex; flex-direction: column; align-items: flex-start; justify-content: center;">
 
-<%= user.instructor_id %>
-<%= user.name %>
-<%= user.email %>
-<%= user.designation %>
-<%= user.date_of_joining %>
-
+<h5>Instructor ID : <%= user.instructor_id %></h5>
+<h5>User Name : <%= user.name %></h5>
+<h5>Email : <%= user.email %></h5>
+<h5>Designation : <%= user.designation %></h5>
+<h5>Date of Joining : <%= user.date_of_joining %></h5>
+<a href="">Contact Us</a>
 </div>
 <% include partials/footer %>

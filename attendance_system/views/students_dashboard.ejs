@@ -1,26 +1,38 @@
 <!DOCTYPE html>
 <% include partials/header_student %>
-<div class="container">
+<div class="container" style="align-items: center;">
 <% if(present){ %>
 <h5>Present</h5>
-	<% for(var i=0; i < present.length ; ++i){ %>
-		<%=present[i].subject_code%>
-		<%=present[i]['sum(duration_of_class)']%> 
-	<% } %> 
+	<div style="display: flex;">
+		<% for(var i=0; i < present.length ; ++i){ %>
+			<div style="display: flex; flex-direction: column; border: solid;">
+				<div>Subject Code : <%=present[i].subject_code%></div>
+				<div>Attendance  : <%=present[i]['sum(duration_of_class)']%></div> 
+			</div>
+		<% } %>
+	</div> 
 <% } %>
 <% if(absent){ %>
 <h5>Absent</h5>
-	<% for(var i=0; i < absent.length ; ++i){ %>
-		<%=absent[i].subject_code%>
-		<%=absent[i]['sum(duration_of_class)']%> 
-	<% } %> 
+	<div style="display: flex;">
+		<% for(var i=0; i < absent.length ; ++i){ %>
+			<div style="display: flex; flex-direction: column; border: solid;">
+				<div><%=absent[i].subject_code%></div>
+				<div><%=absent[i]['sum(duration_of_class)']%></div>
+			</div> 
+		<% } %> 
+	</div>
 <% } %>
 <% if(notapplicable){ %>
 <h5>Not applicable</h5>
-	<% for(var i=0; i < notapplicable.length ; ++i){ %>
-		<%=notapplicable[i].subject_code%>
-		<%=notapplicable[i]['sum(duration_of_class)']%> 
-	<% } %> 
+	<div style="display: flex;">
+		<% for(var i=0; i < notapplicable.length ; ++i){ %>
+			<div style="display: flex; flex-direction: column; border: solid;">
+				<div><%=notapplicable[i].subject_code%></div>
+				<div><%=notapplicable[i]['sum(duration_of_class)']%></div>
+			</div> 
+		<% } %> 
+	</div>
 <% } %>
 	
 	 
