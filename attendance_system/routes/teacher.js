@@ -88,19 +88,6 @@ router.get('/dashboard', function(req, res){
 	});
 });
 
-router.get('/dashboard', function(req, res){
-	if(!req.isAuthenticated()){
-		res.redirect("/teacher/login");
-	}
-	if(req.user.instructor_id == null){
-		res.redirect("/teacher/login");
-	}
-	var sub = require("../models/subjects")
-	var subjects = sub.getSubjectByTeacher(req.user.instructor_id, function(err, results){
-		if(err) throw err;
-		res.render('teacher_dashboard',{'subjects': results});
-	});
-});
 
 router.get('/attendance/:batch_id/:subject_id', function(req, res){
 	if(!req.isAuthenticated()){
