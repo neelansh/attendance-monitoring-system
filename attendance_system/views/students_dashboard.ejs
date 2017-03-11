@@ -1,41 +1,126 @@
 <!DOCTYPE html>
-<% include partials/header_student %>
-<div class="container" style="align-items: center;">
-attendance
-<% if(present){ %>
-<h5>Present</h5>
-	<div style="display: flex;">
-		<% for(var i=0; i < present.length ; ++i){ %>
-			<div style="display: flex; flex-direction: column; border: solid;">
-				<div>Subject Code : <%=present[i].subject_code%></div>
-				<div>Attendance  : <%=present[i]['sum(duration_of_class)']%></div> 
+<% include partials/header %>
+ <br>
+	<div id="grad" class="container student-card card">
+		<div class=" card-content row">
+
+			<div class="col-md-4">
+				  <% if(user != null && user.enrollment_no != null) {%>
+
+				<div class='greeting'>HELLO</div>
+
+				<div class="student-name details-field"><%=user.name%></div>
+
+				<div class="student-enroll details-field"><%=user.enrollment_no%></div>
+				<% } %>
 			</div>
-		<% } %>
-	</div> 
-<% } %>
-<% if(absent){ %>
-<h5>Absent</h5>
-	<div style="display: flex;">
-		<% for(var i=0; i < absent.length ; ++i){ %>
-			<div style="display: flex; flex-direction: column; border: solid;">
-				<div><%=absent[i].subject_code%></div>
-				<div><%=absent[i]['sum(duration_of_class)']%></div>
-			</div> 
-		<% } %> 
-	</div>
-<% } %>
-<% if(notapplicable){ %>
-<h5>Not applicable</h5>
-	<div style="display: flex;">
-		<% for(var i=0; i < notapplicable.length ; ++i){ %>
-			<div style="display: flex; flex-direction: column; border: solid;">
-				<div><%=notapplicable[i].subject_code%></div>
-				<div><%=notapplicable[i]['sum(duration_of_class)']%></div>
-			</div> 
-		<% } %> 
-	</div>
-<% } %>
+			<div class="col-md-4 ">
+			</div>
+			<div class="col-md-4">
+			
+			
+		
+				<a class="logout btn waves-effect waves-light right">LOG OUT </a>
+			</div>
+		</div>
+
+	<div class="card-action">
+			<div class="row">
+
+				<div class="col-md-3">
+					<div class="small-title">SCHOOL</div>
+
+					<div class="small-content school"></div>
+
+				</div>
+
+
+				<div class="col-md-3">
+					<div class="small-title">COURSE</div>
+					<div class="small-content course"><%= user.course %></div>
+				</div>
+				<div class="col-md-3">
+					<div class="small-title">STREAM</div>
+
+					<div class="small-content stream"><%= user.stream %></div>
+
+				</div>
+				<div class="col-md-3">
+					<div class="small-title">YEAR OF ADMISSION</div>
+
+					<div class="small-contenty yoa"><%= user.year_of_admission %></div>
+
+				</div>
+
+
+
+			</div>
+		</div>
+
+		<div class="card-action">
+			
+			<div class="row">
+				<div class="col-md-12">
+
+					<div class="input-field col-md-6">
+						<div class="small-title">EMAIL ID</div>
+						<div class="details-field small-content email-id"><%= user.email %></div>	
+					</div>
+
+					<div class="input-field col-md-6">
+					<div class="small-title">PHONE</div>
+							<div class="details-field small-content phone"><%= user.phone %></div>	
+					</div>
+
+				</div>
+
+			</div>
+
+
+		</div>
+		
+		
+		<div class="card-action">
+			<div class="row">			
+				<a class="change-password btn waves-effect waves-light right">CHANGE
+					PASSWORD </a>
+							<a class="editBtn update-email-btn btn waves-effect waves-light left">
+				 EDIT DETAILS
+				</a>
+			</div>
+		</div>
+
+<div class="card-action" style="align-items: center;">
+<div class="row center-block">
+      <table class="striped center">
+        <thead>
+          <tr>
+              <th data-field="id">Subject</th>
+              <th data-field="name">Present</th>
+              <th data-field="price">Absent</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            <td>Alvin</td>
+            <td>1</td>
+            <td>5</td>
+          </tr>
+          <tr>
+            <td>Alan</td>
+            <td>6</td>
+            <td>5</td>
+          </tr>
+          <tr>
+            <td>Jonathan</td>
+            <td>4</td>
+            <td>4</td>
+          </tr>
+        </tbody>
+      </table>
 	
-	 
+	 </div>
+</div>
 </div>
 <% include partials/footer %>
