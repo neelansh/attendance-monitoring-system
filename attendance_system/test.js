@@ -61,3 +61,7 @@ insert INTO usict_students SELECT * from usict_student_2015;
 insert INTO usict_students SELECT * from usict_student_2016;
 
 alter table usict_students add batch_id integer(3) 
+
+alter table (change to bigint enrollment no)
+
+update usict_students set batch_id = usict_batch_allocation.batch_id where usict_students.course = usict_batch_allocation.course and usict_students.stream = usict_batch_allocation.stream and usict_batch_allocation.semester = (2017 - year_of_admission)*2

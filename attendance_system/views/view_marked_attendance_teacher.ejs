@@ -6,7 +6,7 @@
 		<h4>Hours of lecture student was present:</h4>
 		<% for(var i=0; i<present.length ; ++i){ %>
 		<div style="display: flex; border-style: solid;">
-			<div><%=present[i]['student']%> : </div>
+			<div><a href="<%=present[i]['student']%>"><%=present[i]['student']%></a> : </div>
 			<div><%=present[i]['sum(duration_of_class)']%></div>
 		</div>
 		<% } %>
@@ -15,7 +15,7 @@
 		<h4>Hours of lecture student was absent:</h4>
 		<% for(var i=0; i<absent.length ; ++i){ %>
 		<div style="display: flex; border-style: solid;">
-			<div><%=absent[i]['student']%> : </div>
+			<div><a href="<%=absent[i]['student']%>"><%=absent[i]['student']%></a> : </div>
 			<div><%=absent[i]['sum(duration_of_class)']%></div>
 		</div>
 		<% } %>

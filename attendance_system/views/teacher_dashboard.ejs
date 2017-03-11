@@ -9,7 +9,7 @@
 	<!-- Dropdown Structure -->
 	<ul id='attendance' class='dropdown-content'>
 		<% for(var i=0; i<subjects.length ; ++i){ %>
-		<li><a href="/teacher/attendance/<%=subjects[i].batch_id%>/<%=subjects[i].subject_id%>"><%=subjects[i].subject_code%> <%=subjects[i].course%> <%=subjects[i].stream%> <%=subjects[i].semester%></a></li>    <li class="divider"></li>
+		<li><a href="/teacher/attendance/<%=subjects[i].batch_id%>/<%=subjects[i].subject_id%>/"><%=subjects[i].subject_code%> <%=subjects[i].course%> <%=subjects[i].stream%> <%=subjects[i].semester%></a></li>    <li class="divider"></li>
 		<% } %>
 	</ul>
 </div>
@@ -22,7 +22,7 @@
 	<!-- Dropdown Structure -->
 	<ul id='attendance_marked' class='dropdown-content'>
 		<% for(var i=0; i<subjects.length ; ++i){ %>
-		<li><a href="/teacher/attendance_marked/<%=subjects[i].batch_id%>/<%=subjects[i].subject_id%>"><%=subjects[i].subject_code%> <%=subjects[i].course%> <%=subjects[i].stream%> <%=subjects[i].semester%></a></li>    <li class="divider"></li>
+		<li><a href="/teacher/attendance_marked/<%=subjects[i].batch_id%>/<%=subjects[i].subject_id%>/"><%=subjects[i].subject_code%> <%=subjects[i].course%> <%=subjects[i].stream%> <%=subjects[i].semester%></a></li>    <li class="divider"></li>
 		<% } %>
 	</ul>
 </div>

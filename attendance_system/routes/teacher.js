@@ -198,6 +198,26 @@ router.get('/attendance_marked/:batch_id/:subject_id', function(req, res){
 	});
 });
 
+router.get('/attendance_marked/:batch_id/:subject_id/:enrollment_no', function(req, res){
+	if(!req.isAuthenticated()){
+		res.redirect("/teacher/login");
+	}
+	if(req.user.instructor_id == null){
+		res.redirect("/teacher/login");
+	}
+	req.checkParams('batch_id', 'invalid batch id parameter').notEmpty().isInt();
+	req.checkParams('subject_id', 'invalid subject id parameter').notEmpty().isInt();
+	req.checkParams('enrollment_no', 'invalid enrollment_id parameter').notEmpty().isInt();
+	var att = require("../models/attendance")
+	att.getAttendanceByStudent(req.params.enrollment_no, req.params.subject_id, function(err, results){
+			if(err) throw err;
+			if(results == null){
+				res.sendStatus(404);
+			}
+			res.render('student_attendance',{'attendance': results});
+		});
+	
+});
 
 
 module.exports = router;
