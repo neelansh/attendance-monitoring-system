@@ -89,18 +89,29 @@ router.get('/dashboard', function(req, res){
 				}
 				// console.log(attendance);
 				notapplicable = attendance;
-				att.getAttendance(req.user.enrollment_no, function(err, results){
-					if(err){
-						throw err;
-					}
-					res.render('students_dashboard', {'user': req.user, 'present': present, 'absent': absent, 'notapplicable': notapplicable, 'attendance': JSON.stringify(results)});
-				});
+				res.render('students_dashboard', {'user': req.user, 'present': present, 'absent': absent, 'notapplicable': notapplicable});
 			});
 		});
 	});
 	// console.log(present, absent, notapplicable);
 	
 	// res.send("okay" + req.user.enrollment_no);
+});
+
+router.get('/get_attendance', function(req, res){
+	if(!req.isAuthenticated()){
+		res.redirect("/student/login");
+	}
+	if(req.user.enrollment_no == null){
+		res.redirect("/student/login");
+	}
+	att.getAttendance(req.user.enrollment_no, function(err, results){
+		if(err){
+			throw err;
+		}
+		console.log(JSON.stringify(results));
+		res.json(results);
+	});
 });
 
 router.get('/profile', function(req, res){
