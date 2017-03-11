@@ -147,7 +147,8 @@ router.post('/attendance/:batch_id/:subject_id', function(req, res) {
 		res.render('display_students', {'students_present': students_present,
 			'students_notapplicable': students_notapplicable,
 			'students_absent': students_absent,
-			'date': date
+			'date': date,
+			'attendanceAwarded' : duration_of_class
 		});
 	});	
 });

@@ -1,22 +1,25 @@
 <!DOCTYPE html>
 
 <% include partials/header %>
-<div class="container">
-  <h4>Present count:</h4>
-<% for(var i=0; i<present.length ; ++i){ %>
-
-<%=present[i]['student']%><span>:</span>
-<%=present[i]['sum(duration_of_class)']%><br>
-
-<% } %>
-<h4>Absent Count:</h4>
-<% for(var i=0; i<absent.length ; ++i){ %>
-
-<%=absent[i]['student']%><span>:</span>
-<%=absent[i]['sum(duration_of_class)']%><br>
-
-<% } %>
-
+<div class="container" style="display: flex; justify-content: space-between;">
+	<div>
+		<h4>Present count:</h4>
+		<% for(var i=0; i<present.length ; ++i){ %>
+		<div style="display: flex; border-style: solid;">
+			<div><%=present[i]['student']%> : </div>
+			<div><%=present[i]['sum(duration_of_class)']%></div>
+		</div>
+		<% } %>
+	</div>
+	<div>
+		<h4>Absent Count:</h4>
+		<% for(var i=0; i<absent.length ; ++i){ %>
+		<div style="display: flex; border-style: solid;">
+			<div><%=absent[i]['student']%> : </div>
+			<div><%=absent[i]['sum(duration_of_class)']%></div>
+		</div>
+		<% } %>
+	</div>
 </div>
 
 
