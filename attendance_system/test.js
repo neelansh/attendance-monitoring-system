@@ -62,6 +62,21 @@ insert INTO usict_students SELECT * from usict_student_2016;
 
 alter table usict_students add batch_id integer(3) 
 
-alter table (change to bigint enrollment no)
+//to check non numeric enrollment numbers
+SELECT * FROM `usict_students` WHERE concat('',enrollment_no * 1) = enrollment_no
 
+alter table usict_students modify column enrollment_no BIGINT(20)
+
+//CREATE MYSQL DUMP
+
+password : $2a$08$TqHk4godBQ/ouxSrFtd3yuWGfo39JvS9KNaGOsSsOBnDljPvAe27y
+
+update usict_students set password = '$2a$08$TqHk4godBQ/ouxSrFtd3yuWGfo39JvS9KNaGOsSsOBnDljPvAe27y'
+
+
+alter table usict_subject_allocation add subject_id int(4);
+
+update usict_subject_allocation set subject_id = feedback_id;
+
+////not applied
 update usict_students set batch_id = usict_batch_allocation.batch_id where usict_students.course = usict_batch_allocation.course and usict_students.stream = usict_batch_allocation.stream and usict_batch_allocation.semester = (2017 - year_of_admission)*2

@@ -109,7 +109,7 @@ router.get('/get_attendance', function(req, res){
 		if(err){
 			throw err;
 		}
-		console.log(JSON.stringify(results));
+		// console.log(JSON.stringify(results));
 		res.json(results);
 	});
 });
