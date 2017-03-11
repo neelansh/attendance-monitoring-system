@@ -16,12 +16,12 @@ exports.connect = function(mode, done) {
   state.pool = mysql.createPool({
     host: 'localhost',
     user: 'root',
-    password: '',
+    password: 'neelansh5',
     database: mode === exports.MODE_PRODUCTION ? PRODUCTION_DB : TEST_DB
   });
 
   state.mode = mode;
-  done();
+  done(state);
 }
 
 exports.get = function() {

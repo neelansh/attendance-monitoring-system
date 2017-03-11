@@ -77,10 +77,9 @@ app.use(function (req, res, next) {
 var db = require('./db');
 
 // Connect to MySQL on start
-db.connect(db.MODE_PRODUCTION, function(err) {
-  if (err) {
+db.connect(db.MODE_PRODUCTION, function(pool_state) {
+  if (pool_state.pool == null) {
     console.log('Unable to connect to MySQL.')
-    process.exit(1)
   } else {
     console.log('mysql connection established')
   }
