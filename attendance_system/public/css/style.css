@@ -1,241 +1,278 @@
-@font-face {
-  font-family: "brandon-grotesque";
-  font-style: normal;
-  font-weight: 500;
-  src: url("https://fonts.typekit.net/af/a7d2be/0000000000000000000132e1/27/l?subset_id=2&fvd=n5") format("woff2");
+#b1 {
+  background-color:#1A237E;
+  height:40px;
 }
 
-@font-face {
-  font-family: "brandon-grotesque-reg";
-  font-style: normal;
-  font-weight: 400;
-  src: url("https://fonts.typekit.net/af/87035b/0000000000000000000132df/27/l?subset_id=2&fvd=n4") format("woff2");
+#c1 {
+  width:10px;
+  vertical-align:bottom;
+  display:inline-block;
 }
 
-
-
-nav, footer{
-  text-align: center;
-      background-color: #1A237E !important;
+#submenu {
+  font-family:brandon-grotesque;
+  background-color:#283593!important;
+  text-transform:uppercase;
+  font-weight:500;
+  letter-spacing:.2em;
 }
 
-#submenu{
-  font-family: "brandon-grotesque";
-    background-color: #283593 !important;
-    text-transform: uppercase;
-font-weight: 500;
-letter-spacing: 0.2em;
-
-}
-.sub-nav{
-  background-color: #283593 !important;
-}
-.sub-title{
-  font-family: Lato;
-      font-weight: 500;
-      font-size: 1.5em !important;
-      letter-spacing: 0.3em;
-}
-.main-title{
-  font-family: Lato;
-font-size: 1em !important;
-font-weight: bolder;
-letter-spacing: 0.5em;
-}
-.footer-title{
-  font-family: Lato !important;
-font-size: 0.7em !important;
-
-letter-spacing: 0.2em !important;
+#title-form {
+  font:500 24px/36px brandon-grotesque,sans-serif;
+  text-transform:uppercase;
+  letter-spacing:.1em;
 }
 
-footer.page-footer .footer-copyright {
-    overflow: hidden;
-    height: 50px;
-    line-height: 0px !important;
-    color: rgba(255,255,255,0.8);
-    background-color: rgba(51,51,51,0.08);
-}
-.enroll{
-  font-size: 2rem !important;
-  padding: 0.5em;
-}
-#title-form{
-  font: 500 24px/36px "brandon-grotesque",sans-serif;
-  text-transform: uppercase;
-    letter-spacing: 0.1em;
+.btn {
+  border-radius:0!important;
 }
 
-.input-field .prefix ~ input, .input-field .prefix ~ textarea, .input-field .prefix ~ label, .input-field .prefix ~ .validate ~ label, .input-field .prefix ~ .autocomplete-content {
-    margin-left: 3rem;
-    margin-right: 3rem;
-    width: 92%;
-    width: calc(100% - 3rem);
+.btn,.btn-large {
+  text-decoration:none;
+  color:#fff;
+  background-color:#1A237E;
+  text-align:center;
+  letter-spacing:.5px;
+  transition:.2s ease-out;
+  cursor:pointer;
 }
 
-.drop-down-school{
-  margin-top: 0em;
-   align-items: center;
-  min-height: 70vh;
-   background-image: url(../images/1.jpg);
-   background-size: cover;
-
+.btn:hover,.btn-large:hover {
+  background-color:#0D47A1;
 }
 
-.drop-down-main{
+.custom-container {
+  padding-left:0!important;
+}
+
+.custom-file-upload {
+  border:1px dashed #02041D;
+  display:inline-block;
+  cursor:pointer;
+  padding:3px 6px;
+}
+
+.custom-full-row {
+  margin-left:0!important;
+  margin-top:1em;
+}
+
+.drop-down-main {
   margin-top:5em;
 }
 
-.login-select-item{
-  font-family: Roboto;
-font-size: 2em !important;
-font-weight: 100;
-text-transform: capitalize !important;
+.drop-down-school {
+  margin-top:0;
+  align-items:center;
+  min-height:70vh;
+  background-image:url(../images/1.jpg);
+  background-size:cover;
 }
-.log-sel-cont{
 
-padding-top: 5em;
+.email-id-col {
+  margin-top:2em;
+}
+
+.enroll {
+  font-size:2rem!important;
+  padding:.5em;
+}
+
+.footer-title {
+  font-family:Lato!important;
+  font-size:.7em!important;
+  letter-spacing:.2em!important;
+}
+
+.form-instructions {
+  color:grey;
+  margin-top:.2em;
+}
+
+.greeting {
+  margin-top:4em;
+  font-weight:900;
+  font-size:16px;
+  color:#008B8B;
+  letter-spacing:.1em;
+}
+
+.input-field .prefix ~ input,.input-field .prefix ~ textarea,.input-field .prefix ~ label,.input-field .prefix ~ .validate ~ label,.input-field .prefix ~ .autocomplete-content {
+  margin-left:3rem;
+  margin-right:3rem;
+  width:calc(100%-3rem);
+}
+
+.input[type=text]:focus:not([readonly]) {
+  background-color:#000!important;
+}
+
+.log-sel-cont {
+  padding-top:5em;
+}
+
+.login-card-title {
+  font-size:1.3em;
+  margin-left:1.5em!important;
+  font-family:Roboto;
+  font-weight:800;
+  letter-spacing:.1em;
+  color:#1A237E;
+}
+
+.login-sel-cont {
+  padding-top:2em;
+}
+
+.login-select-item {
+  font-family:Roboto;
+  font-size:2em!important;
+  font-weight:100;
+  text-transform:capitalize!important;
+}
+
+.main-title {
+  font-family:Lato;
+  font-size:1em!important;
+  font-weight:bolder;
+  letter-spacing:.5em;
+}
+
+.page-sub-theme {
+  font-family:Lato;
+  text-transform:uppercase;
+  font-weight:800;
+  text-align:center;
+  align-content:center;
+  letter-spacing:.1em;
+}
+
+.page-theme {
+  font-family:Roboto;
+  font-weight:100;
+  font-size:3em;
+  padding-top:1em;
+  text-align:center;
+}
+
+.profile-image {
+  align-content:center;
+}
+
+.small-content {
+  text-align:left;
+  padding-top:.3em;
+  font-size:14px;
+}
+
+.small-title {
+  font-weight:700;
+  font-size:12px;
+  color:#008B8B;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+}
+
+.stud-attribute-text {
+  font-family:Roboto;
+  font-size:36px;
+  font-weight:200;
+  text-align:center;
+  padding-top:1em;
+}
+
+.student-enroll {
+  padding-top:1em;
+  color:#008B8B;
+  letter-spacing:.2em;
+}
+
+.student-image {
+  margin-top:1em;
+}
+
+.student-main-image:hover {
+  opacity:0.5;
+}
+
+.student-name {
+  margin-top:.5em;
+  color:#000;
+  font-size:24px;
+  font-weight:300;
+  font-family:Roboto;
+}
+
+.student-name-welcome {
+  font-size:1.5em;
+}
+
+.sub-nav {
+  background-color:#283593!important;
+}
+
+.sub-title {
+  font-family:Lato;
+  font-weight:500;
+  font-size:1.5em!important;
+  letter-spacing:.3em;
+}
+
+.teacher-input {
+  background-color:#1A237E!important;
+  color:#fff;
+  text-align:center;
+  width:100px!important;
+}
+
+.verticalLine {
+  border-left:thick solid red;
+}
+
+.welcome-student {
+  font-size:1em;
+  font-family:Roboto;
+  font-weight:400;
+  padding:1em;
+}
+
+.welcome-student-col {
+  margin-top:3em;
+}
+
+body {
+  display:flex;
+  min-height:100vh;
+  flex-direction:column;
 }
 
 footer.page-footer {
-    margin-top: 0px !important;
-    padding-top: 20px !important;
-
+  margin-top:0!important;
+  padding-top:20px!important;
 }
 
-.login-sel-cont{
-  padding-top: 2em;
+footer.page-footer .footer-copyright {
+  overflow:hidden;
+  height:50px;
+  line-height:0!important;
+  color:rgba(255,255,255,0.8);
+  background-color:rgba(51,51,51,0.08);
 }
 
-#wrapper-bar
-{
-
-
-}
-#c1
-{
-width: 10px;vertical-align:bottom;display:inline-block;
-}
-#b1
-{
-background-color:#1A237E; height: 40px;
-}
-
-
-.custom-full-row {
-
-}
-
-.btn, .btn-large {
-    text-decoration: none;
-    color: #fff;
-    background-color: #1A237E;
-    text-align: center;
-    letter-spacing: .5px;
-    transition: .2s ease-out;
-    cursor: pointer;
-}
-
-.btn:hover{
-  background-color: #0D47A1;
-}
-
-.btn-large:hover{
-  background-color: #0D47A1;
-}
-.login-card-title{
-  font-size: 1.3em;
-margin-left: 1.5em !important;
-font-family: Roboto;
-font-weight: 800;
-
-letter-spacing: 0.1em;
-color: #1A237E;
-}
-.verticalLine {
-    border-left: thick solid #ff0000;
-}
-.login-box-form{
-
-}
-
-.page-theme{
-  font-family: Roboto;
-    font-weight: 100;
-    font-size: 3em;
-    padding-top: 1em;
-
-    text-align: center;
-}
-body {
-  display: flex;
-  min-height: 100vh;
-  flex-direction: column;
+input[type="file"] {
+  display:none;
 }
 
 main {
-  flex: 1 0 auto;
+  flex:1 0 auto;
 }
 
-.page-sub-theme{
-  font-family: Lato;
-      text-transform: uppercase;
-      font-weight: 800;
-      text-align: center;
-      align-content: center;
-      letter-spacing: 0.1em;
+nav,footer {
+  text-align:center;
+  background-color:#1A237E!important;
 }
 
-.custom-full-row{
-  margin-left: 0em !important;
-
-margin-top: 1em;
-}
-
-.custom-container{
-  padding-left: 0em !important
-}
-.welcome-student{
-  font-size: 1em;
-font-family: Roboto;
-font-weight: 400;
-padding: 1em;
-}
-.student-name-welcome{
-  font-size: 1.5em;
-}
-.student-image{
-  margin-top: 1em;
-}
-
-.email-id-col{
-  margin-top: 2em;
-}
-
-.welcome-student-col{
-  margin-top: 3em;
-
-}
-
-.student-main-image:hover{
-  opacity: 0.5;
-}
-
-.teacher-input{
-        background-color: #1A237E !important;
-    color: #fff;
-    text-align: center;
-    width: 100px !important;
-}
-
-.input[type=text]:focus:not([readonly]){
-    background-color:black !important;
-}
-
-.stud-attribute-text{
-        font-family: Roboto;
-    font-size: 36px;
-    font-weight: 200;
-    text-align: center;
-    padding-top: 1em;
+.available-for-edit{
+    background: darkcyan;
+    padding: 0.2em;
 }
