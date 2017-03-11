@@ -5,7 +5,7 @@ var con = mysql.createConnection({
   host: "localhost",
   user: "root",
   password: "neelansh5",
-  database: "sdc" 
+  database: "sdc2" 
 });
 
 con.connect(function(err){
@@ -35,13 +35,13 @@ con.connect(function(err){
 //     else console.log(rows);
 //   });
 
-con.query("select * from usms_teacher where instructor_id = ?",
-  [30081],
-  function(err, rows){
-    if(err)console.log(err);
-    console.log(rows);
-    console.log(rows[0].name);
-  });
+// con.query("select * from usms_teacher where instructor_id = ?",
+//   [30081],
+//   function(err, rows){
+//     if(err)console.log(err);
+//     console.log(rows);
+//     console.log(rows[0].name);
+//   });
 
 con.end(function(err) {
   // The connection is terminated gracefully
@@ -49,3 +49,15 @@ con.end(function(err) {
   // before sending a COM_QUIT packet to the MySQL server.
   if(err)console.log(err);
 });
+
+
+
+script:
+
+create table usict_students as select * from usict_student_2013;
+
+insert INTO usict_students SELECT * from usict_student_2014;
+insert INTO usict_students SELECT * from usict_student_2015;
+insert INTO usict_students SELECT * from usict_student_2016;
+
+alter table usict_students add batch_id integer(3) 

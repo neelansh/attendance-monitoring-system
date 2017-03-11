@@ -87,9 +87,11 @@ router.get('/dashboard', function(req, res){
 				if(err){
 					throw err;
 				}
-				console.log(attendance);
+				// console.log(attendance);
 				notapplicable = attendance;
-				res.render('students_dashboard', {'user': req.user, 'present': present, 'absent': absent, 'notapplicable': notapplicable});
+				att.getAttendance(req.user.enrollment_no, function(err, results){
+					res.render('students_dashboard', {'user': req.user, 'present': present, 'absent': absent, 'notapplicable': notapplicable, 'attendance': results});
+				});
 			});
 		});
 	});
