@@ -1,8 +1,31 @@
 <!DOCTYPE html>
 <% include partials/header %>
 <script type="text/javascript">
-	var attendance = JSON.stringify( <%= attendance %>);
-	console.log(attendance);
+$(document).ready(function () {
+		$.getJSON('/student/get_attendance', function (data) {
+		arr = {};
+		data.forEach(function (elem) {
+			if (! (elem.subject_code in arr)){
+				arr[elem.subject_code] = {
+						"P" : 0,
+						"A" : 0,
+						"NA" : 0
+					}
+			}	
+				arr[elem.subject_code][elem.attendance] ++;
+		})
+		html = ''
+		Object.keys(arr).forEach(function (elem) {
+			html += '<tr>';
+			html += '<td>' + elem + '</td>';
+			html += '<td>' + arr[elem]["P"] + '</td>';
+			html += '<td>' + arr[elem]["A"] + '</td>';
+			html += '<td>' + arr[elem]["NA"] + '</td>';
+			html += '</tr>';
+		})
+		$('.attendance-table').html(html)
+	})
+})
 </script>
 
 	<div id="grad" class="container student-card card">
@@ -93,7 +116,7 @@
 
 <div class="card-action" style="align-items: center;">
 <div class="row center-block">
-      <table class="striped center">
+      <table class="striped centered">
         <thead>
           <tr>
               <th data-field="id">Subject</th>
@@ -103,22 +126,8 @@
           </tr>
         </thead>
 
-        <tbody>
-          <tr>
-            <td>Alvin</td>
-            <td>1</td>
-            <td>5</td>
-          </tr>
-          <tr>
-            <td>Alan</td>
-            <td>6</td>
-            <td>5</td>
-          </tr>
-          <tr>
-            <td>Jonathan</td>
-            <td>4</td>
-            <td>4</td>
-          </tr>
+        <tbody class="attendance-table">
+        
         </tbody>
       </table>
 	
