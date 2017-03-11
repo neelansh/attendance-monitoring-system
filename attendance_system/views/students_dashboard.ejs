@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <% include partials/header %>
- <br>
+<script type="text/javascript">
+	var attendance = JSON.stringify( <%= attendance %>);
+	console.log(attendance);
+</script>
+
 	<div id="grad" class="container student-card card">
 		<div class=" card-content row">
 
@@ -17,9 +21,6 @@
 			<div class="col-md-4 ">
 			</div>
 			<div class="col-md-4">
-			
-			
-		
 				<a class="logout btn waves-effect waves-light right">LOG OUT </a>
 			</div>
 		</div>
@@ -98,6 +99,7 @@
               <th data-field="id">Subject</th>
               <th data-field="name">Present</th>
               <th data-field="price">Absent</th>
+              <th data-field="price">Not Applicable</th>
           </tr>
         </thead>
 
