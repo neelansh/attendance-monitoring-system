@@ -35,8 +35,8 @@
 				<span class="sub-code"><%=subjects[i].subject_code%></span>
 			</div>
 			<div class="card-action">
-				<a class="btn waves-effect waves-light" href="#">View</a>
-				<a href="#" class=" btn waves-effect waves-light">Mark</a>
+				<a href="/teacher/attendance_marked/<%=subjects[i].batch_id%>/<%=subjects[i].subject_id%>/" class="btn waves-effect waves-light">View</a>
+				<a href="/teacher/attendance/<%=subjects[i].batch_id%>/<%=subjects[i].subject_id%>/" class=" btn waves-effect waves-light">Mark</a>
 			</div>
 		</div>
 		<% } %>
