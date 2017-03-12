@@ -15,24 +15,18 @@ router.get('/login', function(req, res, next) {
 });
 
 
-passport.serializeUser(function(user, done) {
-	console.log("password serialized");
-	done(null, user.enrollment_no);
-});
-
-passport.deserializeUser(function(id, done) {
-	student.getUserById(id, function(err, user) {
-		console.log("password deserialized");
-		done(err, user);
-	});
-});
-
-passport.use("local.student",new LocalStrategy({
+passport.use('local.student',new LocalStrategy({
 	usernameField: 'enrollment_no',
-	passwordField: 'password'
+	passwordField: 'password',
+	passReqToCallback: true
 },
-function(username, password, done) {
-	student.getUserById(username, function(err, user){
+function(req, username, password, done) {
+	console.log(req.body.school);
+	if(req.body.school !== 'usict' && req.body.school !== 'usms'){
+		return done(null, false, {message: 'Unknown School'});
+	}
+	var school = req.body.school;
+	student.getUserById(school, username, function(err, user){
 		if(err) throw err;
 		if(!user){
 			console.log("Unknown user");
@@ -43,6 +37,7 @@ function(username, password, done) {
 			if(err) throw err;
 			if(isMatch){
 				console.log("valid password");
+				user.school = school;
 				return done(null, user);
 			} else {
 				console.log("invalid pass");
@@ -64,6 +59,7 @@ router.get('/logout', function(req, res){
 });
 
 router.get('/dashboard', function(req, res){
+	console.log("hello dash ");
 	if(!req.isAuthenticated()){
 		res.redirect("/student/login");
 	}
@@ -71,19 +67,19 @@ router.get('/dashboard', function(req, res){
 		res.redirect("/student/login");
 	}
 	var present;
-	att.getAttendanceCount(req.user.enrollment_no, 'P', function(err, attendance){
+	att.getAttendanceCount(req.user.school, req.user.enrollment_no, 'P', function(err, attendance){
 		if(err){
 			throw err;
 		}
 		present = attendance;
 		var absent;
-		att.getAttendanceCount(req.user.enrollment_no, 'A', function(err, attendance){
+		att.getAttendanceCount(req.user.school, req.user.enrollment_no, 'A', function(err, attendance){
 			if(err){
 				throw err;
 			}
 			absent = attendance;
 			var notapplicable;
-			att.getAttendanceCount(req.user.enrollment_no, 'NA', function(err, attendance){
+			att.getAttendanceCount(req.user.school, req.user.enrollment_no, 'NA', function(err, attendance){
 				if(err){
 					throw err;
 				}
@@ -99,13 +95,14 @@ router.get('/dashboard', function(req, res){
 });
 
 router.get('/get_attendance', function(req, res){
+	console.log("hello attendance");
 	if(!req.isAuthenticated()){
 		res.redirect("/student/login");
 	}
 	if(req.user.enrollment_no == null){
 		res.redirect("/student/login");
 	}
-	att.getAttendance(req.user.enrollment_no, function(err, results){
+	att.getAttendance(req.user.school, req.user.enrollment_no, function(err, results){
 		if(err){
 			throw err;
 		}
@@ -121,7 +118,7 @@ router.get('/profile', function(req, res){
 	if(req.user.enrollment_no == null){
 		res.redirect("/student/login");
 	}
-	var profile = student.getUserById(req.user.enrollment_no, function(err, results){
+	var profile = student.getUserById(req.user.school, req.user.enrollment_no, function(err, results){
 		if(err) throw err;
 		if(results == null){
 			res.sendStatus(404);

@@ -4,6 +4,7 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 
 var teacher = require('../models/teacher');
+var student = require('../models/students');
 
 /* GET teacher login page. */
 router.get('/login', function(req, res, next) {
@@ -15,21 +16,54 @@ router.get('/login', function(req, res, next) {
 
 
 passport.serializeUser(function(user, done) {
-	done(null, user.instructor_id);
+	console.log("serialized user techer");
+	if(user.enrollment_no !== undefined){
+		//handel as student
+		done(null, {
+			'id': user.enrollment_no,
+			'school': user.school,
+			'isTeacher': false,
+			'isStudent': true
+		});
+	}else if(user.instructor_id !== undefined){
+		//handel as teacher
+		done(null, {
+			'id': user.instructor_id,
+			'school': user.school,
+			'isTeacher': true,
+			'isStudent': false
+		});
+	}
 });
 
-passport.deserializeUser(function(id, done) {
-	teacher.getUserById(id, function(err, user) {
-		done(err, user);
-	});
+passport.deserializeUser(function(user, done) {
+	if(user.isTeacher){
+		teacher.getUserById(user.school, user.id, function(err, user_details) {
+			if(err) throw err;
+			user_details.school = user.school;
+			done(err, user_details);
+		});
+	}else if(user.isStudent){
+		student.getUserById(user.school, user.id, function(err, user_details) {
+			if(err) throw err;
+			user_details.school = user.school;
+			done(err, user_details);
+		});
+	}
 });
 
 passport.use('local.teacher',new LocalStrategy({
 	usernameField: 'employee_id',
-	passwordField: 'password'
+	passwordField: 'password',
+	passReqToCallback: true
 },
-function(username, password, done) {
-	teacher.getUserById(username, function(err, user){
+function(req, username, password, done) {
+	console.log(req.body.school);
+	if(req.body.school !== 'usict' && req.body.school !== 'usms'){
+		return done(null, false, {message: 'Unknown School'});
+	}
+	var school = req.body.school;
+	teacher.getUserById(school, username, function(err, user){
 		if(err) throw err;
 		if(!user){
 			console.log("Unknown user");
@@ -40,6 +74,7 @@ function(username, password, done) {
 			if(err) throw err;
 			if(isMatch){
 				console.log("valid password");
+				user.school = school;
 				return done(null, user);
 			} else {
 				console.log("invalid pass");
@@ -75,14 +110,17 @@ router.get('/logout', function(req, res){
 });
 
 router.get('/dashboard', function(req, res){
+	console.log("hello work")
 	if(!req.isAuthenticated()){
 		res.redirect("/teacher/login");
 	}
 	if(req.user.instructor_id == null){
 		res.redirect("/teacher/login");
 	}
+	console.log("in dashboard ", req.user.school);
 	var sub = require("../models/subjects")
-	var subjects = sub.getSubjectByTeacher(req.user.instructor_id, function(err, results){
+	console.log("here asshole");
+	var subjects = sub.getSubjectByTeacher(req.user.school, req.user.instructor_id, function(err, results){
 		if(err) throw err;
 		res.render('teacher_dashboard',{'subjects': results});
 	});
@@ -99,7 +137,7 @@ router.get('/attendance/:batch_id/:subject_id', function(req, res){
 	req.checkParams('batch_id', 'invalid batch id parameter').notEmpty().isInt();
 	req.checkParams('subject_id', 'invalid subject id parameter').notEmpty().isInt();
 	var sub = require("../models/subjects")
-	var subjects = sub.getStudentsByBatch(req.params.batch_id, function(err, results){
+	var subjects = sub.getStudentsByBatch(req.user.school, req.params.batch_id, function(err, results){
 		if(err) throw err;
 		if(results == null){
 			res.sendStatus(404);
@@ -142,7 +180,7 @@ router.post('/attendance/:batch_id/:subject_id', function(req, res) {
 	// console.log(req.body);
 	// console.log(date);
 	// console.log(students);
-	var subjects = att.saveAttendance(subject_id, date, students_present, students_absent, students_notapplicable, duration_of_class, function(err, results){
+	var subjects = att.saveAttendance(req.user.school, subject_id, date, students_present, students_absent, students_notapplicable, duration_of_class, function(err, results){
 		if(err) throw err;
 		res.render('display_students', {'students_present': students_present,
 			'students_notapplicable': students_notapplicable,
@@ -161,7 +199,7 @@ router.get('/profile', function(req, res){
 		res.redirect("/teacher/login");
 	}
 	// console.log('HEYHEY',req.user);
-	var profile = teacher.getUserById(req.user.instructor_id, function(err, results){
+	var profile = teacher.getUserById(req.user.school, req.user.instructor_id, function(err, results){
 		if(err) throw err;
 		if(results == null){
 			res.sendStatus(404);
@@ -181,13 +219,13 @@ router.get('/attendance_marked/:batch_id/:subject_id', function(req, res){
 	req.checkParams('subject_id', 'invalid subject id parameter').notEmpty().isInt();
 	var att = require("../models/attendance")
 
-	var marked_attendance = att.getPresentBySubject(req.params.subject_id, function(err, results){
+	var marked_attendance = att.getPresentBySubject(req.user.school, req.params.subject_id, function(err, results){
 		if(err) throw err;
 		if(results == null){
 			res.sendStatus(404);
 		}
 		var present = results;
-		att.getAbsentBySubject(req.params.subject_id, function(err, results){
+		att.getAbsentBySubject(req.user.school, req.params.subject_id, function(err, results){
 			if(err) throw err;
 			if(results == null){
 				res.sendStatus(404);
@@ -209,7 +247,7 @@ router.get('/attendance_marked/:batch_id/:subject_id/:enrollment_no', function(r
 	req.checkParams('subject_id', 'invalid subject id parameter').notEmpty().isInt();
 	req.checkParams('enrollment_no', 'invalid enrollment_id parameter').notEmpty().isInt();
 	var att = require("../models/attendance")
-	att.getAttendanceByStudent(req.params.enrollment_no, req.params.subject_id, function(err, results){
+	att.getAttendanceByStudent(req.user.school, req.params.enrollment_no, req.params.subject_id, function(err, results){
 			if(err) throw err;
 			if(results == null){
 				res.sendStatus(404);

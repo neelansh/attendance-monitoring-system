@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <% include partials/header %>
-
-        
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('select').material_select();
+  });
+</script>
 <div class="container drop-down-school">
   <div class="row login-sel-cont">
     <div class="col-md-4 col-md-offset-4">
@@ -25,6 +28,17 @@
 
        <form class="login-box-form" action="/student/login" method="post">
         <div class="container-fluid">
+        <div class="row">
+           <div class="col s12">
+           <div class="input-field">
+             <select name="school" id="school">
+                <option value="usms">USMS</option>
+                <option value="usict">USICT</option>
+              </select>
+             <label>Select School : </label>
+           </div>
+           </div>
+         </div>
           <div class="row">
            <div class="input-field col s12">
              <input name="enrollment_no" id="enroll" type="text" class="validate">

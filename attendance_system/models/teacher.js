@@ -4,16 +4,17 @@ var bcrypt = require('bcryptjs');
 //Teacher user model
 
 
-module.exports.getUserByUsername = function(username, callback){
-	var query = db.get().query("select * from usms_teacher where name = ?",[username],function(err, rows){
+module.exports.getUserByUsername = function(school, username, callback){
+	var query = db.get().query("select * from ?? where name = ?",[school+"_teacher", username],function(err, rows){
 		if(err)throw err;
 		callback(null, rows[0]);
 	});
 }
 
-module.exports.getUserById = function(id, callback){
-	var query = db.get().query("select * from usms_teacher where instructor_id = ?",[id],function(err, rows){
+module.exports.getUserById = function(school, id, callback){
+	var query = db.get().query("select * from ?? where instructor_id = ?",[school+"_teacher", id],function(err, rows){
 		if(err)throw err;
+		console.log("hey o hey");
 		callback(null, rows[0]);
 	});
 }
