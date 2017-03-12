@@ -127,4 +127,46 @@ router.get('/profile', function(req, res){
 	});
 });
 
+router.get('/change_password', function(req, res){
+	if(!req.isAuthenticated()){
+		res.redirect("/student/login");
+	}
+	if(req.user.enrollment_no == null){
+		res.redirect("/student/login");
+	}
+	res.render('change_password_student');
+});
+
+router.post('/change_password', function(req, res){
+	if(!req.isAuthenticated()){
+		res.redirect("/student/login");
+	}
+	if(req.user.enrollment_no == null){
+		res.redirect("/student/login");
+	}
+	req.checkBody('old_password', 'old password empty').notEmpty().isAlpha();
+	req.checkBody('new_password', 'new password empty').notEmpty().isAlpha();
+	req.checkBody('confirm_password', 'confirm password empty').notEmpty().isAlpha();
+
+	if(req.body.new_password !== req.body.confirm_password){
+		req.flash('error_msg', 'new password and confirm new password do NOT match');
+	}
+
+	student.comparePassword(req.body.old_password, req.user.password, function(err, isMatch){
+		if(err) throw err;
+		if(isMatch){
+			student.setPassword(req.user.school, req.body.new_password, req.user.enrollment_no, function(err, result){
+				if(err) throw err;
+				console.log("success changed password");
+				req.flash('success_msg', 'Password Successfully Changed');
+				res.redirect('/student/change_password');
+			});
+		} else if(!isMatch){
+			req.flash('error_msg', 'Incorrect password');
+			res.redirect('/student/change_password');
+		}
+	});
+
+});
+
 module.exports = router;

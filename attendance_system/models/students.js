@@ -27,3 +27,17 @@ module.exports.comparePassword = function(candidatePassword, hash, callback){
     	callback(null, isMatch);
 	});
 }
+
+module.exports.setPassword = function(school, new_password, id, callback){
+	bcrypt.genSalt(10, function(err, salt) {
+		bcrypt.hash(new_password, salt, function(err, hash) {
+			console.log(salt, hash, new_password);
+			var query = db.get().query("update ?? set password = ? where enrollment_no = ?",[school+"_students", hash, id],function(err, rows){
+				if(err) throw err;
+				console.log(rows);
+				callback(null, rows);
+			});
+			console.log(query.sql);
+    	});
+	});
+}

@@ -87,20 +87,6 @@ function(req, username, password, done) {
 router.post('/login',
 	passport.authenticate('local.teacher',{successRedirect: "/teacher/dashboard", failureRedirect: "/teacher/login",failureFlash: true}));
 
-
-// router.post('/login',function(req, res, next){
-	
-// 	passport.authenticate('local', function(err, user, info) {
-// 		console.log("here in post login");
-// 		if (err) { return next(err); }
-// 		if (!user) { return res.redirect('teacher/login'); }
-// 		req.logIn(user, function(err) {
-// 			if (err) { return next(err); }
-// 			return res.redirect("/teacher/dashboard");
-// 		});
-// 	});
-// });
-
 router.get('/logout', function(req, res){
 	req.logout();
 
@@ -257,5 +243,46 @@ router.get('/attendance_marked/:batch_id/:subject_id/:enrollment_no', function(r
 	
 });
 
+router.get('/change_password', function(req, res){
+	if(!req.isAuthenticated()){
+		res.redirect("/teacher/login");
+	}
+	if(req.user.instructor_id == null){
+		res.redirect("/teacher/login");
+	}
+	res.render('change_password');
+});
+
+router.post('/change_password', function(req, res){
+	if(!req.isAuthenticated()){
+		res.redirect("/teacher/login");
+	}
+	if(req.user.instructor_id == null){
+		res.redirect("/teacher/login");
+	}
+	req.checkBody('old_password', 'old password empty').notEmpty().isAlpha();
+	req.checkBody('new_password', 'new password empty').notEmpty().isAlpha();
+	req.checkBody('confirm_password', 'confirm password empty').notEmpty().isAlpha();
+
+	if(req.body.new_password !== req.body.confirm_password){
+		req.flash('error_msg', 'new password and confirm new password do NOT match');
+	}
+
+	teacher.comparePassword(req.body.old_password, req.user.password, function(err, isMatch){
+		if(err) throw err;
+		if(isMatch){
+			teacher.setPassword(req.user.school, req.body.new_password, req.user.instructor_id, function(err, result){
+				if(err) throw err;
+				console.log("success changed password");
+				req.flash('success_msg', 'Password Successfully Changed');
+				res.redirect('/teacher/change_password');
+			});
+		} else if(!isMatch){
+			req.flash('error_msg', 'Incorrect password');
+			res.redirect('/teacher/change_password');
+		}
+	});
+
+});
 
 module.exports = router;
