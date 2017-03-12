@@ -1,137 +1,105 @@
 <!DOCTYPE html>
 <% include partials/header %>
 <script type="text/javascript">
-$(document).ready(function () {
-		$.getJSON('/student/get_attendance', function (data) {
-		arr = {};
-		data.forEach(function (elem) {
-			if (! (elem.subject_code in arr)){
-				arr[elem.subject_code] = {
-						"P" : 0,
-						"A" : 0,
-						"NA" : 0
-					}
-			}	
-				arr[elem.subject_code][elem.attendance] ++;
-		})
-		html = ''
-		Object.keys(arr).forEach(function (elem) {
-			html += '<tr>';
-			html += '<td>' + elem + '</td>';
-			html += '<td>' + arr[elem]["P"] + '</td>';
-			html += '<td>' + arr[elem]["A"] + '</td>';
-			html += '<td>' + arr[elem]["NA"] + '</td>';
-			html += '</tr>';
-		})
-		$('.attendance-table').html(html)
-	})
-})
+  $(document).ready(function () {
+  		$.getJSON('/student/get_attendance', function (data) {
+  		arr = {};
+  		data.forEach(function (elem) {
+  			if (! (elem.subject_code in arr)){
+  				arr[elem.subject_code] = {
+  						"P" : 0,
+  						"A" : 0,
+  						"NA" : 0
+  					}
+  			}	
+  				arr[elem.subject_code][elem.attendance] ++;
+  		})
+  		html = ''
+  		Object.keys(arr).forEach(function (elem) {
+  			html += '<tr>';
+  			html += '<td>' + elem + '</td>';
+  			html += '<td>' + arr[elem]["P"] + '</td>';
+  			html += '<td>' + arr[elem]["A"] + '</td>';
+  			html += '<td>' + arr[elem]["NA"] + '</td>';
+  			html += '</tr>';
+  		})
+  		$('.attendance-table').html(html)
+  	})
+  })
 </script>
-
-	<div id="grad" class="container student-card card">
-		<div class=" card-content row">
-
-			<div class="col-md-4">
-				  <% if(user != null && user.enrollment_no != null) {%>
-
-				<div class='greeting'>HELLO</div>
-
-				<div class="student-name details-field"><%=user.name%></div>
-
-				<div class="student-enroll details-field"><%=user.enrollment_no%></div>
-				<% } %>
-			</div>
-			<div class="col-md-4 ">
-			</div>
-			<div class="col-md-4">
-				<a href="/student/logout" class="logout btn waves-effect waves-light right">LOG OUT </a>
-			</div>
-		</div>
-
-	<div class="card-action">
-			<div class="row">
-
-				<div class="col-md-3">
-					<div class="small-title">SCHOOL</div>
-
-					<div class="small-content school" style="text-transform: uppercase;"><%=user.school%></div>
-
-				</div>
-
-
-				<div class="col-md-3">
-					<div class="small-title">COURSE</div>
-					<div class="small-content course"><%= user.course %></div>
-				</div>
-				<div class="col-md-3">
-					<div class="small-title">STREAM</div>
-
-					<div class="small-content stream"><%= user.stream %></div>
-
-				</div>
-				<div class="col-md-3">
-					<div class="small-title">YEAR OF ADMISSION</div>
-
-					<div class="small-contenty yoa"><%= user.year_of_admission %></div>
-
-				</div>
-
-
-
-			</div>
-		</div>
-
-		<div class="card-action">
-			
-			<div class="row">
-				<div class="col-md-12">
-
-					<div class="input-field col-md-6">
-						<div class="small-title">EMAIL ID</div>
-						<div class="details-field small-content email-id"><%= user.email %></div>	
-					</div>
-
-					<div class="input-field col-md-6">
-					<div class="small-title">PHONE</div>
-							<div class="details-field small-content phone"><%= user.phone %></div>	
-					</div>
-
-				</div>
-
-			</div>
-
-
-		</div>
-		
-		
-		<div class="card-action">
-			<div class="row">			
-				<a href="/student/change_password" class="change-password btn waves-effect waves-light right">CHANGE
-					PASSWORD </a>
-							<a class="editBtn update-email-btn btn waves-effect waves-light left">
-				 EDIT DETAILS
-				</a>
-			</div>
-		</div>
-
-<div class="card-action attendance-report">ATTENDANCE REPORT</div>
-		<br>
-      <table class="striped centered">
-        <thead>
-          <tr>
-              <th data-field="id">Subject</th>
-              <th data-field="name">Present</th>
-              <th data-field="price">Absent</th>
-              <th data-field="price">Not Applicable</th>
-          </tr>
-        </thead>
-
-        <tbody class="attendance-table">
-        
-        </tbody>
-      </table>
-	
-	 </div>
+<div id="grad" class="container student-card card">
+  <div class=" card-content row">
+    <div class="col-md-4">
+      <% if(user != null && user.enrollment_no != null) {%>
+      <div class='greeting'>HELLO</div>
+      <div class="student-name details-field"><%=user.name%></div>
+      <div class="student-enroll details-field"><%=user.enrollment_no%></div>
+      <% } %>
+    </div>
+    <div class="col-md-4">
+    </div>
+    <div class="col-md-4">
+      <a href="/student/logout" class="logout btn waves-effect waves-light right">LOG OUT </a>
+    </div>
+  </div>
+  <div class="card-action">
+    <div class="row">
+      <div class="col-md-3">
+        <div class="small-title">SCHOOL</div>
+        <div class="small-content school" style="text-transform: uppercase;"><%=user.school%></div>
+      </div>
+      <div class="col-md-3">
+        <div class="small-title">COURSE</div>
+        <div class="small-content course"><%= user.course %></div>
+      </div>
+      <div class="col-md-3">
+        <div class="small-title">STREAM</div>
+        <div class="small-content stream"><%= user.stream %></div>
+      </div>
+      <div class="col-md-3">
+        <div class="small-title">YEAR OF ADMISSION</div>
+        <div class="small-contenty yoa"><%= user.year_of_admission %></div>
+      </div>
+    </div>
+  </div>
+  <div class="card-action">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="input-field col-md-6">
+          <div class="small-title">EMAIL ID</div>
+          <div class="details-field small-content email-id"><%= user.email %></div>
+        </div>
+        <div class="input-field col-md-6">
+          <div class="small-title">PHONE</div>
+          <div class="details-field small-content phone"><%= user.phone %></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card-action">
+    <div class="row">			
+      <a href="/student/change_password" class="change-password btn waves-effect waves-light right">CHANGE
+      PASSWORD </a>
+      <a class="editBtn update-email-btn btn waves-effect waves-light left">
+      EDIT DETAILS
+      </a>
+    </div>
+  </div>
+  <div class="card-action attendance-report">ATTENDANCE REPORT</div>
+  <br>
+  <table class="striped centered">
+    <thead>
+      <tr>
+        <th data-field="id">Subject</th>
+        <th data-field="name">Present</th>
+        <th data-field="price">Absent</th>
+        <th data-field="price">Not Applicable</th>
+      </tr>
+    </thead>
+    <tbody class="attendance-table">
+    </tbody>
+  </table>
+</div>
 </div>
 </div>
 <% include partials/footer %>
