@@ -1,13 +1,61 @@
 <!DOCTYPE html>
 <% include partials/header %>
+<div id="grad" class="container student-card card">
+	<div class=" card-content row">
 
-<div class="container" style="display: flex; flex-direction: column; align-items: flex-start; justify-content: center;">
+		<div class="col-md-4">
+			<% if(user != null && user.instructor_id != null) {%>
 
-<h5>Instructor ID : <%= user.instructor_id %></h5>
-<h5>User Name : <%= user.name %></h5>
-<h5>Email : <%= user.email %></h5>
-<h5>Designation : <%= user.designation %></h5>
-<h5>Date of Joining : <%= user.date_of_joining %></h5>
-<a href="">Contact Us</a>
-</div>
-<% include partials/footer %>
+			<div class='greeting'>HELLO</div>
+
+			<div class="student-name details-field"><%=user.name%></div>
+
+			<div class="student-enroll details-field"><%=user.instructor_id%></div>
+			<% } %>
+		</div>
+		<div class="col-md-4">
+		</div>
+		<div class="col-md-4">
+			<a href="/teacher/dashboard" class="logout btn waves-effect waves-light">DASHBOARD</a>
+			<a href="/teacher/logout" class="logout btn waves-effect waves-light right">LOG OUT </a>
+		</div>
+	</div>
+
+	<div class="card-action">
+		<div class="row">
+
+
+			<div class="input-field col-md-3">
+				<div class="small-title">DESIGNATION</div>
+				<div class="small-content course"><%= user.designation %></div>
+			</div>
+
+			<div class="input-field col-md-3">
+				<div class="small-title">DATE OF JOINING</div>
+
+				<div class="small-contenty yoa"><%= user.date_of_joining %></div>
+
+			</div>
+
+			<div class="input-field col-md-3">
+				<div class="small-title">EMAIL ID</div>
+				<div class="details-field small-content email-id"><%= user.email %></div>	
+			</div>
+
+			<div class="input-field col-md-3">
+				<div class="small-title">PHONE</div>
+				<div class="details-field small-content phone"><%= user.phone %></div>	
+			</div>
+		</div>
+	</div>
+	<div class="card-action">
+		<div class="row">			
+			<a class="change-password btn waves-effect waves-light right">CHANGE
+				PASSWORD </a>
+				<a class="editBtn update-email-btn btn waves-effect waves-light left">
+					EDIT DETAILS
+				</a>
+			</div>
+		</div>
+	</div>
+	<% include partials/footer %>
