@@ -1,111 +1,78 @@
 <!DOCTYPE html>
-
 <% include partials/header %>
+
 <div class="container">
-
-<form name="attendance_form" action = "" method = "post" class="card-panel" onsubmit="return validateForm()">
-    <div class="row card-panel valign-wrapper">
-      <div class="col s4 valign">
-        <label for="datepicker" >Date:</label>
-        <input type="date" id="datepicker" class="datepicker" name="date_of_attendance" required>
-      </div>
-      <div class="col s4 valign">
-        <div class="input-field">
-          <select name="teaching_hours" id="number">
-            <option value="1">1 Hours</option>
-            <option value="2">2 Hours</option>
-            <option value="3">3 Hours</option>
-            <option value="4">4 Hours</option>
-          </select>
-          <label>Teaching Hours</label>
-
-        </div>
-      </div>
-     <!--  <div class="card-panel col s4 valign red" >Selected students: <span id="counter">0</span></div> -->
-    </div>
-    <table>
-     <tr>
-      <th>Enrollment Number</th><th>Name</th><th>Attendance</th>
-    </tr>
-
-    <% for (var i = 0; i < students.length ;i++) { %>
+  <div class="">
+    <ul>
+    <li class="current">Yo</li>
+     <li><div class="card">Yo</div></li>
     
-    <tr>
-      <td><%= students[i].enrollment_no %></td>
-      <td><%= students[i].name %></td>
-      <!-- <td>                        
-        <input type="checkbox" class="filled-in" id="present_<%= students[i].enrollment_no %>" name='student_present' value="present_<%= students[i].enrollment_no %>">
-        <label for="<%= students[i].enrollment_no %>"></label>
-      </td>
-      <td>                        
-        <input type="checkbox" class="filled-in" id="absent_<%= students[i].enrollment_no %>" name='student_absent' value="absent_<%= students[i].enrollment_no %>">
-        <label for="<%= students[i].enrollment_no %>"></label>
-      </td>
-      <td>                        
-        <input type="checkbox" class="filled-in" id="notapplicable_<%= students[i].enrollment_no %>" name='student_notApplicable' value="notappicable_<%= students[i].enrollment_no %>">
-        <label for="<%= students[i].enrollment_no %>"></label>
-      </td> -->
-      <td>
-      <select name="<%= students[i].enrollment_no %>">
-        <option value="absent">Absent</option>
-        <option value="present">Present</option>
-        <option value="notapplicable">Not Applicable</option>       
-      </select>
-      </td>
-    </tr>
-       
-    <% } %>
-  </table>
+    </ul>
 
-  <button class="btn waves-effect waves-light" type="submit" name="action" style="position: fixed;
-  bottom: 2em;
-  right: 2em;
-  border: solid;">Submit the Attendance
-    <i class="material-icons right">send</i>
-  </button>
-
-</form>
-
-<!-- </div> -->
+  </div>
 </div>
+
 <script type="text/javascript">
+$(document).ready(function () {
+  // body...
+   console.log(<%- JSON.stringify(students)%>)
 
-  $(document).ready(function() {
-    $('select').material_select();
-    var date = new Date();
-    date.setDate(date.getDate());
-    $('.datepicker').pickadate({
-      min: date,
-      today: '',
-      clear: '',
-      closeOnSelect: true,
-      closeOnClear: false,
-      selectMonths: true, // Creates a dropdown to control month
-      selectYears: 3 // Creates a dropdown of 15 years to control year
-    });
-  });
-  var inputs;
-  inputs=document.getElementsByTagName('input')
-  console.log(inputs);
-  for (var i = 0; i < inputs.length; i++) {
-    inputs[i].onclick=function(){
-      countpresent();
+})
+
+$(document).keydown(function(e){
+    
+
+    if (e.keyCode == 40) { //move left or wrap
+         var next = $("li.current").next();
+         $("li.current").removeClass("current"); 
+         next.addClass("current");
+
+      $('html, body').animate({
+        scrollTop: $("li.current").prev().prev().prev().prev().prev().prev().prev().offset().top
+    }, 0);
     }
-  }
-  countpresent =function(){
-    var count=0;
-    for (var j = 0; j <= inputs.length; j++) {
-      if (inputs[j].checked) { count = count+1;}
-      document.getElementById('counter').innerHTML = count; 
+
+    if (e.keyCode == 37) { //move left or wrap
+        $("li.current").addClass("absent");
+        var next = $("li.current").next();
+        $("li.current").removeClass("current"); 
+        next.addClass("current");
     }
-  }
-  function validateForm() {
-    var x = document.forms["attendance_form"]["date_of_attendance"].value;
-    if (x == "") {
-        alert("Date must be filled out");
-        return false;
+
+    if (e.keyCode == 39) { //move left or wrap
+        $("li.current").addClass("present");
+        var next = $("li.current").next();
+        $("li.current").removeClass("current"); 
+        next.addClass("current");
     }
-}
+
+    if (e.keyCode == 38) { // move up
+        var prev = $("li.current").prev();
+         $("li.current").removeClass("current"); 
+         prev.addClass("current");
+         $('html, body').animate({
+        scrollTop: $("li.current").offset().top
+    }, 0);
+    }
+
+});
+
+window.addEventListener("keydown", function(e) {
+    // space and arrow keys
+    if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+        e.preventDefault();
+    }
+}, false);
 </script>
-
+<style type="text/css">
+  .current{
+    background: grey;
+  }
+  .present{
+    background: green;
+  }
+  .absent{
+    background: red;
+  }
+</style>
 <% include partials/footer %>
