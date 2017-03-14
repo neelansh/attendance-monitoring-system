@@ -1,68 +1,150 @@
 <!DOCTYPE html>
 <% include partials/header %>
 
-<div class="container">
-  <div class="">
-    <ul>
-    <li class="current">Yo</li>
-     <li><div class="card">Yo</div></li>
-    
-    </ul>
+<div class="container att-cont" ng-app="attendance" ng-controller="ac as ac" ng-keydown="arrowPressed($event)" tabindex="0">
+<div class="col-md-4">
+  <div class="card settings-card">
+    <label for="datepicker" >Date:</label>
+    <input type="date" id="datepicker" class="datepicker" name="date_of_attendance" required>
+    <br><br>
+    Hours
+    <div class="row center">
+    <br>
+   <input name="group1" type="radio" id="test12" />
+      <label for="test12">1</label> &nbsp;&nbsp;&nbsp;
+   <input name="group1" type="radio" id="test13" />
+      <label for="test13">2</label> &nbsp;&nbsp;&nbsp;
+    <input name="group1" type="radio" id="test14" />
+      <label for="test14">3</label> &nbsp;&nbsp;&nbsp;
+    <input name="group1" type="radio" id="test15" />
+      <label for="test15">4</label> &nbsp;&nbsp;&nbsp;
+      </div>
+  </div>
 
+</div>
+<div class="col-md-4">
+  <div class="card att-card {{student.enrollment_no}} {{student.status}}" ng-class="{selected: $first}" ng-repeat="student in students">{{student.enrollment_no}}</div>
+</div>
+<div class="col-md-4">
+  
+  <div class="card special-settings-card">
+   <div class="row center">
+
+    <br>
+   <input name="group2" type="radio" id="test22" />
+      <label for="test22">All Absent</label> &nbsp;&nbsp;&nbsp;
+   <input name="group2" type="radio" id="test23" />
+      <label for="test23">All Present</label> &nbsp;&nbsp;&nbsp;
+  
+      </div>
+  
+  
+  </div>
+</div>
+
+ <div class="fixed-action-btn">
+    <a class="btn-floating btn-large red">
+      <i class="large material-icons">send</i>
+    </a>
   </div>
 </div>
 
 <script type="text/javascript">
-$(document).ready(function () {
-  // body...
-   console.log(<%- JSON.stringify(students)%>)
+var app = angular.module('attendance', [])
+.controller('ac', function ($scope) {
+  $scope.students = <%- JSON.stringify(students) %>
+  var i = 0;
+  $scope.cs = $scope.students[i]
+  var i = 0;
+  console.log($scope.students);
 
+  $scope.arrowPressed = function ($event) {
+    var e = $event;
+    $(document).ready(function () {
+      var li = $('.att-card');
+      var liSelected = $('.selected');
+     
+
+      if(e.keyCode === 68 || e.keyCode === 65 || e.keyCode === 83){
+      if (e.keyCode == 68){
+         $scope.cs.status = 'present';
+          $scope.$evalAsync();
+       } else  if(e.keyCode === 65){
+        $scope.cs.status = 'absent';
+         $scope.$evalAsync();
+       } 
+       
+        if(liSelected){
+            liSelected.removeClass('selected');
+           
+            next = liSelected.next();
+        
+
+            if(next){
+              if(next.length > 0){
+                liSelected = next.addClass('selected');
+            }else{
+               
+                liSelected = li.eq(0).addClass('selected');
+            }
+          }else{
+              
+            liSelected = li.eq(0).addClass('selected');
+          }
+            
+        }else{
+           
+            liSelected = li.eq(0).addClass('selected');
+           
+        }
+        i++;
+
+        $scope.cs = $scope.students[i];
+         $scope.$evalAsync();
+    }else if(e.keyCode === 87){
+       
+       
+        if(liSelected){
+            liSelected.removeClass('selected');
+            next = liSelected.prev();
+            if(next.length > 0){
+                liSelected = next.addClass('selected');
+            }else{
+                liSelected = li.last().addClass('selected');
+            }
+        }else{
+            liSelected = li.last().addClass('selected');
+        }
+         i--;
+        $scope.cs = $scope.students[i];
+         $scope.$evalAsync();
+    }
+
+
+    console.log(liSelected);
+    $scope.$evalAsync();
+    })
+
+  }
 })
 
-$(document).keydown(function(e){
-    
+$(document).ready(function () {
+  $('.att-cont').focus();
+  
 
-    if (e.keyCode == 40) { //move left or wrap
-         var next = $("li.current").next();
-         $("li.current").removeClass("current"); 
-         next.addClass("current");
-
-      $('html, body').animate({
-        scrollTop: $("li.current").prev().prev().prev().prev().prev().prev().prev().offset().top
-    }, 0);
-    }
-
-    if (e.keyCode == 37) { //move left or wrap
-        $("li.current").addClass("absent");
-        var next = $("li.current").next();
-        $("li.current").removeClass("current"); 
-        next.addClass("current");
-    }
-
-    if (e.keyCode == 39) { //move left or wrap
-        $("li.current").addClass("present");
-        var next = $("li.current").next();
-        $("li.current").removeClass("current"); 
-        next.addClass("current");
-    }
-
-    if (e.keyCode == 38) { // move up
-        var prev = $("li.current").prev();
-         $("li.current").removeClass("current"); 
-         prev.addClass("current");
-         $('html, body').animate({
-        scrollTop: $("li.current").offset().top
-    }, 0);
-    }
-
-});
-
-window.addEventListener("keydown", function(e) {
-    // space and arrow keys
-    if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
-        e.preventDefault();
-    }
-}, false);
+  var date = new Date();
+    date.setDate(date.getDate());
+    $('.datepicker').pickadate({
+      min: date,
+      today: '',
+      clear: '',
+      closeOnSelect: true,
+      closeOnClear: false,
+      selectMonths: true, // Creates a dropdown to control month
+      selectYears: 3 // Creates a dropdown of 15 years to control year
+    });
+ 
+})
 </script>
 <style type="text/css">
   .current{
@@ -74,5 +156,35 @@ window.addEventListener("keydown", function(e) {
   .absent{
     background: red;
   }
+  .att-card{
+    padding: 0.2em;
+    text-align: center;
+    font-size: 1.5em;
+  }
+  .att-cont{
+    outline:none;
+  }
+  .selected{
+    background: grey;
+  }
+  .settings-card{
+    padding: 4em;
+   
+  }
+   .special-settings-card{
+    padding: 2em;
+   
+  }
+  .btn-floating.btn-large {
+    width: 100px !important;
+    height: 100px;
+    background-color: crimson !important;
+}
+.btn-floating.btn-large i {
+    line-height: 100px;
+}
+.btn-large i {
+    font-size: 3rem;
+}
 </style>
 <% include partials/footer %>
