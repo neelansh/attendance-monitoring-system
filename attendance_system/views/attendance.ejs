@@ -10,24 +10,18 @@
     Hours
     <div class="row center">
     <br>
-   <input name="group1" type="radio" id="test12" />
+   <input name="group1" type="radio" id="test12" value="1" />
       <label for="test12">1</label> &nbsp;&nbsp;&nbsp;
-   <input name="group1" type="radio" id="test13" />
+   <input name="group1" type="radio" id="test13" value="2"  />
       <label for="test13">2</label> &nbsp;&nbsp;&nbsp;
-    <input name="group1" type="radio" id="test14" />
+    <input name="group1" type="radio" id="test14" value="3" />
       <label for="test14">3</label> &nbsp;&nbsp;&nbsp;
-    <input name="group1" type="radio" id="test15" />
+    <input name="group1" type="radio" id="test15" value="4" />
       <label for="test15">4</label> &nbsp;&nbsp;&nbsp;
       </div>
   </div>
 
-</div>
-<div class="col-md-4">
-  <div class="card att-card {{student.enrollment_no}} {{student.status}}" ng-class="{selected: $first}" ng-repeat="student in students">{{student.enrollment_no}}</div>
-</div>
-<div class="col-md-4">
-  
-  <div class="card special-settings-card">
+ <div class="card special-settings-card">
    <div class="row center">
 
     <br>
@@ -41,9 +35,29 @@
   
   </div>
 </div>
+<div class="col-md-4">
+  <div class="card att-card {{student.enrollment_no}} {{student.status}}" ng-class="{selected: $first}" ng-repeat="student in students">{{student.enrollment_no}}</div>
+</div>
+<div class="col-md-4">
+  <div class="card special-settings-card">
+  <div class="row">
+  <div class="col-md-6">
+        <div class="small-title">PRESENT</div> {{present_count()}}
 
- <div class="fixed-action-btn">
-    <a class="btn-floating btn-large red">
+  </div>
+   <div class="col-md-6">
+         <div class="small-title">ABSENT</div>{{absent_count()}}
+
+   </div>
+    </div>
+    <br>
+    <div class="small-title">NOT APPLICABLE</div> {{na_count()}}
+  </div>  
+ 
+</div>
+
+ <div ng-click="submit()" class="fixed-action-btn">
+    <a  class="btn-floating btn-large red">
       <i class="large material-icons">send</i>
     </a>
   </div>
@@ -57,6 +71,83 @@ var app = angular.module('attendance', [])
   $scope.cs = $scope.students[i]
   var i = 0;
   console.log($scope.students);
+  $scope.present_count = function () {
+    count = 0;
+    angular.forEach($scope.students, function(value){
+      
+      if (value.status=="present"){
+        count++;
+      }
+    });
+    return count;
+  }
+
+   $scope.absent_count = function () {
+    count = 0;
+    angular.forEach($scope.students, function(value){
+     
+      if (value.status=="absent"){
+        count++;
+      }
+    });
+    return count;
+  }
+
+   $scope.na_count = function () {
+    count = 0;
+    angular.forEach($scope.students, function(value){
+      
+      if (value.status==undefined){
+        count++;
+      }
+    });
+    return count;
+  }
+
+   $scope.submit = function(){
+    console.log('Hello')
+       $(document).ready(function(){
+        var date, hours;
+         if ($('input[name="group1"]').filter(":checked").val() == undefined){
+           alert('Please Enter Hours!');
+           return;
+         }else{
+           hours = parseInt($('input[name="group1"]').filter(":checked").val());
+         }
+         
+         if($('#datepicker').val() == undefined || $('#datepicker').val() == ""){
+          alert('Please Enter Date');
+         }else{
+          date = $('#datepicker').val();
+         }
+
+         var present = [];
+         var absent = [];
+         var na = [];
+         angular.forEach($scope.students, function (data) {
+           if(data.status == "present"){
+            present.push(data.enrollment_no);
+           }
+           if(data.status == "absent"){
+            absent.push(data.enrollment_no);
+           }
+           if(data.status == "" || data.status == undefined){
+            na.push(data.enrollment_no);
+           }
+         })
+
+         final_json = {
+          "date" : date,
+          "hours" : hours,
+          "present" : present,
+          "absent" : absent,
+          "na" : na
+         }
+         console.log(final_json);
+       })
+       
+     }
+
 
   $scope.arrowPressed = function ($event) {
     var e = $event;
@@ -115,13 +206,13 @@ var app = angular.module('attendance', [])
         }else{
             liSelected = li.last().addClass('selected');
         }
-         i--;
+        i--;
         $scope.cs = $scope.students[i];
-         $scope.$evalAsync();
+        $scope.$evalAsync();
     }
 
 
-    console.log(liSelected);
+    
     $scope.$evalAsync();
     })
 
@@ -176,15 +267,15 @@ $(document).ready(function () {
    
   }
   .btn-floating.btn-large {
-    width: 100px !important;
-    height: 100px;
+    width: 56px !important;
+    height: 56px;
     background-color: crimson !important;
 }
 .btn-floating.btn-large i {
-    line-height: 100px;
+    line-height: 56px;
 }
 .btn-large i {
-    font-size: 3rem;
+    font-size: 1.5rem;
 }
 </style>
 <% include partials/footer %>
