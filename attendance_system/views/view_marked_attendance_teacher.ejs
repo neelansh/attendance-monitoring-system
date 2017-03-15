@@ -1,25 +1,58 @@
 <!DOCTYPE html>
 
 <% include partials/header %>
+<style type="text/css">
+  .heading{
+    text-align: center;
+    font-size: 2em;
+    font-weight: 700;
+    color: darkcyan;
+    letter-spacing: 0.2em;
+  }
+</style>
 <div class="container" style="display: flex; justify-content: space-between;">
 	<div>
-		<h4>Hours of lecture student was present:</h4>
-		<% for(var i=0; i<present.length ; ++i){ %>
-		<div style="display: flex; border-style: solid;">
-			<div><a href="<%=present[i]['student']%>"><%=present[i]['student']%></a> : </div>
-			<div><%=present[i]['sum(duration_of_class)']%></div>
-		</div>
-		<% } %>
+		<h5 class="heading">Student Present:</h5>
+		<table class="striped centered">
+        <thead>
+        <tr>
+              <th>Enrollment Number</th>
+               <th>Hours Present</th>
+          </tr>
+        </thead>
+        <tbody>
+           <% for(var i=0; i<present.length ; ++i){ %>
+    <tr>
+      <td><a href="<%=present[i]['student']%>"><%=present[i]['student']%></a></td>
+      <td><%=present[i]['sum(duration_of_class)']%></td>
+    </tr>    
+    <% } %>
+        </tbody>
+    </table>
+		
 	</div>
 	<div>
-		<h4>Hours of lecture student was absent:</h4>
-		<% for(var i=0; i<absent.length ; ++i){ %>
-		<div style="display: flex; border-style: solid;">
-			<div><a href="<%=absent[i]['student']%>"><%=absent[i]['student']%></a> : </div>
-			<div><%=absent[i]['sum(duration_of_class)']%></div>
-		</div>
-		<% } %>
+		<h5 class="heading">Student Absent:</h5>
+		<table class="striped centered">
+        <thead>
+        <tr>
+              <th>Enrollment Number</th>
+               <th>Hours Absent</th>
+          </tr>
+        </thead>
+        <tbody>
+           <% for(var i=0; i<absent.length ; ++i){ %>
+    <tr>
+      <td><a href="<%=absent[i]['student']%>"><%=absent[i]['student']%></a></td>
+      <td><%=absent[i]['sum(duration_of_class)']%></td>
+    </tr>    
+    <% } %>
+        </tbody>
+    </table>
+		
 	</div>
+
+	
 </div>
 
 
