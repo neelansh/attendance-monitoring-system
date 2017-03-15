@@ -89,7 +89,6 @@ router.get('/dashboard', function(req, res){
 			});
 		});
 	});
-	// console.log(present, absent, notapplicable);
 	
 	// res.send("okay" + req.user.enrollment_no);
 });
@@ -157,7 +156,6 @@ router.post('/change_password', function(req, res){
 		if(isMatch){
 			student.setPassword(req.user.school, req.body.new_password, req.user.enrollment_no, function(err, result){
 				if(err) throw err;
-				console.log("success changed password");
 				req.flash('success_msg', 'Password Successfully Changed');
 				res.redirect('/student/change_password');
 			});

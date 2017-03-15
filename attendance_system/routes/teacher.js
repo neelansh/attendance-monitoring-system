@@ -16,7 +16,6 @@ router.get('/login', function(req, res, next) {
 
 
 passport.serializeUser(function(user, done) {
-	console.log("serialized user techer");
 	if(user.enrollment_no !== undefined){
 		//handel as student
 		done(null, {
@@ -58,7 +57,6 @@ passport.use('local.teacher',new LocalStrategy({
 	passReqToCallback: true
 },
 function(req, username, password, done) {
-	console.log(req.body.school);
 	if(req.body.school !== 'usict' && req.body.school !== 'usms'){
 		return done(null, false, {message: 'Unknown School'});
 	}
@@ -96,16 +94,13 @@ router.get('/logout', function(req, res){
 });
 
 router.get('/dashboard', function(req, res){
-	console.log("hello work")
 	if(!req.isAuthenticated()){
 		res.redirect("/teacher/login");
 	}
 	if(req.user.instructor_id == null){
 		res.redirect("/teacher/login");
 	}
-	console.log("in dashboard ", req.user.school);
 	var sub = require("../models/subjects")
-	console.log("here asshole");
 	var subjects = sub.getSubjectByTeacher(req.user.school, req.user.instructor_id, function(err, results){
 		if(err) throw err;
 		res.render('teacher_dashboard',{'subjects': results});
@@ -135,7 +130,6 @@ router.get('/attendance/:batch_id/:subject_id', function(req, res){
 var findkey = function(obj, value){
 	var res = [];
 	for (var key in obj) {
-    	//console.log(obj.data[i].name);
     	if (obj[key] === value) {
     		res.push(key);
     	}
@@ -150,6 +144,8 @@ router.post('/attendance/:batch_id/:subject_id', function(req, res) {
 	if(req.user.instructor_id == null){
 		res.redirect("/teacher/login");
 	}
+	console.log("hello i have a post req");
+	console.log(req.body);
 	req.checkParams('batch_id', 'invalid batch id parameter').notEmpty().isInt();
 	req.checkParams('subject_id', 'invalid subject id parameter').notEmpty().isInt();
 	req.checkBody('teaching_hours','teaching hours invalid').notEmpty().isInt();	
@@ -162,10 +158,7 @@ router.post('/attendance/:batch_id/:subject_id', function(req, res) {
 	var students_absent = findkey(req.body, 'absent');
 	var students_notapplicable = findkey(req.body, 'notapplicable');
 	var duration_of_class = req.body.teaching_hours;
-	console.log(students_present, students_absent, students_notapplicable);
-	console.log(req.body);
-	// console.log(date);
-	// console.log(students);
+	
 	var subjects = att.saveAttendance(req.user.school, subject_id, date, students_present, students_absent, students_notapplicable, duration_of_class, function(err, results){
 		if(err) throw err;
 		res.render('display_students', {'students_present': students_present,
@@ -184,7 +177,7 @@ router.get('/profile', function(req, res){
 	if(req.user.instructor_id == null){
 		res.redirect("/teacher/login");
 	}
-	// console.log('HEYHEY',req.user);
+
 	var profile = teacher.getUserById(req.user.school, req.user.instructor_id, function(err, results){
 		if(err) throw err;
 		if(results == null){
@@ -273,7 +266,6 @@ router.post('/change_password', function(req, res){
 		if(isMatch){
 			teacher.setPassword(req.user.school, req.body.new_password, req.user.instructor_id, function(err, result){
 				if(err) throw err;
-				console.log("success changed password");
 				req.flash('success_msg', 'Password Successfully Changed');
 				res.redirect('/teacher/change_password');
 			});
