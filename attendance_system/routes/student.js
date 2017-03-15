@@ -21,7 +21,6 @@ passport.use('local.student',new LocalStrategy({
 	passReqToCallback: true
 },
 function(req, username, password, done) {
-	console.log(req.body.school);
 	if(req.body.school !== 'usict' && req.body.school !== 'usms'){
 		return done(null, false, {message: 'Unknown School'});
 	}
@@ -83,7 +82,6 @@ router.get('/dashboard', function(req, res){
 				if(err){
 					throw err;
 				}
-				// console.log(attendance);
 				notapplicable = attendance;
 				res.render('students_dashboard', {'user': req.user, 'present': present, 'absent': absent, 'notapplicable': notapplicable});
 			});
@@ -94,7 +92,6 @@ router.get('/dashboard', function(req, res){
 });
 
 router.get('/get_attendance', function(req, res){
-	console.log("hello attendance");
 	if(!req.isAuthenticated()){
 		res.redirect("/student/login");
 	}
@@ -105,7 +102,6 @@ router.get('/get_attendance', function(req, res){
 		if(err){
 			throw err;
 		}
-		// console.log(JSON.stringify(results));
 		res.json(results);
 	});
 });

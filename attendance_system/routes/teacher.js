@@ -123,7 +123,7 @@ router.get('/attendance/:batch_id/:subject_id', function(req, res){
 		if(results == null){
 			res.sendStatus(404);
 		}
-		res.render('attendance',{'students': results});
+		res.render('attendance',{'students': results, 'batch_id': req.params.batch_id, 'subject_id': req.params.subject_id});
 	});
 });
 
