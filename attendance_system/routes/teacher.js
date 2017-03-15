@@ -163,7 +163,7 @@ router.post('/attendance/:batch_id/:subject_id', function(req, res) {
 	var students_notapplicable = findkey(req.body, 'notapplicable');
 	var duration_of_class = req.body.teaching_hours;
 	console.log(students_present, students_absent, students_notapplicable);
-	// console.log(req.body);
+	console.log(req.body);
 	// console.log(date);
 	// console.log(students);
 	var subjects = att.saveAttendance(req.user.school, subject_id, date, students_present, students_absent, students_notapplicable, duration_of_class, function(err, results){

@@ -72,11 +72,12 @@ alter table usict_students modify column enrollment_no BIGINT(20)
 password : $2a$08$TqHk4godBQ/ouxSrFtd3yuWGfo39JvS9KNaGOsSsOBnDljPvAe27y
 
 update usict_students set password = '$2a$08$TqHk4godBQ/ouxSrFtd3yuWGfo39JvS9KNaGOsSsOBnDljPvAe27y'
-
+update usict_teacher set password = '$2a$08$TqHk4godBQ/ouxSrFtd3yuWGfo39JvS9KNaGOsSsOBnDljPvAe27y'
 
 alter table usict_subject_allocation add subject_id int(4);
 
 update usict_subject_allocation set subject_id = feedback_id;
 
-////not applied
-update usict_students set batch_id = usict_batch_allocation.batch_id where usict_students.course = usict_batch_allocation.course and usict_students.stream = usict_batch_allocation.stream and usict_batch_allocation.semester = (2017 - year_of_admission)*2
+update usict_students, usict_batch_allocation set usict_students.batch_id = usict_batch_allocation.batch_id where usict_students.course = usict_batch_allocation.course and usict_students.stream = usict_batch_allocation.stream and usict_batch_allocation.semester = (2017 - year_of_admission)*2-1
+
+
