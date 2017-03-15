@@ -2,41 +2,59 @@
 
 <% include partials/header %>
 <div style="width:800px; margin:0 auto;">
-  <h2>Attendance marked for the date: <%=date.getDate()%>/<%=date.getMonth()%>/<%=date.getFullYear()%></h2>
-</div>
-<div class="container" style="display: flex; justify-content: space-between;">
-  <div>
-    <h4>Students marked present are: </h4>
-    
-    <table>
-     <tr>
-      <th>Enrollment Number</th>
-      <th>Attendance awarded</th>
-    </tr>
+  <div class="attendance-heading">Attendance Marked Successfully</div>
 
-    <% for (var i = 0; i < students_present.length ;i++) { %>
+  <div class="date-attendance"><%=date.getDate()%>/<%=date.getMonth()%>/<%=date.getFullYear()%>
+  </div>
+</div>
+<br><br>
+<div class="container">
+  <div class="row">
+  <div class="col-md-6">
+  <div class="card" style="padding: 1em;">
+  <h4 class="marked-heading">Students marked present</h4>
+   <table class="striped centered">
+        <thead>
+        <tr>
+              <th>Enrollment Number</th>
+               <th>Attendance awarded</th>
+          </tr>
+        </thead>
+        <tbody>
+           <% for (var i = 0; i < students_present.length ;i++) { %>
     <tr>
       <td><%= students_present[i] %></td>
       <td><%= attendanceAwarded %></td>
     </tr>    
     <% } %>
+        </tbody>
     </table>
+   
+    </div>
+   
   </div>
-  <div>
-    <h4>Students marked absent are: </h4>
-    <table>
-      <tr>
-        <th>Enrollment Number</th>
-        <th>Attendance awarded</th>
-      </tr>
-      <% for (var i = 0; i < students_absent.length ;i++) { %>
-      <tr>
-        <td><%= students_absent[i] %></td>
-        <td><%= attendanceAwarded %></td>
-      </tr>    
-      <% } %>
+  <div class="col-md-6">
+  <div class="card" style="padding: 1em;">
+    <h4 class="marked-heading">Students marked absent</h4>
+    <table class="striped centered">
+       <thead>
+        <tr>
+              <th>Enrollment Number</th>
+               <th>Attendance awarded</th>
+          </tr>
+        </thead>
+        <tbody>
+           <% for (var i = 0; i < students_absent.length ;i++) { %>
+    <tr>
+      <td><%= students_absent[i] %></td>
+      <td><%= attendanceAwarded %></td>
+    </tr>    
+    <% } %>
+        </tbody>
     </table>
+    </div>
   </div>  
+  </div>
 <!-- <h4>Students marked not applicable are: </h4>
   <h4>date: <%=date.getDate()%>/<%=date.getMonth()%>/<%=date.getFullYear()%></h4>
   <table>
@@ -54,3 +72,27 @@
 
 
 <% include partials/footer %>
+<style type="text/css">
+  .date-attendance{
+    text-align: center;
+    font-size: 2em;
+    font-weight: 700;
+    color: darkcyan;
+    letter-spacing: 0.2em;
+  }
+  .attendance-heading{
+    font-size: 3em;
+    text-align: center;
+    font-weight: 200;
+  }
+  .marked-heading{
+    font-size: 1.1em;
+    line-height: 110%;
+    margin: 1.14rem 0 0.912rem 0;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    text-align: center;
+    font-weight: 900;
+    color: darkslategray;
+  }
+</style>
