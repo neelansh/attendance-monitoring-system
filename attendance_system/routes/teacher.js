@@ -144,8 +144,6 @@ router.post('/attendance/:batch_id/:subject_id', function(req, res) {
 	if(req.user.instructor_id == null){
 		res.redirect("/teacher/login");
 	}
-	console.log("hello i have a post req");
-	console.log(req.body);
 	req.checkParams('batch_id', 'invalid batch id parameter').notEmpty().isInt();
 	req.checkParams('subject_id', 'invalid subject id parameter').notEmpty().isInt();
 	req.checkBody('teaching_hours','teaching hours invalid').notEmpty().isInt();	
@@ -158,10 +156,9 @@ router.post('/attendance/:batch_id/:subject_id', function(req, res) {
 	var students_absent = req.body.absent;
 	var students_notapplicable = req.body.na;
 	var duration_of_class = req.body.hours;
-	console.log(students_present, students_absent, students_notapplicable);
+
 	var subjects = att.saveAttendance(req.user.school, subject_id, date, students_present, students_absent, students_notapplicable, duration_of_class, function(err, results){
 		if(err) throw err;
-		console.log("done it");
 		res.render('display_students', {'students_present': students_present,
 			'students_notapplicable': students_notapplicable,
 			'students_absent': students_absent,
