@@ -155,7 +155,8 @@
       }).then(
       function(res) {
         console.log('succes !');
-        
+        console.log(res);;
+        $('html').html(res.data)
       },
       function(err) {
         console.log('error...');
