@@ -153,14 +153,15 @@ router.post('/attendance/:batch_id/:subject_id', function(req, res) {
 
 	var att = require("../models/attendance")
 	var subject_id = req.params.subject_id;
-	var date = new Date(req.body.date_of_attendance);
-	var students_present = findkey(req.body, 'present');
-	var students_absent = findkey(req.body, 'absent');
-	var students_notapplicable = findkey(req.body, 'notapplicable');
-	var duration_of_class = req.body.teaching_hours;
-	
+	var date = new Date(req.body.date);
+	var students_present = req.body.present;
+	var students_absent = req.body.absent;
+	var students_notapplicable = req.body.na;
+	var duration_of_class = req.body.hours;
+	console.log(students_present, students_absent, students_notapplicable);
 	var subjects = att.saveAttendance(req.user.school, subject_id, date, students_present, students_absent, students_notapplicable, duration_of_class, function(err, results){
 		if(err) throw err;
+		console.log("done it");
 		res.render('display_students', {'students_present': students_present,
 			'students_notapplicable': students_notapplicable,
 			'students_absent': students_absent,

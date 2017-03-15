@@ -6,6 +6,7 @@ module.exports.saveAttendance = function(school, subject_id, lecture_timestamp, 
   for(var i=0 ; i<students_present.length ; ++i){
     var query = db.get().query("insert into ?? values(?,?,?,?,'P')",[school+"_attendance", subject_id, lecture_timestamp, students_present[i], duration_of_class],function(err, rows){
       if(err)throw err;
+      console.log("you are kidding me");
     });
   }
   for(var i=0 ; i<students_absent.length ; ++i){
