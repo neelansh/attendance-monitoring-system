@@ -39,7 +39,7 @@
   <div class="card att-card {{student.enrollment_no}} {{student.status}}" ng-class="{selected: $first}" ng-repeat="student in students">{{student.enrollment_no}}</div>
 </div>
 <div class="col-md-4">
-  <div class="card special-settings-card">
+  <div class="card special-settings-card " style="position:fixed;">
     <div class="row">
       <div class="col-md-6">
         <div class="small-title">PRESENT</div> {{present_count()}}
@@ -74,7 +74,7 @@
     $scope.present_count = function () {
       count = 0;
       angular.forEach($scope.students, function(value){
-        
+
         if (value.status=="present"){
           count++;
         }
@@ -85,7 +85,7 @@
     $scope.absent_count = function () {
       count = 0;
       angular.forEach($scope.students, function(value){
-       
+
         if (value.status=="absent"){
           count++;
         }
@@ -96,7 +96,7 @@
     $scope.na_count = function () {
       count = 0;
       angular.forEach($scope.students, function(value){
-        
+
         if (value.status==undefined){
           count++;
         }
@@ -119,9 +119,7 @@
         alert('Please Enter Date');
       }else{
         date = $('#datepicker').val();
-      }
-
-      var present = [];
+        var present = [];
       var absent = [];
       var na = [];
       angular.forEach($scope.students, function (data) {
@@ -163,6 +161,9 @@
         
       }
       );
+      }
+
+
     })
       
     }
@@ -194,16 +195,16 @@
             if(next.length > 0){
               liSelected = next.addClass('selected');
             }else{
-             
+
               liSelected = li.eq(0).addClass('selected');
             }
           }else{
-            
+
             liSelected = li.eq(0).addClass('selected');
           }
           
         }else{
-         
+
           liSelected = li.eq(0).addClass('selected');
           
         }
@@ -212,8 +213,8 @@
         $scope.cs = $scope.students[i];
         $scope.$evalAsync();
       }else if(e.keyCode === 87){
-       
-       
+
+
         if(liSelected){
           liSelected.removeClass('selected');
           next = liSelected.prev();
