@@ -7,6 +7,11 @@
       <label for="datepicker" >Date:</label>
       <input type="date" id="datepicker" class="datepicker" name="date_of_attendance" required>
       <br><br>
+
+      <label for="timepicker">Time</label>
+      <input id="timepicker" class="timepicker" name="time_of_attendance" type="time">
+      <br><br>
+
       Hours
       <div class="row center">
         <br>
@@ -25,18 +30,18 @@
      <div class="row center">
 
       <br>
-      <input name="group2" type="radio" id="test22" />
+      <input ng-model="all_pa_status" ng-change="toggle_pa()" value="absent" name="group2" type="radio" id="test22" />
       <label for="test22">All Absent</label> &nbsp;&nbsp;&nbsp;
-      <input name="group2" type="radio" id="test23" />
+      <input ng-model="all_pa_status" ng-change="toggle_pa()" value="present" name="group2" type="radio" id="test23" />
       <label for="test23">All Present</label> &nbsp;&nbsp;&nbsp;
-      
+
     </div>
-    
-    
+
+
   </div>
 </div>
 <div class="col-md-4">
-  <div class="card att-card {{student.enrollment_no}} {{student.status}}" ng-class="{selected: $first}" ng-repeat="student in students">{{student.enrollment_no}}</div>
+  <div class="card att-card {{student.enrollment_no}} {{student.status}}" ng-class="{selected: $first}" ng-repeat="student in students">{{student.enrollment_no}} <div class="student-name-att">{{student.name}}</div></div>
 </div>
 <div class="col-md-4">
   <div class="card special-settings-card " style="position:fixed;">
@@ -52,8 +57,8 @@
    </div>
    <br>
    <div class="small-title">NOT APPLICABLE</div> {{na_count()}}
- </div>  
- 
+ </div>
+
 </div>
 
 <div ng-click="submit()" class="fixed-action-btn">
@@ -104,6 +109,15 @@
       return count;
     }
 
+    $scope.toggle_pa = function () {
+      if($scope.all_pa_status== undefined) return;
+      if($scope.all_pa_status == "present" || $scope.all_pa_status == "absent"){
+        angular.forEach($scope.students, function (value) {
+          value.status = $scope.all_pa_status;
+        })
+      }
+    }
+
     $scope.submit = function(){
       console.log('Hello')
       $(document).ready(function(){
@@ -114,7 +128,14 @@
        }else{
          hours = parseInt($('input[name="group1"]').filter(":checked").val());
        }
-       
+
+       if($('#timepicker').val() == undefined || $('#timepicker').val()== ""){
+         alert('Please Enter Time');
+       }else{
+         time = $('#timepicker').val();
+
+       }
+
        if($('#datepicker').val() == undefined || $('#datepicker').val() == ""){
         alert('Please Enter Date');
       }else{
@@ -136,6 +157,7 @@
 
       final_json = {
         "date" : date,
+        "time" : time,
         "hours" : hours,
         "present" : present,
         "absent" : absent,
@@ -144,11 +166,11 @@
       console.log(final_json);
       var bid = <%- JSON.stringify(batch_id) %>
       var sid = <%- JSON.stringify(subject_id) %>
-      
+
 
       $http({
         method: 'POST',
-        url: '/teacher/attendance/' + bid + '/' + sid, 
+        url: '/teacher/attendance/' + bid + '/' + sid,
         data: JSON.stringify(final_json)
       }).then(
       function(res) {
@@ -158,14 +180,14 @@
       },
       function(err) {
         console.log('error...');
-        
+
       }
       );
       }
 
 
     })
-      
+
     }
 
 
@@ -174,7 +196,7 @@
       $(document).ready(function () {
         var li = $('.att-card');
         var liSelected = $('.selected');
-        
+
 
         if(e.keyCode === 68 || e.keyCode === 65 || e.keyCode === 83){
           if (e.keyCode == 68){
@@ -183,13 +205,13 @@
          } else  if(e.keyCode === 65){
           $scope.cs.status = 'absent';
           $scope.$evalAsync();
-        } 
-        
+        }
+
         if(liSelected){
           liSelected.removeClass('selected');
-          
+
           next = liSelected.next();
-          
+
 
           if(next){
             if(next.length > 0){
@@ -202,11 +224,11 @@
 
             liSelected = li.eq(0).addClass('selected');
           }
-          
+
         }else{
 
           liSelected = li.eq(0).addClass('selected');
-          
+
         }
         i++;
 
@@ -232,7 +254,7 @@
       }
 
 
-      
+
       $scope.$evalAsync();
     })
 
@@ -241,7 +263,7 @@
 
 $(document).ready(function () {
   $('.att-cont').focus();
-  
+
 
   var date = new Date();
   date.setDate(date.getDate());
@@ -254,7 +276,7 @@ $(document).ready(function () {
       selectMonths: true, // Creates a dropdown to control month
       selectYears: 3 // Creates a dropdown of 15 years to control year
     });
-  
+
 })
 </script>
 <style type="text/css">
@@ -280,11 +302,11 @@ $(document).ready(function () {
   }
   .settings-card{
     padding: 4em;
-    
+
   }
   .special-settings-card{
     padding: 2em;
-    
+
   }
   .btn-floating.btn-large {
     width: 56px !important;
@@ -298,4 +320,14 @@ $(document).ready(function () {
     font-size: 1.5rem;
   }
 </style>
+<script>
+$(document).ready(function () {
+  $('#timepicker').pickatime({
+    autoclose: false,
+    twelvehour: false,
+    default: '14:20:00'
+  });
+})
+
+</script>
 <% include partials/footer %>
