@@ -29,28 +29,26 @@
     <% } %>
         </tbody>
     </table>
-   
     </div>
-   
   </div>
   <div class="col-md-6">
   <div class="card" style="padding: 1em;">
     <h4 class="marked-heading">Students marked absent</h4>
     <table class="striped centered">
-       <thead>
+      <thead>
         <tr>
-              <th>Enrollment Number</th>
-               <th>Attendance awarded</th>
-          </tr>
-        </thead>
-        <tbody>
-           <% for (var i = 0; i < students_absent.length ;i++) { %>
-    <tr>
-      <td><%= students_absent[i] %></td>
-      <td><%= attendanceAwarded %></td>
-    </tr>    
-    <% } %>
-        </tbody>
+          <th>Enrollment Number</th>
+          <th>Attendance awarded</th>
+        </tr>
+      </thead>
+      <tbody>
+          <% for (var i = 0; i < students_absent.length ;i++) { %>
+        <tr>
+          <td><%= students_absent[i] %></td>
+          <td><%= attendanceAwarded %></td>
+        </tr>    
+          <% } %>
+      </tbody>
     </table>
     </div>
   </div>  
