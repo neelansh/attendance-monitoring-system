@@ -1,28 +1,6 @@
 <!DOCTYPE html>
 <% include partials/header %>
 
-
-<div id="grad" class="container student-card card">
-	<div class=" card-content row">
-
-		<div class="col-md-4">
-			<% if(user != null && user.instructor_id != null) {%>
-
-			<div class='greeting'>HELLO</div>
-
-			<div class="student-name details-field"><%=user.name%></div>
-
-			<div class="student-enroll details-field"><%=user.instructor_id%></div>
-			<% } %>
-		</div>
-		<div class="col-md-4">
-		</div>
-		<div class="col-md-4">
-			<a href="/teacher/profile" class="logout btn waves-effect waves-light">VIEW PROFILE</a>
-			<a href="/teacher/logout" class="logout btn waves-effect waves-light right">LOG OUT </a>
-		</div>
-	</div>
-</div>
 <br>
 <div class="container parent-wrapper" style="text-align: center;">
 	<div class="parent">

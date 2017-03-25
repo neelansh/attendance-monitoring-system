@@ -40,12 +40,14 @@ passport.deserializeUser(function(user, done) {
 		teacher.getUserById(user.school, user.id, function(err, user_details) {
 			if(err) throw err;
 			user_details.school = user.school;
+			user_details.isTeacher = user.isTeacher;
 			done(err, user_details);
 		});
 	}else if(user.isStudent){
 		student.getUserById(user.school, user.id, function(err, user_details) {
 			if(err) throw err;
 			user_details.school = user.school;
+			user_details.isStudent = user.isStudent;
 			done(err, user_details);
 		});
 	}

@@ -58,7 +58,6 @@ router.get('/logout', function(req, res){
 });
 
 router.get('/dashboard', function(req, res){
-	console.log("hello dash ");
 	if(!req.isAuthenticated()){
 		res.redirect("/student/login");
 	}
