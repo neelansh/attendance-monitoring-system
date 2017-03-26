@@ -2,33 +2,36 @@
 <% include partials/header %>
 <script type="text/javascript">
   $(document).ready(function () {
-  		$.getJSON('/student/get_attendance', function (data) {
-  		arr = {};
-  		data.forEach(function (elem) {
-  			if (! (elem.subject_code in arr)){
-  				arr[elem.subject_code] = {
-  						"P" : 0,
-  						"A" : 0,
-  						"NA" : 0
-  					}
-  			}	
-  				arr[elem.subject_code][elem.attendance] ++;
-  		})
-  		html = ''
-  		Object.keys(arr).forEach(function (elem) {
-  			html += '<tr>';
-  			html += '<td>' + elem + '</td>';
-  			html += '<td>' + arr[elem]["P"] + '</td>';
-  			html += '<td>' + arr[elem]["A"] + '</td>';
-  			html += '<td>' + arr[elem]["NA"] + '</td>';
-  			html += '</tr>';
-  		})
-  		$('.attendance-table').html(html)
-  	})
+    $.getJSON('/student/get_attendance', function (data) {
+      arr = {};
+      data.forEach(function (elem) {
+        if (! (elem.subject_code in arr)){
+          arr[elem.subject_code] = {
+            "P" : 0,
+            "A" : 0,
+            "NA" : 0,
+            "subject_name": elem.subject_name,
+            "subject_id": elem.subject_id
+          }
+        }	
+        arr[elem.subject_code][elem.attendance] ++;
+      });
+      html = '';
+      Object.keys(arr).forEach(function (elem) {
+        html += '<tr>';
+        html += '<td><a href=\"/student/attendance/'+ arr[elem]['subject_id'] + "\">" + elem + '</a></td>';
+        html += '<td>' + arr[elem]['subject_name'] + '</td>';
+        html += '<td>' + arr[elem]["P"] + '</td>';
+        html += '<td>' + arr[elem]["A"] + '</td>';
+        html += '<td>' + arr[elem]["P"]*100/(arr[elem]["P"] + arr[elem]["A"]) + '</td>';
+        html += '</tr>';
+      });
+      $('.attendance-table').html(html);
+    })
   })
 </script>
 <div id="grad" class="container student-card card">
-  
+
   <div class="card-action">
     <div class="row">
       <div class="col-md-3">
@@ -66,27 +69,29 @@
   <div class="card-action">
     <div class="row">			
       <a href="/student/change_password" class="change-password btn waves-effect waves-light right">CHANGE
-      PASSWORD </a>
-      <a class="editBtn update-email-btn btn waves-effect waves-light left">
-      EDIT DETAILS
-      </a>
+        PASSWORD </a>
+        <a class="editBtn update-email-btn btn waves-effect waves-light left">
+          EDIT DETAILS
+        </a>
+      </div>
     </div>
+    <div class="card-action attendance-report">ATTENDANCE REPORT</div>
+    <br>
+    <table class="striped centered">
+      <thead>
+        <tr>
+          <th data-field="id">Subject Code</th>
+          <th data-field="id">Subject Name</th>
+          <th data-field="name">Present</th>
+          <th data-field="price">Absent</th>
+          <th data-field="price">Percentage</th>
+        </tr>
+      </thead>
+      <tbody class="attendance-table">
+      </tbody>
+    </table>
+    <p>* click on subject code to view details</p>
   </div>
-  <div class="card-action attendance-report">ATTENDANCE REPORT</div>
-  <br>
-  <table class="striped centered">
-    <thead>
-      <tr>
-        <th data-field="id">Subject</th>
-        <th data-field="name">Present</th>
-        <th data-field="price">Absent</th>
-        <th data-field="price">Not Applicable</th>
-      </tr>
-    </thead>
-    <tbody class="attendance-table">
-    </tbody>
-  </table>
-</div>
 </div>
 </div>
 <% include partials/footer %>

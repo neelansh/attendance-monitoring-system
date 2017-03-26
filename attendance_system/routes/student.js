@@ -162,4 +162,25 @@ router.post('/change_password', function(req, res){
 
 });
 
+
+router.get('/attendance/:subject_id', function(req, res){
+	if(!req.isAuthenticated()){
+		res.redirect("/student/login");
+	}
+	if(req.user.enrollment_no == null){
+		res.redirect("/student/login");
+	}
+	req.checkParams('subject_id', 'invalid subject id parameter').notEmpty().isInt();
+
+	var att = require("../models/attendance")
+	att.getAttendanceByStudent(req.user.school, req.user.enrollment_no, req.params.subject_id, function(err, results){
+			if(err) throw err;
+			if(results == null){
+				res.sendStatus(404);
+			}
+			res.render('attendance_details_student',{'attendance': results, "enrollment_no": req.user.enrollment_no});
+		});
+	
+});
+
 module.exports = router;

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<% include partials/header %>
+<style type="text/css">
+	.marked-heading{
+		font-size: 1.1em;
+		line-height: 110%;
+		margin: 1.14rem 0 0.912rem 0;
+		text-transform: uppercase;
+		letter-spacing: 0.1em;
+		text-align: center;
+		font-weight: 900;
+		color: darkslategray;
+	}
+	.heading{
+		text-align: center;
+		font-size: 2em;
+		font-weight: 700;
+		color: darkcyan;
+		letter-spacing: 0.2em;
+	}
+</style>
+
+
+<div class="container card">
+
+	<div>
+		<h5 class="heading">DETAILS OF STUDENT FOR EACH LECTURE:</h5>
+		<p class="marked-heading">*P: Present , A: Absent , NA: Not Applicable</p>
+		<table class="striped centered">
+			<thead>
+				<tr>
+					<th>Lecture Date</th>
+					<th>Present / Absent</th>
+					<th>hours of lecture</th>
+				</tr>
+			</thead>
+			<tbody>
+				<% for(var i=0 ; i<attendance.length; ++i){ %>
+				<tr>
+					<% var date = new Date(attendance[i].lecture_timestamp) %>
+					<td><%=date.getDate()%>/<%=date.getMonth()%>/<%=date.getFullYear()%></td>
+					<td><%=attendance[i].attendance%></td>
+					<td><%=attendance[i].duration_of_class%></td>
+				</tr>    
+				<% } %>
+			</tbody>
+		</table>	
+	</div>
+
+</div>
+
+
+
+<% include partials/footer %>
