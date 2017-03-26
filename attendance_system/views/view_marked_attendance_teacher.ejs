@@ -2,6 +2,28 @@
 
 <% include partials/header %>
 <style type="text/css">
+  .date-attendance{
+    text-align: center;
+    font-size: 2em;
+    font-weight: 700;
+    color: darkcyan;
+    letter-spacing: 0.2em;
+  }
+  .attendance-heading{
+    font-size: 3em;
+    text-align: center;
+    font-weight: 200;
+  }
+  .marked-heading{
+    font-size: 1.1em;
+    line-height: 110%;
+    margin: 1.14rem 0 0.912rem 0;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    text-align: center;
+    font-weight: 900;
+    color: darkslategray;
+  }
   .heading{
     text-align: center;
     font-size: 2em;
@@ -10,9 +32,21 @@
     letter-spacing: 0.2em;
   }
 </style>
+<script type="text/javascript">
+  $(document).ready(function () {
+      var subject_id = <%-subject_id%>;
+      $.getJSON('/api/subjects/' + subject_id, function (data) {
+      $('#heading')[0].append(data[0].subject_name + '(' + data[0].subject_code + ')');
+    });
+  });
+
+</script>
+<h4 id="heading" class="heading container">ATTENDANCE FOR CLASS <br></h4><br>
+<h5 class="marked-heading">*CLICK ON ENROLLMENT NUMBER FOR MORE DETAILS</h5>
 <div class="container" style="display: flex; justify-content: space-between;">
-	<div>
-		<h5 class="heading">Student Present:</h5>
+
+	<div class="card col-md-5" style="padding: 1em;">
+		<h5 class="marked-heading">Student Present:</h5>
 		<table class="striped centered">
         <thead>
         <tr>
@@ -31,8 +65,9 @@
     </table>
 		
 	</div>
-	<div>
-		<h5 class="heading">Student Absent:</h5>
+  <div class="col-md-2"></div>
+	<div class="card col-md-5" style="padding: 1em;"">
+		<h5 class="marked-heading">Student Absent:</h5>
 		<table class="striped centered">
         <thead>
         <tr>

@@ -146,14 +146,16 @@ router.post('/attendance/:batch_id/:subject_id', function(req, res) {
 	if(req.user.instructor_id == null){
 		res.redirect("/teacher/login");
 	}
+	console.log(req.body);
 	req.checkParams('batch_id', 'invalid batch id parameter').notEmpty().isInt();
 	req.checkParams('subject_id', 'invalid subject id parameter').notEmpty().isInt();
-	req.checkBody('teaching_hours','teaching hours invalid').notEmpty().isInt();	
-	req.checkBody('date_of_attendance','attendance date is empty').notEmpty();
+	req.checkBody('hours','teaching hours invalid').notEmpty().isInt();	
+	req.checkBody('date','attendance date is empty').notEmpty();
+	req.checkBody('time','attendance time is empty').notEmpty();
 
 	var att = require("../models/attendance")
 	var subject_id = req.params.subject_id;
-	var date = new Date(req.body.date);
+	var date = new Date(req.body.date + " " + req.body.time);
 	var students_present = req.body.present;
 	var students_absent = req.body.absent;
 	var students_notapplicable = req.body.na;
@@ -210,7 +212,7 @@ router.get('/attendance_marked/:batch_id/:subject_id', function(req, res){
 				res.sendStatus(404);
 			}
 			var absent = results;
-			res.render('view_marked_attendance_teacher',{'present': present, 'absent': absent});
+			res.render('view_marked_attendance_teacher',{'present': present, 'absent': absent, 'subject_id': req.params.subject_id});
 		});
 	});
 });
@@ -231,7 +233,7 @@ router.get('/attendance_marked/:batch_id/:subject_id/:enrollment_no', function(r
 			if(results == null){
 				res.sendStatus(404);
 			}
-			res.render('student_attendance',{'attendance': results});
+			res.render('student_attendance',{'attendance': results, "enrollment_no": req.params.enrollment_no});
 		});
 	
 });

@@ -91,6 +91,7 @@ app.use('/', routes);
 // app.use('/users', users);
 app.use('/teacher',require('./routes/teacher'));
 app.use('/student',require('./routes/student'));
+app.use('/api',require('./routes/api'));
 
 function isLoggedIn(url, req, res, next) {
 
