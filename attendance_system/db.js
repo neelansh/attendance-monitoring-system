@@ -16,6 +16,7 @@ exports.connect = function(mode, done) {
   state.pool = mysql.createPool({
     host: process.env.mysql_host||'localhost',
     user: process.env.mysql_user||'root',
+    port: process.env.mysql_port||3306,
     password: process.env.mysql_password||'neelansh5',
     database: mode === exports.MODE_PRODUCTION ? PRODUCTION_DB : TEST_DB
   });
