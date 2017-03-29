@@ -2,17 +2,19 @@
 <% include partials/header %>
 
 <div class="container att-cont" ng-app="attendance" ng-controller="ac as ac" ng-keydown="arrowPressed($event)" tabindex="0">
+<div class="row">
   <div class="col-md-4">
     <div class="card settings-card">
+      <p class="marked-heading">LECTURE DETAILS :</p>
       <label for="datepicker" >Date:</label>
       <input type="date" id="datepicker" class="datepicker" name="date_of_attendance" required>
       <br><br>
 
-      <label for="timepicker">Time</label>
+      <label for="timepicker">Time At Which Lecture Started :</label>
       <input id="timepicker" class="timepicker" name="time_of_attendance" type="time">
       <br><br>
 
-      Hours
+      <label>Duration of lecture in hours:</label>
       <div class="row center">
         <br>
         <input name="group1" type="radio" id="test12" value="1" />
@@ -40,25 +42,34 @@
 
   </div>
 </div>
-<div class="col-md-4">
-  <div class="card att-card {{student.enrollment_no}} {{student.status}}" ng-class="{selected: $first}" ng-repeat="student in students">{{student.enrollment_no}} <div class="student-name-att">{{student.name}}</div></div>
+<div class="col-md-8 card">
+  <p class="marked-heading">ATTENDANCE REGISTER</p>
+  <div class="card att-card {{student.enrollment_no}} {{student.status}}" ng-class="{selected: $first}" ng-repeat="student in students">
+  <div class="row">
+    <div class="col-md-6">
+      {{student.enrollment_no}}
+    </div>
+    <div class="col-md-6">
+      {{student.name}}
+    </div>
+  </div>
+  </div>
 </div>
-<div class="col-md-4">
-  <div class="card special-settings-card ">
-    <div class="row">
-      <div class="col-md-6">
-        <div class="small-title">PRESENT</div> {{present_count()}}
 
-      </div>
-      <div class="col-md-6">
-       <div class="small-title">ABSENT</div>{{absent_count()}}
+</div>
 
-     </div>
-   </div>
-   <br>
-   <div class="small-title">NOT APPLICABLE</div> {{na_count()}}
- </div>
 
+<div class="row card counter-card" style="padding: 10px;">
+<p class="marked-heading">STUDENT MARKED:</p>
+  <div class="col-md-4 center-align">
+    <div class="small-title">PRESENT : <span style="color: black;">{{present_count()}}</span></div>
+  </div>
+  <div class="col-md-4 center-align">
+    <div class="small-title">ABSENT : <span style="color: black;">{{absent_count()}}</span></div>
+  </div>
+  <div class="col-md-4 center-align">
+    <div class="small-title">NOT APPLICABLE : <span style="color: black;">{{na_count()}}</span></div>
+  </div>
 </div>
 
 <div ng-click="submit()" class="fixed-action-btn">
@@ -342,7 +353,7 @@ $(document).ready(function () {
   .att-card{
     padding: 0.2em;
     text-align: center;
-    font-size: 1.5em;
+    font-size: 1.2em;
   }
   .att-cont{
     outline:none;
@@ -368,6 +379,28 @@ $(document).ready(function () {
   }
   .btn-large i {
     font-size: 1.5rem;
+  }
+  .marked-heading{
+    font-size: 1.1em;
+    line-height: 110%;
+    margin: 1.14rem 0 0.912rem 0;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    text-align: center;
+    font-weight: 900;
+    color: darkslategray;
+  }
+  .heading{
+    text-align: center;
+    font-size: 2em;
+    font-weight: 700;
+    color: darkcyan;
+    letter-spacing: 0.2em;
+  }
+  .counter-card{
+    bottom: 0px;
+    width: 50%;  
+    position: fixed;
   }
 </style>
 <script>
