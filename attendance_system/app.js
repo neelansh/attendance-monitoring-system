@@ -80,7 +80,7 @@ var db = require('./db');
 db.connect(db.MODE_PRODUCTION, function(pool_state) {
   if (pool_state.pool === null) {
     console.log('Unable to connect to MySQL.')
-  } else {
+  } else if(pool_state.pool != null){
     console.log('mysql connection established')
   }
 })
@@ -114,7 +114,7 @@ app.use(function(req, res, next) {
 
 // development error handler
 // will print stacktrace
-if (app.get('env') === 'development') {
+if (process.env.development) {
   app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     res.render('error', {
