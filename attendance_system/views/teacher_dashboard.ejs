@@ -22,12 +22,12 @@
 			<div class="col-md-4 valign center-align">
 				<span class="sub-course">SUBJECT NAME :</span>
 			</div>
-			<div class="col-md-5 valign center-align">
+			<div class="col-md-4 valign center-align">
 				<span class="sub-course">COURSE : </span>
 				<span class="sub-course">STREAM : </span>
 				<span class="sub-course">SUBJECT CODE</span>
 			</div>
-			<div class="col-md-3 valign center-align">
+			<div class="col-md-4 valign center-align">
 				<span class="sub-course">ACTIONS :</span>
 			</div>
 		</div>
@@ -36,14 +36,15 @@
 			<div class="col-md-4 valign center-align">
 				<span class="sub-code"><%=subjects[i].subject_name%></span>
 			</div>
-			<div class="col-md-5 valign center-align">
+			<div class="col-md-4 valign center-align">
 				<span class="sub-course"><%=subjects[i].course%>&nbsp;:&nbsp;</span>
 				<span class="sub-stream"><%=subjects[i].stream%>&nbsp;:&nbsp;</span>
 				<span class="sub-code"><%=subjects[i].subject_code%></span>
 			</div>
-			<div class="col-md-3 valign center-align">
+			<div class="col-md-4 valign center-align">
 				<a href="/teacher/attendance_marked/<%=subjects[i].batch_id%>/<%=subjects[i].subject_id%>/" class="btn waves-effect waves-light">View</a>
 				<a href="/teacher/attendance/<%=subjects[i].batch_id%>/<%=subjects[i].subject_id%>/" class=" btn waves-effect waves-light">Mark</a>
+				<a href="/teacher/edit_attendance/<%=subjects[i].subject_id%>" class=" btn waves-effect waves-light">Edit</a>
 			</div>
 		</div>
 		<% } %>

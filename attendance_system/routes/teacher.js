@@ -38,14 +38,14 @@ passport.serializeUser(function(user, done) {
 passport.deserializeUser(function(user, done) {
 	if(user.isTeacher){
 		teacher.getUserById(user.school, user.id, function(err, user_details) {
-			if(err) throw err;
+			if(err) throw new Error(err);
 			user_details.school = user.school;
 			user_details.isTeacher = user.isTeacher;
 			done(err, user_details);
 		});
 	}else if(user.isStudent){
 		student.getUserById(user.school, user.id, function(err, user_details) {
-			if(err) throw err;
+			if(err) throw new Error(err);
 			user_details.school = user.school;
 			user_details.isStudent = user.isStudent;
 			done(err, user_details);
@@ -64,14 +64,14 @@ function(req, username, password, done) {
 	}
 	var school = req.body.school;
 	teacher.getUserById(school, username, function(err, user){
-		if(err) throw err;
+		if(err) throw new Error(err);
 		if(!user){
 			console.log("Unknown user");
 			return done(null, false, {message: 'Unknown User'});
 		}
 
 		teacher.comparePassword(password, user.password, function(err, isMatch){
-			if(err) throw err;
+			if(err) throw new Error(err);
 			if(isMatch){
 				console.log("valid password");
 				user.school = school;
@@ -104,7 +104,7 @@ router.get('/dashboard', function(req, res){
 	}
 	var sub = require("../models/subjects")
 	var subjects = sub.getSubjectByTeacher(req.user.school, req.user.instructor_id, function(err, results){
-		if(err) throw err;
+		if(err) throw new Error(err);
 		res.render('teacher_dashboard',{'subjects': results});
 	});
 });
@@ -119,13 +119,20 @@ router.get('/attendance/:batch_id/:subject_id', function(req, res){
 	}
 	req.checkParams('batch_id', 'invalid batch id parameter').notEmpty().isInt();
 	req.checkParams('subject_id', 'invalid subject id parameter').notEmpty().isInt();
+	var errors = req.validationErrors();
+	if(errors){
+		res.locals.errors = errors;
+		res.render('index');
+		return;
+	}
 	var sub = require("../models/subjects")
 	var subjects = sub.getStudentsByBatch(req.user.school, req.params.batch_id, function(err, results){
-		if(err) throw err;
+		if(err) throw new Error(err);
 		if(results == null){
 			res.sendStatus(404);
 		}
 		res.render('attendance',{'students': results, 'batch_id': req.params.batch_id, 'subject_id': req.params.subject_id});
+		return;
 	});
 });
 
@@ -152,6 +159,12 @@ router.post('/attendance/:batch_id/:subject_id', function(req, res) {
 	req.checkBody('hours','teaching hours invalid').notEmpty().isInt();	
 	req.checkBody('date','attendance date is empty').notEmpty();
 	req.checkBody('time','attendance time is empty').notEmpty();
+	var errors = req.validationErrors();
+	if(errors){
+		res.locals.errors = errors;
+		res.render('index');
+		return;
+	}
 
 	var att = require("../models/attendance")
 	var subject_id = req.params.subject_id;
@@ -162,7 +175,7 @@ router.post('/attendance/:batch_id/:subject_id', function(req, res) {
 	var duration_of_class = req.body.hours;
 
 	var subjects = att.saveAttendance(req.user.school, subject_id, date, students_present, students_absent, students_notapplicable, duration_of_class, function(err, results){
-		if(err) throw err;
+		if(err) throw new Error(err);
 		res.render('display_students', {'students_present': students_present,
 			'students_notapplicable': students_notapplicable,
 			'students_absent': students_absent,
@@ -181,7 +194,7 @@ router.get('/profile', function(req, res){
 	}
 
 	var profile = teacher.getUserById(req.user.school, req.user.instructor_id, function(err, results){
-		if(err) throw err;
+		if(err) throw new Error(err);
 		if(results == null){
 			res.sendStatus(404);
 		}
@@ -198,16 +211,23 @@ router.get('/attendance_marked/:batch_id/:subject_id', function(req, res){
 	}
 	req.checkParams('batch_id', 'invalid batch id parameter').notEmpty().isInt();
 	req.checkParams('subject_id', 'invalid subject id parameter').notEmpty().isInt();
+	var errors = req.validationErrors();
+	if(errors){
+		res.locals.errors = errors;
+		res.render('index');
+		return;
+	}
+
 	var att = require("../models/attendance")
 
 	var marked_attendance = att.getPresentBySubject(req.user.school, req.params.subject_id, function(err, results){
-		if(err) throw err;
+		if(err) throw new Error(err);
 		if(results == null){
 			res.sendStatus(404);
 		}
 		var present = results;
 		att.getAbsentBySubject(req.user.school, req.params.subject_id, function(err, results){
-			if(err) throw err;
+			if(err) throw new Error(err);
 			if(results == null){
 				res.sendStatus(404);
 			}
@@ -227,9 +247,16 @@ router.get('/attendance_marked/:batch_id/:subject_id/:enrollment_no', function(r
 	req.checkParams('batch_id', 'invalid batch id parameter').notEmpty().isInt();
 	req.checkParams('subject_id', 'invalid subject id parameter').notEmpty().isInt();
 	req.checkParams('enrollment_no', 'invalid enrollment_id parameter').notEmpty().isInt();
+	var errors = req.validationErrors();
+	if(errors){
+		res.locals.errors = errors;
+		res.render('index');
+		return;
+	}
+
 	var att = require("../models/attendance")
 	att.getAttendanceByStudent(req.user.school, req.params.enrollment_no, req.params.subject_id, function(err, results){
-			if(err) throw err;
+			if(err) throw new Error(err);
 			if(results == null){
 				res.sendStatus(404);
 			}
@@ -258,16 +285,23 @@ router.post('/change_password', function(req, res){
 	req.checkBody('old_password', 'old password empty').notEmpty().isAlpha();
 	req.checkBody('new_password', 'new password empty').notEmpty().isAlpha();
 	req.checkBody('confirm_password', 'confirm password empty').notEmpty().isAlpha();
+	var errors = req.validationErrors();
+	if(errors){
+		res.locals.errors = errors;
+		res.render('index');
+		return;
+	}
+
 
 	if(req.body.new_password !== req.body.confirm_password){
 		req.flash('error_msg', 'new password and confirm new password do NOT match');
 	}
 
 	teacher.comparePassword(req.body.old_password, req.user.password, function(err, isMatch){
-		if(err) throw err;
+		if(err) throw new Error(err);
 		if(isMatch){
 			teacher.setPassword(req.user.school, req.body.new_password, req.user.instructor_id, function(err, result){
-				if(err) throw err;
+				if(err) throw new Error(err);
 				req.flash('success_msg', 'Password Successfully Changed');
 				res.redirect('/teacher/change_password');
 			});
@@ -287,8 +321,18 @@ router.get('/edit_attendance/:subject_id', function(req, res){
 		res.redirect("/teacher/login");
 	}
 	req.checkParams('subject_id', 'invalid subject id').notEmpty().isInt();
+	var errors = req.validationErrors();
+	if(errors){
+		res.locals.errors = errors;
+		res.render('index');
+		return;
+	}
+	var att = require("../models/attendance")
+	var attendance = att.getAttendanceBySubject(req.user.school, req.params.subject_id, function(err, results){
+		if(err) throw new Error(err);
+		res.render('display_lectures',{ 'lectures': JSON.stringify(results) });
+	});
 
-	res.render('change_password');
 });
 
 module.exports = router;

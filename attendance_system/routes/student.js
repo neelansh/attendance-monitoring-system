@@ -141,7 +141,12 @@ router.post('/change_password', function(req, res){
 	req.checkBody('old_password', 'old password empty').notEmpty().isAlpha();
 	req.checkBody('new_password', 'new password empty').notEmpty().isAlpha();
 	req.checkBody('confirm_password', 'confirm password empty').notEmpty().isAlpha();
-
+	var errors = req.validationErrors();
+	if(errors){
+		res.locals.errors = errors;
+		res.render('index');
+		return;
+	}
 	if(req.body.new_password !== req.body.confirm_password){
 		req.flash('error_msg', 'new password and confirm new password do NOT match');
 	}
@@ -171,7 +176,12 @@ router.get('/attendance/:subject_id', function(req, res){
 		res.redirect("/student/login");
 	}
 	req.checkParams('subject_id', 'invalid subject id parameter').notEmpty().isInt();
-
+	var errors = req.validationErrors();
+	if(errors){
+		res.locals.errors = errors;
+		res.render('index');
+		return;
+	}
 	var att = require("../models/attendance")
 	att.getAttendanceByStudent(req.user.school, req.user.enrollment_no, req.params.subject_id, function(err, results){
 			if(err) throw err;

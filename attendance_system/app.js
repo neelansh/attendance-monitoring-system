@@ -15,9 +15,6 @@ var users = require('./routes/users');
 
 var app = express();
 
-var MySQLStore = require('express-mysql-session')(session);
-
-
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -70,9 +67,23 @@ db.connect(function(err) {
 // }));
 
 //MYSQL session store
-var sessionStore = new MySQLStore({}, db.get());
+var MySQLStore = require('express-mysql-session')(session);
+var sessionStore = new MySQLStore({
+    checkExpirationInterval: 900000,// How frequently expired sessions will be cleared; milliseconds.
+    expiration: 86400000,// The maximum age of a valid session; milliseconds.
+    createDatabaseTable: true,// Whether or not to create the sessions database table, if one does not already exist.
+    schema: {
+        tableName: 'sessions',
+        columnNames: {
+            session_id: 'session_id',
+            expires: 'expires',
+            data: 'data'
+        }
+    }
+  }, db.connection_for_sessions);
  
 app.use(session({
+    key: 'attendance.key',
     secret: '$76b+_t*j_%$15(_96v(r=1u4yelple=ds^!w-raio8^2qys7w',
     store: sessionStore,
     resave: true,
@@ -92,11 +103,10 @@ app.use(flash());
 app.use(function (req, res, next) {
   res.locals.success_msg = req.flash('success_msg');
   res.locals.error_msg = req.flash('error_msg');
-  res.locals.error = req.flash('error');
+  res.locals.errors = null;
   res.locals.user = req.user || null;
   next();
 });
-
 
 //routes
 app.use('/', routes);

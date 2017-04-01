@@ -182,10 +182,11 @@
     <% if(error_msg != "") {%>
     <div class="center-align card-panel red-text col s4 offset-s4"><%= error_msg %></div>
     <% } %>
-    <% if(error != "") {%>
-    <div class="center-align card-panel red-text col s4 offset-s4"><%= error %></div>
+    <% if(errors) {%>
+      <% for(var i=0 ; i<errors.length ; ++i) {%>
+        <div class="center-align card-panel red-text col s4 offset-s4"><%= errors[i].msg %>, value: <%= errors[i].value %></div>
+      <% } %>
     <% } %>
-
   </div>
 
 <style type="text/css">

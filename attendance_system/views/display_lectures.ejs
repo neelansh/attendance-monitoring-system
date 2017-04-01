@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<% include partials/header %>
+
+<div id="main" class="container">
+  
+</div>
+
+<script type="text/javascript" src="/javascripts/underscore-min.js"></script>
+<script type="text/javascript">
+  var attendance_data = <%- lectures %>
+  var lectures = _.groupBy(attendance_data, function(d){ return d.lecture_timestamp });
+  var html = "";
+  console.log(lectures);
+  
+  _.each(lectures, function(value, key){
+    html = html + "<div class=\"card\">" + new Date(key) + "<a href=\"/"+key+"\">edit</a>" + "</div>";
+  });
+
+  $("#main").html(html);
+</script>
+
+<% include partials/footer %>
