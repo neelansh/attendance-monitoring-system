@@ -15,6 +15,9 @@ var users = require('./routes/users');
 
 var app = express();
 
+var MySQLStore = require('express-mysql-session')(session);
+
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -24,25 +27,7 @@ app.set('view engine', 'ejs');
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
-
-//set static folder
-app.use(express.static(path.join(__dirname, 'public')));
-
-// Express Session
-app.use(session({
-    secret: '$76b+_t*j_%$15(_96v(r=1u4yelple=ds^!w-raio8^2qys7w',
-    saveUninitialized: true,
-    resave: true
-}));
-
-
-// Passport init
-app.use(passport.initialize());
-app.use(passport.session());    //for presistent login sessions
-
-
-// Express Validator
+//Express validator
 app.use(expressValidator({
   errorFormatter: function(param, msg, value) {
       var namespace = param.split('.')
@@ -59,6 +44,46 @@ app.use(expressValidator({
     };
   }
 }));
+app.use(cookieParser());
+
+//set static folder
+app.use(express.static(path.join(__dirname, 'public')));
+
+//setting mysql config
+var db = require('./db');
+
+// Connect to MySQL on start
+db.connect(function(err) {
+  if (err) {
+    console.log('Unable to connect to MySQL.')
+  } else{
+    console.log('mysql connection established')
+  }
+});
+
+
+// Express Session
+// app.use(session({
+//     secret: ,
+//     saveUninitialized: true,
+//     resave: true
+// }));
+
+//MYSQL session store
+var sessionStore = new MySQLStore({}, db.get());
+ 
+app.use(session({
+    secret: '$76b+_t*j_%$15(_96v(r=1u4yelple=ds^!w-raio8^2qys7w',
+    store: sessionStore,
+    resave: true,
+    saveUninitialized: true
+}));
+
+
+// Passport init
+app.use(passport.initialize());
+app.use(passport.session());    //for presistent login sessions
+
 
 // Connect Flash
 app.use(flash());
@@ -71,19 +96,6 @@ app.use(function (req, res, next) {
   res.locals.user = req.user || null;
   next();
 });
-
-
-//setting mysql config
-var db = require('./db');
-
-// Connect to MySQL on start
-db.connect(db.MODE_PRODUCTION, function(pool_state) {
-  if (pool_state.pool === null) {
-    console.log('Unable to connect to MySQL.')
-  } else if(pool_state.pool != null){
-    console.log('mysql connection established')
-  }
-})
 
 
 //routes
@@ -126,13 +138,15 @@ if (process.env.development) {
 
 // production error handler
 // no stacktraces leaked to user
-app.use(function(err, req, res, next) {
-  res.status(err.status || 500);
-  res.render('error', {
-    message: err.message,
-    error: {}
+if(process.env.production){
+  app.use(function(err, req, res, next) {
+    res.status(err.status || 500);
+    res.render('error', {
+      message: err.message,
+      error: {}
+    });
   });
-});
+}
 
 
 module.exports = app;

@@ -279,4 +279,16 @@ router.post('/change_password', function(req, res){
 
 });
 
+router.get('/edit_attendance/:subject_id', function(req, res){
+	if(!req.isAuthenticated()){
+		res.redirect("/teacher/login");
+	}
+	if(req.user.instructor_id == null){
+		res.redirect("/teacher/login");
+	}
+	req.checkParams('subject_id', 'invalid subject id').notEmpty().isInt();
+
+	res.render('change_password');
+});
+
 module.exports = router;
