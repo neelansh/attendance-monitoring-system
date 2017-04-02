@@ -10,6 +10,9 @@
   <!-- Compiled and minified CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/css/materialize.min.css">
 
+  <!-- Favicon -->
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+
   <!-- Compiled and minified JavaScript -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/js/materialize.min.js"></script>
 
@@ -182,9 +185,12 @@
     <% if(error_msg != "") {%>
     <div class="center-align card-panel red-text col s4 offset-s4"><%= error_msg %></div>
     <% } %>
-    <% if(errors) {%>
-      <% for(var i=0 ; i<errors.length ; ++i) {%>
-        <div class="center-align card-panel red-text col s4 offset-s4"><%= errors[i].msg %>, value: <%= errors[i].value %></div>
+    <% if(error != "") {%>
+    <div class="center-align card-panel red-text col s4 offset-s4"><%= error %></div>
+    <% } %>
+    <% if(errors_validator) {%>
+      <% for(var i=0 ; i<errors_validator.length ; ++i) {%>
+        <div class="center-align card-panel red-text col s4 offset-s4"><%= errors_validator[i].msg %>, value: <%= errors_validator[i].value %></div>
       <% } %>
     <% } %>
   </div>
