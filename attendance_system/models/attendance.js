@@ -22,8 +22,42 @@ module.exports.saveAttendance = function(school, subject_id, lecture_timestamp, 
   callback(null, "all entries done")
 }
 
+module.exports.updateAttendance = function(school, subject_id, lecture_timestamp_new, lecture_timestamp_old, students_present, students_absent, students_notapplicable, duration_of_class, callback){
+  for(var i=0 ; i<students_present.length ; ++i){
+    var query = db.get().query("update ?? set lecture_timestamp = ?, student = ?, duration_of_class=?, attendance = 'P' where subject_id = ? and lecture_timestamp = ?",[school+"_attendance", lecture_timestamp_new, students_present[i], duration_of_class, subject_id, lecture_timestamp_old],function(err, rows){
+      if(err)throw err;
+    });
+  }
+  for(var i=0 ; i<students_absent.length ; ++i){
+    var query = db.get().query("update ?? set lecture_timestamp = ?, student = ?, duration_of_class=?, attendance = 'A' where subject_id = ? and lecture_timestamp = ?",[school+"_attendance", lecture_timestamp_new, students_present[i], duration_of_class, subject_id, lecture_timestamp_old],function(err, rows){
+      if(err)throw err;
+    });
+  }
+  for(var i=0 ; i<students_notapplicable.length ; ++i){
+    var query = db.get().query("update ?? set lecture_timestamp = ?, student = ?, duration_of_class=?, attendance = 'NA' where subject_id = ? and lecture_timestamp = ?",[school+"_attendance", lecture_timestamp_new, students_present[i], duration_of_class, subject_id, lecture_timestamp_old],function(err, rows){
+      if(err)throw err;
+    });
+  }
+  
+  callback(null, "all entries done")
+}
+
 module.exports.getAttendanceBySubject = function(school, subject_id, callback){
   var query = db.get().query("select * from ?? where subject_id = ?",[school+"_attendance", subject_id],function(err, rows){
+    if(err)throw err;
+    callback(null, rows);
+  });
+}
+
+module.exports.getLecturesBySubject = function(school, subject_id, callback){
+  var query = db.get().query("select lecture_timestamp from ?? where subject_id = ? group by lecture_timestamp",[school+"_attendance", subject_id],function(err, rows){
+    if(err)throw err;
+    callback(null, rows);
+  });
+}
+
+module.exports.getAttendanceByLecture = function(school, subject_id, lecture, callback){
+  var query = db.get().query("select * from ?? where subject_id = ? and lecture_timestamp = ?",[school+"_attendance", subject_id, lecture],function(err, rows){
     if(err)throw err;
     callback(null, rows);
   });

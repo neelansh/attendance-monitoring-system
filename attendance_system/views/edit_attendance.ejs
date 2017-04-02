@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<% include partials/header %>
+
+<div class="container att-cont" ng-app="attendance" ng-controller="ac as ac" ng-keydown="arrowPressed($event)" tabindex="0">
+<div class="row">
+  <div class="col-md-4">
+    <div class="card settings-card">
+      <p class="marked-heading">LECTURE DETAILS :</p>
+      <label for="datepicker" >Date:</label>
+      <input type="date" id="datepicker" class="datepicker" name="date_of_attendance" required>
+      <br><br>
+
+      <label for="timepicker">Time At Which Lecture Started :</label>
+      <input id="timepicker" class="timepicker" name="time_of_attendance" type="time">
+      <br><br>
+
+      <label>Duration of lecture in hours:</label>
+      <div class="row center">
+        <br>
+        <input name="group1" type="radio" id="test12" value="1" />
+        <label for="test12">1</label> &nbsp;&nbsp;&nbsp;
+        <input name="group1" type="radio" id="test13" value="2"  />
+        <label for="test13">2</label> &nbsp;&nbsp;&nbsp;
+        <input name="group1" type="radio" id="test14" value="3" />
+        <label for="test14">3</label> &nbsp;&nbsp;&nbsp;
+        <input name="group1" type="radio" id="test15" value="4" />
+        <label for="test15">4</label> &nbsp;&nbsp;&nbsp;
+      </div>
+    </div>
+
+    <div class="card special-settings-card">
+     <div class="row center">
+
+      <br>
+      <input ng-model="all_pa_status" ng-change="toggle_pa()" value="absent" name="group2" type="radio" id="test22" />
+      <label for="test22">All Absent</label> &nbsp;&nbsp;&nbsp;
+      <input ng-model="all_pa_status" ng-change="toggle_pa()" value="present" name="group2" type="radio" id="test23" />
+      <label for="test23">All Present</label> &nbsp;&nbsp;&nbsp;
+
+    </div>
+
+
+  </div>
+</div>
+<div class="col-md-8 card">
+  <p class="marked-heading">ATTENDANCE REGISTER</p>
+  <div class="card att-card {{student.enrollment_no}} {{student.status}}" ng-class="{selected: $first}" ng-repeat="student in students">
+  <div class="row">
+    <div class="col-md-6">
+      {{student.enrollment_no}}
+    </div>
+    <div class="col-md-6">
+      {{student.name}}
+    </div>
+  </div>
+  </div>
+</div>
+
+</div>
+
+
+<div class="row card counter-card" style="padding: 10px;">
+<p class="marked-heading">STUDENT MARKED:</p>
+  <div class="col-md-4 center-align">
+    <div class="small-title">PRESENT : <span style="color: black;">{{present_count()}}</span></div>
+  </div>
+  <div class="col-md-4 center-align">
+    <div class="small-title">ABSENT : <span style="color: black;">{{absent_count()}}</span></div>
+  </div>
+  <div class="col-md-4 center-align">
+    <div class="small-title">NOT APPLICABLE : <span style="color: black;">{{na_count()}}</span></div>
+  </div>
+</div>
+
+<div ng-click="submit()" class="fixed-action-btn">
+  <a  class="btn-floating btn-large red">
+    <i class="large material-icons">send</i>
+  </a>
+</div>
+
+
+
+
+<!-- Modal Structure -->
+<div id="modal1" class="modal modal-fixed-footer">
+  <div class="modal-content">
+    <h4>Please Confirm</h4>
+    <div class="row">
+      <div class="col-md-4">
+        Present
+        <p ng-repeat="p in present_students">{{p}}</p>
+      </div>
+      <div class="col-md-4">
+        Absent
+        <p ng-repeat="a in absent_students">{{a}}</p>
+      </div>
+      <div class="col-md-4">
+        Not Applicable
+        <p ng-repeat="n in na_students">{{n}}</p>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <a href="" ng-click="submit_okay()" class="modal-action modal-close waves-effect waves-green btn-flat ">Agree</a>
+
+    <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">CANCEL</a>
+  </div>
+</div>
+</div>
+
+<script type="text/javascript">
+
+  var app = angular.module('attendance', [])
+  .controller('ac', ['$http', '$scope', function ($http, $scope) {
+    $scope.students = <%- JSON.stringify(students) %>
+    $scope.attendance = <%- JSON.stringify(attendance) %>
+    console.log($scope.attendance);
+    var i = 0;
+    $scope.cs = $scope.students[i]
+    var i = 0;
+    $scope.present_count = function () {
+      count = 0;
+      angular.forEach($scope.students, function(value){
+
+        if (value.status=="present"){
+          count++;
+        }
+      });
+      return count;
+    }
+
+    $scope.absent_count = function () {
+      count = 0;
+      angular.forEach($scope.students, function(value){
+
+        if (value.status=="absent"){
+          count++;
+        }
+      });
+      return count;
+    }
+
+    $scope.na_count = function () {
+      count = 0;
+      angular.forEach($scope.students, function(value){
+
+        if (value.status==undefined){
+          count++;
+        }
+      });
+      return count;
+    }
+
+    $scope.toggle_pa = function () {
+      if($scope.all_pa_status== undefined) return;
+      if($scope.all_pa_status == "present" || $scope.all_pa_status == "absent"){
+        angular.forEach($scope.students, function (value) {
+          value.status = $scope.all_pa_status;
+        })
+      }
+    }
+
+    $scope.submit = function(){
+      $(document).ready(function () {
+        var date, hours;
+        if ($('input[name="group1"]').filter(":checked").val() == undefined){
+         alert('Please Enter Hours!');
+         return;
+       }else{
+         hours = parseInt($('input[name="group1"]').filter(":checked").val());
+       }
+
+       if($('#timepicker').val() == undefined || $('#timepicker').val()== ""){
+         alert('Please Enter Time');
+       }else{
+         time = $('#timepicker').val();
+
+       }
+
+       if($('#datepicker').val() == undefined || $('#datepicker').val() == ""){
+        alert('Please Enter Date');
+      }else{
+        date = $('#datepicker').val();
+        var present = [];
+      var absent = [];
+      var na = [];
+      angular.forEach($scope.students, function (data) {
+       if(data.status == "present"){
+        present.push(data.enrollment_no);
+      }
+      if(data.status == "absent"){
+        absent.push(data.enrollment_no);
+      }
+      if(data.status == "" || data.status == undefined){
+        na.push(data.enrollment_no);
+      }
+    })
+    console.log('not app');
+    console.log(na);
+
+    $scope.final_json = {
+      "date" : date,
+      "time" : time,
+      "hours" : hours,
+      "present" : present,
+      "absent" : absent,
+      "na" : na
+    }
+
+    $scope.present_students = present;
+    $scope.absent_students = absent;
+    $scope.na_students = na;
+
+    $(document).ready(function(){
+        $('#modal1').openModal();
+        $scope.$evalAsync();
+    })
+
+
+
+  }
+  })
+    }
+
+    $scope.submit_okay = function () {
+      $(document).ready(function(){
+
+
+
+      console.log($scope.final_json);
+      var bid = <%- JSON.stringify(batch_id) %>
+      var sid = <%- JSON.stringify(subject_id) %>
+
+
+      $http({
+        method: 'POST',
+        url: '/teacher/attendance/' + bid + '/' + sid,
+        data: JSON.stringify($scope.final_json)
+      }).then(
+      function(res) {
+        console.log('succes !');
+        console.log(res);;
+        $('html').html(res.data)
+      },
+      function(err) {
+        console.log('error...');
+
+      }
+      );
+
+
+
+    })
+    }
+
+    $scope.arrowPressed = function ($event) {
+      var e = $event;
+      $(document).ready(function () {
+        var li = $('.att-card');
+        var liSelected = $('.selected');
+
+
+        if(e.keyCode === 68 || e.keyCode === 65 || e.keyCode === 83){
+          if (e.keyCode == 68){
+           $scope.cs.status = 'present';
+           $scope.$evalAsync();
+         } else  if(e.keyCode === 65){
+          $scope.cs.status = 'absent';
+          $scope.$evalAsync();
+        }
+
+        if(liSelected){
+          liSelected.removeClass('selected');
+
+          next = liSelected.next();
+
+
+          if(next){
+            if(next.length > 0){
+              liSelected = next.addClass('selected');
+            }else{
+
+              liSelected = li.eq(0).addClass('selected');
+            }
+          }else{
+
+            liSelected = li.eq(0).addClass('selected');
+          }
+
+        }else{
+
+          liSelected = li.eq(0).addClass('selected');
+
+        }
+        i++;
+
+        $scope.cs = $scope.students[i];
+        $scope.$evalAsync();
+      }else if(e.keyCode === 87){
+
+
+        if(liSelected){
+          liSelected.removeClass('selected');
+          next = liSelected.prev();
+          if(next.length > 0){
+            liSelected = next.addClass('selected');
+          }else{
+            liSelected = li.last().addClass('selected');
+          }
+        }else{
+          liSelected = li.last().addClass('selected');
+        }
+        i--;
+        $scope.cs = $scope.students[i];
+        $scope.$evalAsync();
+      }
+
+
+
+      $scope.$evalAsync();
+    })
+
+    }
+  }])
+
+$(document).ready(function () {
+  $('.att-cont').focus();
+
+
+  var date = new Date();
+  date.setDate(date.getDate()-3);
+  $('.datepicker').pickadate({
+    min: date,
+    today: '',
+    clear: '',
+    closeOnSelect: true,
+    closeOnClear: false,
+      selectMonths: true, // Creates a dropdown to control month
+      selectYears: 3 // Creates a dropdown of 15 years to control year
+    });
+
+})
+</script>
+<style type="text/css">
+  .current{
+    background: grey;
+  }
+  .present{
+    background: green;
+  }
+  .absent{
+    background: red;
+  }
+  .att-card{
+    padding: 0.2em;
+    text-align: center;
+    font-size: 1.2em;
+  }
+  .att-cont{
+    outline:none;
+  }
+  .selected{
+    background: grey;
+  }
+  .settings-card{
+    padding: 4em;
+
+  }
+  .special-settings-card{
+    padding: 2em;
+
+  }
+  .btn-floating.btn-large {
+    width: 56px !important;
+    height: 56px;
+    background-color: crimson !important;
+  }
+  .btn-floating.btn-large i {
+    line-height: 56px;
+  }
+  .btn-large i {
+    font-size: 1.5rem;
+  }
+  .marked-heading{
+    font-size: 1.1em;
+    line-height: 110%;
+    margin: 1.14rem 0 0.912rem 0;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    text-align: center;
+    font-weight: 900;
+    color: darkslategray;
+  }
+  .heading{
+    text-align: center;
+    font-size: 2em;
+    font-weight: 700;
+    color: darkcyan;
+    letter-spacing: 0.2em;
+  }
+  .counter-card{
+    bottom: 0px;
+    width: 50%;  
+    position: fixed;
+  }
+</style>
+<script>
+$(document).ready(function () {
+  $('#timepicker').pickatime({
+    autoclose: false,
+    twelvehour: false,
+    default: '14:20:00'
+  });
+})
+
+</script>
+<% include partials/footer %>
