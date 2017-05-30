@@ -115,8 +115,32 @@
     $scope.students = <%- JSON.stringify(students) %>
     $scope.attendance = <%- JSON.stringify(attendance) %>
     console.log($scope.attendance);
+    console.log($scope.students)
     var i = 0;
+    angular.forEach($scope.attendance, function(value, key){
+      angular.forEach($scope.students, function(value_s, key_s){
+        if(value.student == value_s.enrollment_no){
+          if(value.attendance=="P"){
+            value_s.status = "present";
+          } else if(value.attendance == "A"){
+            value_s.status = "absent";
+          } else{
+            value_s.status = undefined;
+          }
+        }
+      });
+    });
+
+    $('document').ready(function(){
+      $('.datepicker').val($scope.attendance[0].lecture_timestamp)
+      $('.timepicker').val($scope.attendance[0].lecture_timestamp)
+      $('input[name="group1"]')[$scope.attendance[0].duration_of_class - 1].checked = true
+    })
+
+    $scope.$evalAsync();
+
     $scope.cs = $scope.students[i]
+    console.log($scope.cs)
     var i = 0;
     $scope.present_count = function () {
       count = 0;
@@ -254,17 +278,21 @@
     }
 
     $scope.arrowPressed = function ($event) {
+      console.log("Arrow Pressed");
+      console.log($scope.cs)
       var e = $event;
       $(document).ready(function () {
         var li = $('.att-card');
         var liSelected = $('.selected');
-
-
-        if(e.keyCode === 68 || e.keyCode === 65 || e.keyCode === 83){
-          if (e.keyCode == 68){
+        console.log("Inisde dom")
+        
+        if(e.keyCode === 39 || e.keyCode === 37 || e.keyCode === 40){
+    console.log("Valid Code")
+          if (e.keyCode == 39){
+            console.log("23")
            $scope.cs.status = 'present';
            $scope.$evalAsync();
-         } else  if(e.keyCode === 65){
+         } else  if(e.keyCode === 37){
           $scope.cs.status = 'absent';
           $scope.$evalAsync();
         }
@@ -296,7 +324,7 @@
 
         $scope.cs = $scope.students[i];
         $scope.$evalAsync();
-      }else if(e.keyCode === 87){
+      }else if(e.keyCode === 38){
 
 
         if(liSelected){
@@ -313,10 +341,13 @@
         i--;
         $scope.cs = $scope.students[i];
         $scope.$evalAsync();
+      } else {
+        console.log("nothing");
+        console.log(e.keyCode);
       }
 
 
-
+console.log($scope.cs);
       $scope.$evalAsync();
     })
 
