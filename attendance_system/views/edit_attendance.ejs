@@ -2,28 +2,29 @@
 <% include partials/header %>
 
 <div class="container att-cont" ng-app="attendance" ng-controller="ac as ac" ng-keydown="arrowPressed($event)" tabindex="0">
+<h3 class="marked-heading">EDIT THE ATTENDANCE :</h3>
 <div class="row">
   <div class="col-md-4">
     <div class="card settings-card">
       <p class="marked-heading">LECTURE DETAILS :</p>
       <label for="datepicker" >Date:</label>
-      <input type="date" id="datepicker" class="datepicker" name="date_of_attendance" required>
+      <input disabled type="date" id="datepicker" class="datepicker" name="date_of_attendance" required>
       <br><br>
 
       <label for="timepicker">Time At Which Lecture Started :</label>
-      <input id="timepicker" class="timepicker" name="time_of_attendance" type="time">
+      <input disabled id="timepicker" class="timepicker" name="time_of_attendance" type="time">
       <br><br>
 
       <label>Duration of lecture in hours:</label>
       <div class="row center">
         <br>
-        <input name="group1" type="radio" id="test12" value="1" />
+        <input disabled name="group1" type="radio" id="test12" value="1" />
         <label for="test12">1</label> &nbsp;&nbsp;&nbsp;
-        <input name="group1" type="radio" id="test13" value="2"  />
+        <input disabled name="group1" type="radio" id="test13" value="2"  />
         <label for="test13">2</label> &nbsp;&nbsp;&nbsp;
-        <input name="group1" type="radio" id="test14" value="3" />
+        <input disabled name="group1" type="radio" id="test14" value="3" />
         <label for="test14">3</label> &nbsp;&nbsp;&nbsp;
-        <input name="group1" type="radio" id="test15" value="4" />
+        <input disabled name="group1" type="radio" id="test15" value="4" />
         <label for="test15">4</label> &nbsp;&nbsp;&nbsp;
       </div>
     </div>
@@ -40,6 +41,22 @@
     </div>
 
 
+  </div>
+  <div class="row card" style="margin: 0.1em;">
+    <p class="marked-heading">STUDENT MARKED:</p>
+    <div class="col-md-6 center-align">
+      <div class="small-title">PRESENT : <span style="color: black;">{{present_count()}}</span></div>
+    </div>
+    <div class="col-md-6 center-align">
+      <div class="small-title">ABSENT : <span style="color: black;">{{absent_count()}}</span></div>
+    </div>
+    <br><br>
+    <div class="row">
+      <div class="col-md-12 center-align">
+        <div class="small-title">NOT APPLICABLE : <span style="color: black;">{{na_count()}}</span></div>
+      </div>  
+    </div>
+    
   </div>
 </div>
 <div class="col-md-8 card">
@@ -58,19 +75,6 @@
 
 </div>
 
-
-<div class="row card counter-card" style="padding: 10px;">
-<p class="marked-heading">STUDENT MARKED:</p>
-  <div class="col-md-4 center-align">
-    <div class="small-title">PRESENT : <span style="color: black;">{{present_count()}}</span></div>
-  </div>
-  <div class="col-md-4 center-align">
-    <div class="small-title">ABSENT : <span style="color: black;">{{absent_count()}}</span></div>
-  </div>
-  <div class="col-md-4 center-align">
-    <div class="small-title">NOT APPLICABLE : <span style="color: black;">{{na_count()}}</span></div>
-  </div>
-</div>
 
 <div ng-click="submit()" class="fixed-action-btn">
   <a  class="btn-floating btn-large red">
@@ -114,8 +118,7 @@
   .controller('ac', ['$http', '$scope', function ($http, $scope) {
     $scope.students = <%- JSON.stringify(students) %>
     $scope.attendance = <%- JSON.stringify(attendance) %>
-    console.log($scope.attendance);
-    console.log($scope.students)
+    
     var i = 0;
     angular.forEach($scope.attendance, function(value, key){
       angular.forEach($scope.students, function(value_s, key_s){
@@ -132,15 +135,15 @@
     });
 
     $('document').ready(function(){
-      $('.datepicker').val($scope.attendance[0].lecture_timestamp)
-      $('.timepicker').val($scope.attendance[0].lecture_timestamp)
-      $('input[name="group1"]')[$scope.attendance[0].duration_of_class - 1].checked = true
+      var lecture_date = new Date($scope.attendance[0].lecture_timestamp);
+      $('.datepicker').val(lecture_date.toDateString());
+      $('.timepicker').val(lecture_date.getHours()+":"+lecture_date.getMinutes());
+      $('input[name="group1"]')[$scope.attendance[0].duration_of_class - 1].checked = true;
     })
 
     $scope.$evalAsync();
 
     $scope.cs = $scope.students[i]
-    console.log($scope.cs)
     var i = 0;
     $scope.present_count = function () {
       count = 0;
@@ -219,8 +222,7 @@
         na.push(data.enrollment_no);
       }
     })
-    console.log('not app');
-    console.log(na);
+    
 
     $scope.final_json = {
       "date" : date,
@@ -251,19 +253,19 @@
 
 
 
-      console.log($scope.final_json);
+      
       var bid = <%- JSON.stringify(batch_id) %>
       var sid = <%- JSON.stringify(subject_id) %>
-
+      var timestamp = <%- JSON.stringify(lecture) %>
 
       $http({
         method: 'POST',
-        url: '/teacher/attendance/' + bid + '/' + sid,
+        url: '/teacher/edit_attendance/' + bid + '/' + sid + '/' + timestamp,
         data: JSON.stringify($scope.final_json)
       }).then(
       function(res) {
         console.log('succes !');
-        console.log(res);;
+        console.log(res);
         $('html').html(res.data)
       },
       function(err) {
@@ -278,21 +280,16 @@
     }
 
     $scope.arrowPressed = function ($event) {
-      console.log("Arrow Pressed");
-      console.log($scope.cs)
       var e = $event;
       $(document).ready(function () {
         var li = $('.att-card');
         var liSelected = $('.selected');
-        console.log("Inisde dom")
         
-        if(e.keyCode === 39 || e.keyCode === 37 || e.keyCode === 40){
-    console.log("Valid Code")
-          if (e.keyCode == 39){
-            console.log("23")
+        if(e.keyCode === 68 || e.keyCode === 65 || e.keyCode === 83){
+          if (e.keyCode == 68){
            $scope.cs.status = 'present';
            $scope.$evalAsync();
-         } else  if(e.keyCode === 37){
+         } else  if(e.keyCode === 65){
           $scope.cs.status = 'absent';
           $scope.$evalAsync();
         }
@@ -324,7 +321,7 @@
 
         $scope.cs = $scope.students[i];
         $scope.$evalAsync();
-      }else if(e.keyCode === 38){
+      }else if(e.keyCode === 87){
 
 
         if(liSelected){
@@ -346,8 +343,6 @@
         console.log(e.keyCode);
       }
 
-
-console.log($scope.cs);
       $scope.$evalAsync();
     })
 

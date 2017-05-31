@@ -3,15 +3,61 @@
 
 <div id="lecture-display" class="container">
 <% if(lectures.length==0){ %>
-  <h4>
-    No Attendance marked for this subject
+  <h4 class="marked-heading">
+    YOU HAVE NOT MARKED ANY ATTENDANCE FOR THIS SUBJECT
   </h4>
 <% } else {%>
-  <% for(var i=0; i<lectures.length ; ++i){ %>
-    <div class="card">
-      <h5><%=lectures[i].lecture_timestamp%><a href="<%=lectures[i].lecture_timestamp%>">Edit</a></h5>
-    </div>
-  <% } %>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.15/datatables.min.css"/>
+ 
+<script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.15/datatables.min.js"></script>
+
+<style type="text/css">
+select{
+	display: initial;
+}
+.marked-heading{
+    font-size: 1.1em;
+    line-height: 110%;
+    margin: 1.14rem 0 0.912rem 0;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    text-align: center;
+    font-weight: 900;
+    color: darkslategray;
+  }
+  .heading{
+    text-align: center;
+    font-size: 2em;
+    font-weight: 700;
+    color: darkcyan;
+    letter-spacing: 0.2em;
+  }
+</style>
+
+
+<table id="lectures" class="striped">
+	<thead>
+		<th>Lecture date and time</th>
+		<th>Edit this lecture</th>
+		<th>Delete this lecture</th>
+	</thead>
+	<tbody>
+		<% for(var i=lectures.length-1; i>=0 ; --i){ 
+		var lecture = new Date(lectures[i].lecture_timestamp);%>
+		<tr>
+			<td><%=lecture.toUTCString()%></td>
+			<td><a href="/teacher/edit_attendance/<%=bid%>/<%=sid%>/<%=lectures[i].lecture_timestamp%>">Edit</a></td>
+			<td><a href="#">Delete</a></td>
+		</tr>
+		<% } %>
+	</tbody>
+</table>
+<script type="text/javascript">
+	$(document).ready(function(){
+	    $('#lectures').DataTable();
+	});
+	
+</script>  
 <% } %>
 </div>
 

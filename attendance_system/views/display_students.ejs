@@ -4,7 +4,7 @@
 <div style="width:800px; margin:0 auto;">
   <div class="attendance-heading">Attendance Marked Successfully</div>
 
-  <div class="date-attendance"><%=date.getDate()%>/<%=date.getMonth()%>/<%=date.getFullYear()%>
+  <div class="date-attendance"><%=date.toUTCString()%>
   </div>
 </div>
 <br><br>
@@ -53,19 +53,6 @@
     </div>
   </div>  
   </div>
-<!-- <h4>Students marked not applicable are: </h4>
-  <h4>date: <%=date.getDate()%>/<%=date.getMonth()%>/<%=date.getFullYear()%></h4>
-  <table>
-   <tr>
-    <th>Enrollment Number</th>
-  </tr>
-
-  <% for (var i = 0; i < students_notapplicable.length ;i++) { %>
-  <tr>
-    <td><%= students_notapplicable[i] %></td>
-  </tr>    
-  <% } %>
-</table> -->
 </div>
 
 

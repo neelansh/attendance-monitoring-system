@@ -153,7 +153,6 @@ router.post('/attendance/:batch_id/:subject_id', function(req, res) {
 	if(req.user.instructor_id == null){
 		res.redirect("/teacher/login");
 	}
-	console.log(req.body);
 	req.checkParams('batch_id', 'invalid batch id parameter').notEmpty().isInt();
 	req.checkParams('subject_id', 'invalid subject id parameter').notEmpty().isInt();
 	req.checkBody('hours','teaching hours invalid').notEmpty().isInt();	
@@ -331,7 +330,12 @@ router.get('/edit_attendance/:batch_id/:subject_id', function(req, res){
 	
 	var attendance = att.getLecturesBySubject(req.user.school, req.params.subject_id, function(err, results){
 		if(err) throw new Error(err);
-		res.render('display_lectures',{ 'lectures': results });
+		var dateFormat = require('dateformat');
+		for(var i=0;i<results.length;++i){
+			var lecture = new Date(results[i].lecture_timestamp);
+			results[i].lecture_timestamp = dateFormat(lecture, "isoDateTime");
+		}
+		res.render('display_lectures',{ 'lectures': results, 'sid':req.params.subject_id, 'bid':req.params.batch_id });
 		return;
 	});
 
@@ -365,14 +369,14 @@ router.get('/edit_attendance/:batch_id/:subject_id/:lecture', function(req, res)
 			res.sendStatus(404);
 			return;
 		}
-		att.getAttendanceByLecture(req.user.school, req.params.subject_id, timestamp, function(err, attendance){
+		att.getAttendanceByLecture(req.user.school, req.params.subject_id, lecture, function(err, attendance){
 			if(err) throw new Error(err);
 			if(attendance.length == 0){
 				req.flash('error_msg', 'Invalid lecture parameter. No record of attendance for lecture on ' + timestamp);
 				res.redirect("/teacher/dashboard");
 				return;
 			}
-			res.render('edit_attendance',{'students': students, 'attendance': attendance, 'batch_id': req.params.batch_id, 'subject_id': req.params.subject_id});
+			res.render('edit_attendance',{'students': students, 'lecture': timestamp, 'attendance': attendance, 'batch_id': req.params.batch_id, 'subject_id': req.params.subject_id});
 			return;
 		});
 	});
@@ -391,9 +395,6 @@ router.post('/edit_attendance/:batch_id/:subject_id/:lecture', function(req, res
 	
 	req.checkParams('batch_id', 'invalid batch id parameter').notEmpty().isInt();
 	req.checkParams('subject_id', 'invalid subject id parameter').notEmpty().isInt();
-	req.checkBody('hours','teaching hours invalid').notEmpty().isInt();	
-	req.checkBody('date','attendance date is empty').notEmpty();
-	req.checkBody('time','attendance time is empty').notEmpty();
 	req.checkParams('lecture', 'invalid lecture parameter').notEmpty();
 	var errors = req.validationErrors();
 	if(errors){
@@ -404,23 +405,21 @@ router.post('/edit_attendance/:batch_id/:subject_id/:lecture', function(req, res
 
 	var att = require("../models/attendance")
 	var subject_id = req.params.subject_id;
-	var date = new Date(req.body.date + " " + req.body.time);
 	var students_present = req.body.present;
 	var students_absent = req.body.absent;
 	var students_notapplicable = req.body.na;
-	var duration_of_class = req.body.hours;
+	
 
-	var dateFormat = require('dateformat');
-	var lecture = new Date(req.params.lecture);
-	var timestamp = dateFormat(lecture, "isoDateTime");
+	
+	var lecture = new Date(req.params.lecture);	
 
-	var subjects = att.updateAttendance(req.user.school, subject_id, date, timestamp, students_present, students_absent, students_notapplicable, duration_of_class, function(err, results){
+	var subjects = att.updateAttendance(req.user.school, subject_id, lecture, students_present, students_absent, students_notapplicable, function(err, results){
 		if(err) throw new Error(err);
 		res.render('display_students', {'students_present': students_present,
 			'students_notapplicable': students_notapplicable,
 			'students_absent': students_absent,
-			'date': date,
-			'attendanceAwarded' : duration_of_class
+			'date': lecture,
+			'attendanceAwarded' : req.body.hours
 		});
 	});	
 });

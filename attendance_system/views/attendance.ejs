@@ -41,6 +41,22 @@
 
 
   </div>
+  <div class="row card" style="margin: 0.1em;">
+    <p class="marked-heading">STUDENT MARKED:</p>
+    <div class="col-md-6 center-align">
+      <div class="small-title">PRESENT : <span style="color: black;">{{present_count()}}</span></div>
+    </div>
+    <div class="col-md-6 center-align">
+      <div class="small-title">ABSENT : <span style="color: black;">{{absent_count()}}</span></div>
+    </div>
+    <br><br>
+    <div class="row">
+      <div class="col-md-12 center-align">
+        <div class="small-title">NOT APPLICABLE : <span style="color: black;">{{na_count()}}</span></div>
+      </div>  
+    </div>
+    
+  </div>
 </div>
 <div class="col-md-8 card">
   <p class="marked-heading">ATTENDANCE REGISTER</p>
@@ -59,18 +75,7 @@
 </div>
 
 
-<div class="row card counter-card" style="padding: 10px;">
-<p class="marked-heading">STUDENT MARKED:</p>
-  <div class="col-md-4 center-align">
-    <div class="small-title">PRESENT : <span style="color: black;">{{present_count()}}</span></div>
-  </div>
-  <div class="col-md-4 center-align">
-    <div class="small-title">ABSENT : <span style="color: black;">{{absent_count()}}</span></div>
-  </div>
-  <div class="col-md-4 center-align">
-    <div class="small-title">NOT APPLICABLE : <span style="color: black;">{{na_count()}}</span></div>
-  </div>
-</div>
+<!-- counter card was here -->
 
 <div ng-click="submit()" class="fixed-action-btn">
   <a  class="btn-floating btn-large red">
@@ -116,7 +121,6 @@
     var i = 0;
     $scope.cs = $scope.students[i]
     var i = 0;
-    console.log($scope.students);
     $scope.present_count = function () {
       count = 0;
       angular.forEach($scope.students, function(value){
