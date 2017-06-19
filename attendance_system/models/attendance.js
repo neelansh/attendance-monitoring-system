@@ -42,6 +42,15 @@ module.exports.updateAttendance = function(school, subject_id, lecture_timestamp
   callback(null, "all entries done")
 }
 
+module.exports.deleteAttendance = function(school, subject_id, lecture_timestamp, callback){
+  
+    var query = db.get().query("delete from ?? where subject_id = ? and lecture_timestamp = ?",[school+"_attendance", subject_id, lecture_timestamp],function(err, rows){
+      if(err)throw err;
+    });
+  
+  callback(null, "all entries done")
+}
+
 module.exports.getAttendanceBySubject = function(school, subject_id, callback){
   var query = db.get().query("select * from ?? where subject_id = ?",[school+"_attendance", subject_id],function(err, rows){
     if(err)throw err;

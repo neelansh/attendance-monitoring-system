@@ -424,4 +424,36 @@ router.post('/edit_attendance/:batch_id/:subject_id/:lecture', function(req, res
 	});	
 });
 
+router.get('/delete_attendance/:batch_id/:subject_id/:lecture', function(req, res){
+	if(!req.isAuthenticated()){
+		res.redirect("/teacher/login");
+	}
+	if(req.user.instructor_id == null){
+		res.redirect("/teacher/login");
+	}
+	req.checkParams('batch_id', 'invalid batch id parameter').notEmpty().isInt();
+	req.checkParams('subject_id', 'invalid subject id').notEmpty().isInt();
+	req.checkParams('lecture', 'invalid lecture parameter').notEmpty();
+	var errors = req.validationErrors();
+	if(errors){
+		res.locals.errors = errors;
+		res.render('index');
+		return;
+	}
+	var att = require("../models/attendance");
+	var sub = require("../models/subjects");
+	var dateFormat = require('dateformat');
+	var lecture = new Date(req.params.lecture);
+	var timestamp = dateFormat(lecture, "isoDateTime");
+	// console.log(timestamp);
+	
+		att.deleteAttendance(req.user.school, req.params.subject_id, lecture, function(err, result){
+			if(err) throw new Error(err);
+			
+			res.render('attendance_deleted',{'students': result, 'lecture': lecture, 'batch_id': req.params.batch_id, 'subject_id': req.params.subject_id});
+			return;
+		});	
+
+});
+
 module.exports = router;

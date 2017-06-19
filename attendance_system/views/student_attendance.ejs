@@ -28,6 +28,8 @@
 			$('#student_name').append(data.name);
 			$('#student_course').append(data.course);
 			$('#student_stream').append(data.stream);
+			$('#student_email').append(data.email);
+			$('#student_phone').append(data.phone);
 
 		});
 	});
@@ -36,41 +38,67 @@
 <div id="student" class="container card center-align">
 	<h5 class="heading">STUDENT DETAILS:</h5><br>
 	<div class="row">
-		<div class="col-md-3">
+		<div class="col-md-4">
 			<span id="student_enroll" class="marked-heading">Erollment No. : </span>
 		</div>
-		<div class="col-md-3">
+		<div class="col-md-4">
 			<span id="student_name" class="marked-heading">Name : </span>
 		</div>
-		<div class="col-md-3">
+		<div class="col-md-4">
 			<span id="student_course" class="marked-heading">Course : </span>
 		</div>
-		<div class="col-md-3">
-			<span id="student_stream" class="marked-heading">stream : </span>
+	</div>
+	<div class="row">
+		<div class="col-md-4">
+			<span id="student_stream" class="marked-heading">Stream : </span>
+		</div>
+		<div class="col-md-4">
+			<span id="student_email" class="marked-heading">Email : </span>
+		</div>
+		<div class="col-md-4">
+			<span id="student_phone" class="marked-heading">Phone No.: </span>
 		</div>
 
 	</div>
 </div>
 
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.15/datatables.min.css"/>
+ 
+<script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.15/datatables.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function(){
+      $('table').DataTable();
+  });
+  
+</script>
+<style type="text/css">
+  select{
+    display: initial;
+    color: initial;
+  }
+  label{
+    color: initial;
+  }
+</style>
 
-<div class="container card">
+<div class="container card" style="padding: 1em;">
 
 	<div>
-		<h5 class="heading">DETAILS OF STUDENT FOR EACH LECTURE:</h5>
+		<h5 class="heading">STUDENT ATTENDANCE FOR EACH LECTURE:</h5>
 		<p class="marked-heading">*P: Present , A: Absent , NA: Not Applicable</p>
 		<table class="striped centered">
 			<thead>
 				<tr>
-					<th>Lecture Date</th>
+					<th>Lecture Date and Time</th>
 					<th>Present / Absent</th>
-					<th>hours of lecture</th>
+					<th>Duration of lecture(in Hours)</th>
 				</tr>
 			</thead>
 			<tbody>
 				<% for(var i=0 ; i<attendance.length; ++i){ %>
 				<tr>
 					<% var date = new Date(attendance[i].lecture_timestamp) %>
-					<td><%=date.getDate()%>/<%=date.getMonth()%>/<%=date.getFullYear()%></td>
+					<td><%=date.toUTCString()%></td>
 					<td><%=attendance[i].attendance%></td>
 					<td><%=attendance[i].duration_of_class%></td>
 				</tr>    

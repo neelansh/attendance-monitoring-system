@@ -41,11 +41,29 @@
   });
 
 </script>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.15/datatables.min.css"/>
+ 
+<script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.15/datatables.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function(){
+      $('table').DataTable();
+  });
+  
+</script> 
+<style type="text/css">
+  select{
+    display: initial;
+    color: initial;
+  }
+  label{
+    color: initial;
+  }
+</style>
 <h4 id="heading" class="heading container">ATTENDANCE FOR CLASS <br></h4><br>
 <h5 class="marked-heading">*CLICK ON ENROLLMENT NUMBER FOR MORE DETAILS</h5>
 <div class="container" style="display: flex; justify-content: space-between;">
 
-	<div class="card col-md-5" style="padding: 1em;">
+	<div class="card col-md-6" style="padding: 1em; margin: 1em;">
 		<h5 class="marked-heading">Student Present:</h5>
 		<table class="striped centered">
         <thead>
@@ -65,8 +83,7 @@
     </table>
 		
 	</div>
-  <div class="col-md-2"></div>
-	<div class="card col-md-5" style="padding: 1em;"">
+	<div class="card col-md-6" style="padding: 1em; margin: 1em;">
 		<h5 class="marked-heading">Student Absent:</h5>
 		<table class="striped centered">
         <thead>
