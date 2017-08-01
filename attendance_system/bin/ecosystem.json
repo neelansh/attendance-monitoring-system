@@ -1,0 +1,18 @@
+{
+  "apps" : [{
+    // Application #1
+    "name"        : "worker-app",
+    "script"      : "www",
+    "args"        : [],
+    "watch"       : true,
+    "node_args"   : "",
+    "merge_logs"  : true,
+    "cwd"         : "www",
+    "env": {
+      "NODE_ENV": "development",
+    },
+    "env_production" : {
+       "NODE_ENV": "production"
+    }
+  }]
+}
