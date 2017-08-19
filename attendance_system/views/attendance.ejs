@@ -59,17 +59,27 @@
   </div>
 </div>
 <div class="col-md-8 card">
-  <p class="marked-heading">ATTENDANCE REGISTER</p>
-  <div class="card att-card {{student.enrollment_no}} {{student.status}}" ng-class="{selected: $first}" ng-repeat="student in students">
-  <div class="row">
-    <div class="col-md-6">
-      {{student.enrollment_no}}
-    </div>
-    <div class="col-md-6">
-      {{student.name}}
-    </div>
-  </div>
-  </div>
+  <table id="student-list">
+    <p class="marked-heading">ATTENDANCE REGISTER</p>
+    <tr class="card att-card {{student.enrollment_no}} {{student.status}}" ng-class="{present : attend=='P', absent: attend=='A'}" ng-repeat="student in students">
+      <td class="col-xs-4">
+        {{student.enrollment_no}}
+      </td>
+      <td class="col-xs-4">
+        {{student.name}}
+      </td>
+      <td class="col-xs-4">
+        <form id="radio{{student.enrollment_no}}"> 
+          <input ng-model="attend" type="radio" name="sel" id="P{{student.enrollment_no}}" value="P" ng-change='count(attend, $index)'/>
+          <label for="P{{student.enrollment_no}}">P</label>
+          <input ng-model="attend" type="radio" name="sel" id="A{{student.enrollment_no}}" value="A" ng-change='count(attend, $index)'/>
+          <label for="A{{student.enrollment_no}}">A</label>
+          <input ng-model="attend" type="radio" name="sel" id="NA{{student.enrollment_no}}" value="NA" ng-change='count(attend, $index)'/>
+          <label for="NA{{student.enrollment_no}}">N/A</label>
+        </form>
+      </td>
+    </tr>
+  </table>
 </div>
 
 </div>
@@ -120,7 +130,6 @@
     $scope.students = <%- JSON.stringify(students) %>
     var i = 0;
     $scope.cs = $scope.students[i]
-    var i = 0;
     $scope.present_count = function () {
       count = 0;
       angular.forEach($scope.students, function(value){
@@ -143,6 +152,22 @@
       return count;
     }
 
+    /*$scope.attend =  {
+      present : 'A';
+    }*/
+
+    $scope.count = function (value, index) {
+      $scope.cs = $scope.students[index];
+      if(value == 'A') {
+        $scope.cs.status = 'absent';
+      }else if(value == 'P') {
+        $scope.cs.status = 'present';
+      }else{
+        $scope.cs.status = 'na';
+      }
+      $scope.$evalAsync();
+    }
+
     $scope.na_count = function () {
       count = 0;
       angular.forEach($scope.students, function(value){
@@ -162,6 +187,7 @@
         })
       }
     }
+
 
     $scope.submit = function(){
       $(document).ready(function () {
@@ -256,77 +282,10 @@
     })
     }
 
-    $scope.arrowPressed = function ($event) {
-      var e = $event;
-      $(document).ready(function () {
-        var li = $('.att-card');
-        var liSelected = $('.selected');
-
-
-        if(e.keyCode === 68 || e.keyCode === 65 || e.keyCode === 83){
-          if (e.keyCode == 68){
-           $scope.cs.status = 'present';
-           $scope.$evalAsync();
-         } else  if(e.keyCode === 65){
-          $scope.cs.status = 'absent';
-          $scope.$evalAsync();
-        }
-
-        if(liSelected){
-          liSelected.removeClass('selected');
-
-          next = liSelected.next();
-
-
-          if(next){
-            if(next.length > 0){
-              liSelected = next.addClass('selected');
-            }else{
-
-              liSelected = li.eq(0).addClass('selected');
-            }
-          }else{
-
-            liSelected = li.eq(0).addClass('selected');
-          }
-
-        }else{
-
-          liSelected = li.eq(0).addClass('selected');
-
-        }
-        i++;
-
-        $scope.cs = $scope.students[i];
-        $scope.$evalAsync();
-      }else if(e.keyCode === 87){
-
-
-        if(liSelected){
-          liSelected.removeClass('selected');
-          next = liSelected.prev();
-          if(next.length > 0){
-            liSelected = next.addClass('selected');
-          }else{
-            liSelected = li.last().addClass('selected');
-          }
-        }else{
-          liSelected = li.last().addClass('selected');
-        }
-        i--;
-        $scope.cs = $scope.students[i];
-        $scope.$evalAsync();
-      }
-
-
-
-      $scope.$evalAsync();
-    })
-
-    }
   }])
 
 $(document).ready(function () {
+
   $('.att-cont').focus();
 
 
@@ -349,10 +308,10 @@ $(document).ready(function () {
     background: grey;
   }
   .present{
-    background: green;
+    background: #49892a;
   }
   .absent{
-    background: red;
+    background: #f04c3b;
   }
   .att-card{
     padding: 0.2em;
