@@ -1,74 +1,14 @@
 <!DOCTYPE html>
 
-<% include partials/header %>
-<div style="width:800px; margin:0 auto;">
-  <div class="attendance-heading">Attendance Marked Successfully</div>
-
-  <div class="date-attendance"><%=date.toUTCString()%>
-  </div>
-</div>
-<br><br>
-<div class="container">
-  <div class="row">
-  <div class="col-md-6">
-  <div class="card" style="padding: 1em;">
-  <h4 class="marked-heading">Students marked present</h4>
-   <table class="striped centered">
-        <thead>
-        <tr>
-              <th>Enrollment Number</th>
-               <th>Attendance awarded</th>
-          </tr>
-        </thead>
-        <tbody>
-           <% for (var i = 0; i < students_present.length ;i++) { %>
-    <tr>
-      <td><%= students_present[i] %></td>
-      <td><%= attendanceAwarded %></td>
-    </tr>    
-    <% } %>
-        </tbody>
-    </table>
-    </div>
-  </div>
-  <div class="col-md-6">
-  <div class="card" style="padding: 1em;">
-    <h4 class="marked-heading">Students marked absent</h4>
-    <table class="striped centered">
-      <thead>
-        <tr>
-          <th>Enrollment Number</th>
-          <th>Attendance awarded</th>
-        </tr>
-      </thead>
-      <tbody>
-          <% for (var i = 0; i < students_absent.length ;i++) { %>
-        <tr>
-          <td><%= students_absent[i] %></td>
-          <td><%= attendanceAwarded %></td>
-        </tr>    
-          <% } %>
-      </tbody>
-    </table>
-    </div>
-  </div>  
-  </div>
-</div>
-
-
-<% include partials/footer %>
 <style type="text/css">
   .date-attendance{
-    text-align: center;
-    font-size: 2em;
-    font-weight: 700;
-    color: darkcyan;
-    letter-spacing: 0.2em;
+    text-align: left;
   }
   .attendance-heading{
     font-size: 3em;
     text-align: center;
     font-weight: 200;
+    color: teal;
   }
   .marked-heading{
     font-size: 1.1em;
@@ -81,3 +21,63 @@
     color: darkslategray;
   }
 </style>
+
+
+
+<div class="container">
+  <div class="row">
+    <p class="attendance-heading">ATTENDANCE MARKED SUCCESSFULLY</p>
+    <div class="col-md-4 date-attendance">
+    <table>
+      <tr>
+        <td>Lecture Date:</td>
+        <td><%=date.toDateString()%></td>
+      </tr>
+      <tr>
+        <td>Lecture Time:</td>
+        <td><%=date.toLocaleTimeString()%></td>
+      </tr>
+      <tr>
+        <td>Duration of Lecture:</td>
+        <td><%=duration_of_class%> Hours</td>
+      </tr>
+    </table>
+      
+    </div>
+    <div class="col-md-8">
+      
+
+      <div class="card material-table">
+        <div class="table-header">
+          <span class="table-title">Attendance for class</span>
+          <div class="actions">
+            <a href="#" class="search-toggle waves-effect btn-flat nopadding"><i class="material-icons">search</i></a>
+          </div>
+        </div>
+        <table id="datatable">
+          <thead>
+            <tr>
+              <th>Roll Number</th>
+              <th>Name</th>
+              <th>Attendance</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% for(var i in attendance){ %>
+              <tr>
+                <td><a style="color: blue;" target="_blank" href="/teacher/attendance_marked/<%=batch_id%>/<%=subject_id%>/<%=attendance[i].student%>"><%=attendance[i].student%></a></td>
+                <td><%=students[attendance[i].student].name%></td>
+                <td><%=attendance[i].attendance%></td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+
+      </div>
+
+
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript" src="/javascripts/material_data_table.js"></script>

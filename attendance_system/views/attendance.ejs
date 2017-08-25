@@ -1,7 +1,302 @@
 <!DOCTYPE html>
 <% include partials/header %>
 
-<div class="container att-cont" ng-app="attendance" ng-controller="ac as ac" ng-keydown="arrowPressed($event)" tabindex="0">
+<style type="text/css">
+  .current{
+    background: grey;
+  }
+  .present{
+    background: #49892a;
+  }
+  .absent{
+    background: #f04c3b;
+  }
+  .att-card{
+    padding: 0.2em;
+    text-align: center;
+    font-size: 1.2em;
+  }
+  .att-cont{
+    outline:none;
+  }
+  .selected{
+    background: grey;
+  }
+  .settings-card{
+    padding: 4em;
+
+  }
+  .special-settings-card{
+    padding: 2em;
+
+  }
+  .btn-floating.btn-large {
+    width: 56px !important;
+    height: 56px;
+    background-color: crimson !important;
+  }
+  .btn-floating.btn-large i {
+    line-height: 56px;
+  }
+  .btn-large i {
+    font-size: 1.5rem;
+  }
+  .marked-heading{
+    font-size: 1.1em;
+    line-height: 110%;
+    margin: 1.14rem 0 0.912rem 0;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    text-align: center;
+    font-weight: 900;
+    color: darkslategray;
+  }
+  .heading{
+    text-align: center;
+    font-size: 2em;
+    font-weight: 700;
+    color: darkcyan;
+    letter-spacing: 0.2em;
+  }
+  .counter-card{
+    bottom: 0px;
+    width: 50%;  
+    position: fixed;
+  }
+</style>
+
+
+
+<div class="container">
+
+<form id="attendance_register" method="POST">
+
+
+  <div class="row">
+
+  <div class="col-md-4">
+    <div class="card settings-card">
+      <p class="marked-heading">LECTURE DETAILS :</p>
+      <label for="datepicker" >Date:</label>
+      <input type="text" id="datepicker" class="datepicker" name="date_of_attendance">
+      <script type="text/javascript">
+         $('.datepicker').pickadate({
+            selectMonths: true, // Creates a dropdown to control month
+            selectYears: 15, // Creates a dropdown of 15 years to control year,
+            today: 'Today',
+            clear: 'Clear',
+            close: 'Ok',
+            closeOnSelect: false // Close upon selecting a date,
+          });
+      </script>
+
+      <!-- <input type="date" id="datepicker" class="datepicker" name="date_of_attendance" required> -->
+      <br><br>
+
+      <label for="timepicker">Time At Which Lecture Started :</label>
+      <input id="timepicker" type="text" class="timepicker" name="time_of_attendance">
+      <!-- <input id="timepicker" class="timepicker" name="time_of_attendance" type="time"> -->
+      <script type="text/javascript">
+          $('.timepicker').pickatime({
+            default: 'now', // Set default time: 'now', '1:30AM', '16:30'
+            fromnow: 0,       // set default time to * milliseconds from now (using with default = 'now')
+            twelvehour: true, // Use AM/PM or 24-hour format
+            autoclose: false, // automatic close timepicker
+            ampmclickable: true, // make AM PM clickable
+          });
+      </script>
+      <br><br>
+
+      <label>Duration of lecture in hours:</label>
+      <div class="row center">
+        <br>
+        <input name="duration_of_lecture" type="radio" id="test1" value="1" />
+        <label for="test1">1</label> &nbsp;&nbsp;
+        <input name="duration_of_lecture" type="radio" id="test2" value="2"  />
+        <label for="test2">2</label> &nbsp;&nbsp;
+        <input name="duration_of_lecture" type="radio" id="test3" value="3" />
+        <label for="test3">3</label> &nbsp;&nbsp;
+        <input name="duration_of_lecture" type="radio" id="test4" value="4" />
+        <label for="test4">4</label> &nbsp;&nbsp;
+      </div>
+    </div>
+  </div>
+
+
+    <div class="col-md-8">
+
+
+      <div class="card material-table">
+        <div class="table-header">
+          <span class="table-title">Attendance for class</span>
+          <div class="actions">
+            <a href="#" class="search-toggle waves-effect btn-flat nopadding"><i class="material-icons">search</i></a>
+          </div>
+        </div>
+
+        <table id="datatable" class="striped centered">
+          <thead>
+            <tr>
+              <th>Roll No.</th>
+              <th>Name</th>
+              <th>Attendance</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% for(var i=0; i<students.length ; ++i){ %>
+            <tr>
+              <td><%=students[i]['enrollment_no']%></td>
+              <td><%=students[i]['name']%></td>
+              <td>
+              <form id="radio_<%=students[i]['enrollment_no']%>">
+                <input id="present_<%=students[i]['enrollment_no']%>" type="radio" class="attendance_present" name="<%=students[i]['enrollment_no']%>" value="P"/>
+                <label for="present_<%=students[i]['enrollment_no']%>">P</label>
+                <input id="absent_<%=students[i]['enrollment_no']%>" type="radio" class="attendance_absent" name="<%=students[i]['enrollment_no']%>" value="A" checked/>
+                <label for="absent_<%=students[i]['enrollment_no']%>">A</label>
+                <input id="na_<%=students[i]['enrollment_no']%>" type="radio" class="attendance_na" name="<%=students[i]['enrollment_no']%>" value="NA" />
+                <label for="na_<%=students[i]['enrollment_no']%>">N/A</label>
+              </form>
+
+              </td>
+            </tr>
+            <% } %>
+          </tbody>
+        </table>
+
+      </div>
+
+
+
+    </div>
+  </div>
+
+
+<div id="submit" class="fixed-action-btn">
+  <a  class="btn-floating btn-large red">
+    <i class="large material-icons">send</i>
+  </a>
+</div>
+
+</form>
+
+<div id="confirm_modal" class="modal">
+  <div class="modal-content">
+    <h4>Are you sure?</h4>
+    <p>You are marking attendance for</p>
+    <p>
+      Date: <span id="date"></span><br>
+      Time: <span id="time"></span><br>
+      Duration (in hours): <span id="duration"></span><br>
+      Number of students Present(P): <span id="present"></span><br>
+      Number of students Absent(A): <span id="absent"></span><br>
+      Number of students Not Applicable(N/A): <span id="na"></span><br>
+    </p>
+  </div>
+  <div class="modal-footer">
+    <a id="confirm_submit" class="modal-action waves-effect waves-green btn-flat">Agree</a>
+    <a class="modal-action modal-close waves-effect waves-green btn-flat">Disagree</a>
+  </div>
+</div>
+
+
+</div>
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('.modal').modal();
+    // var table = get_table();
+
+    var date;
+    var time;
+    var hours;
+    var present = [];
+    var absent = [];
+    var na = [];
+
+    $("#confirm_submit").click(function(event){
+      var bid = <%- JSON.stringify(batch_id) %>
+      var sid = <%- JSON.stringify(subject_id) %>
+
+      $.ajax({
+        type: "POST",
+        url: '/teacher/attendance/' + bid + '/' + sid,
+        data: {
+          "date" : date,
+          "time" : time,
+          "hours" : hours,
+          "present" : JSON.stringify(present),
+          "absent" : JSON.stringify(absent),
+          "na" : JSON.stringify(na)
+        },
+        success: function(data, status, xhr){
+          // console.log(data)
+          $('#confirm_modal').modal('close');
+          $('main').html(data);
+        },
+        error: function(xhr, status, error){
+          alert("Error.")
+        }
+      });
+    })
+
+    $("#submit").click(function(event){
+      
+      if($('#datepicker').val() == undefined || $('#datepicker').val() == ""){
+        alert('Please Enter Date');
+        return;
+      }else{
+        date = $('#datepicker').val();
+      }
+
+      if($('#timepicker').val() == undefined || $('#timepicker').val() == ""){
+        alert('Please Enter Time');
+        return;
+      }else{
+        time = $('#timepicker').val();
+      }
+
+      if($('input[name=duration_of_lecture]:checked').val() == undefined || $('input[name=duration_of_lecture]:checked').val() == ""){
+        alert('Please Enter Duration of lecture');
+        return;
+      }else{
+        hours = $('input[name=duration_of_lecture]:checked').val();
+      }
+
+
+      table.$("input[class=attendance_present]:checked").each(function(){
+        present.push(this.name);
+      })
+      
+      
+      table.$("input[class=attendance_absent]:checked").each(function(){
+        absent.push(this.name);
+      })
+      
+      
+      table.$("input[class=attendance_na]:checked").each(function(){
+        na.push(this.name);
+      })
+
+      $('#date').html(date)
+      $('#time').html(time)
+      $('#duration').html(hours)
+      $('#present').html(present.length)
+      $('#absent').html(absent.length)
+      $('#na').html(na.length)
+
+
+      $('#confirm_modal').modal('open');
+
+    })
+    
+    
+
+  })
+
+</script>
+
+
+<!-- <div class="container att-cont" ng-app="attendance" ng-controller="ac as ac" ng-keydown="arrowPressed($event)" tabindex="0">
 <div class="row">
   <div class="col-md-4">
     <div class="card settings-card">
@@ -85,7 +380,7 @@
 </div>
 
 
-<!-- counter card was here -->
+
 
 <div ng-click="submit()" class="fixed-action-btn">
   <a  class="btn-floating btn-large red">
@@ -96,7 +391,7 @@
 
 
 
-<!-- Modal Structure -->
+
 <div id="modal1" class="modal modal-fixed-footer">
   <div class="modal-content">
     <h4>Please Confirm</h4>
@@ -375,5 +670,5 @@ $(document).ready(function () {
   });
 })
 
-</script>
+</script> -->
 <% include partials/footer %>

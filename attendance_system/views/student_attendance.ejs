@@ -12,20 +12,23 @@
 		color: darkslategray;
 	}
 	.heading{
-		text-align: center;
+		/*text-align: center;*/
 		font-size: 2em;
 		font-weight: 700;
 		color: darkcyan;
 		letter-spacing: 0.2em;
 	}
 </style>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
 <script type="text/javascript">
 	$(document).ready(function () {
 		var enrollment_no = <%-enrollment_no%>;
 		$.getJSON('/api/students/' + enrollment_no, function (data) {
 			
 			$('#student_enroll').append(data.enrollment_no);
-			$('#student_name').append(data.name);
+			$('.student_name').append(data.name);
 			$('#student_course').append(data.course);
 			$('#student_stream').append(data.stream);
 			$('#student_email').append(data.email);
@@ -34,81 +37,110 @@
 		});
 	});
 
+	$(document).ready(function () {
+		var attendance = <%- JSON.stringify(attendance) %>;
+		var hours_present = 0;
+		var hours_absent = 0;
+		$.each(attendance, function(index, value){
+			if(value.attendance === 'P'){
+				hours_present = hours_present + value.duration_of_class;
+			}
+			if(value.attendance === 'A'){
+				hours_absent = hours_absent + value.duration_of_class;
+			}
+		})
+
+		google.charts.load('current', {'packages':['corechart']});
+	      google.charts.setOnLoadCallback(drawChart);
+
+	      function drawChart() {
+
+	        var data = google.visualization.arrayToDataTable([
+	          ['Attendance', 'Hours'],
+	          ['Hours Present',     hours_present],
+	          ['Hours Absent',      hours_absent]
+	        ]);
+
+	        var options = {
+	          title: 'Attendance Stats'
+	        };
+
+	        var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+
+	        chart.draw(data, options);
+	      }
+	});
+
 </script>
-<div id="student" class="container card center-align">
-	<h5 class="heading">STUDENT DETAILS:</h5><br>
-	<div class="row">
-		<div class="col-md-4">
-			<span id="student_enroll" class="marked-heading">Erollment No. : </span>
-		</div>
-		<div class="col-md-4">
-			<span id="student_name" class="marked-heading">Name : </span>
-		</div>
-		<div class="col-md-4">
-			<span id="student_course" class="marked-heading">Course : </span>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-md-4">
-			<span id="student_stream" class="marked-heading">Stream : </span>
-		</div>
-		<div class="col-md-4">
-			<span id="student_email" class="marked-heading">Email : </span>
-		</div>
-		<div class="col-md-4">
-			<span id="student_phone" class="marked-heading">Phone No.: </span>
-		</div>
 
-	</div>
-</div>
+<div class="container">
+	<div class="row" style="min-height: 30em;">
+		<div class="col-md-4 left-align">
+		<h2 class="heading">STUDENT DETAILS</h2>
+		
+			<span id="student_enroll"><span class="marked-heading">Erollment No.: </span> </span>
+			<br><br>
+			<span class="student_name"><span class="marked-heading">Name : </span></span>
+			<br><br>
+			<span id="student_course"><span class="marked-heading">Course : </span></span>
+			<br><br>
+			<span id="student_stream"><span class="marked-heading">Stream : </span></span>
+			<br><br>
+			<span id="student_email"><span class="marked-heading">Email : </span></span>
+			<br><br>
+			<span id="student_phone"><span class="marked-heading">Phone No.: </span> </span>
+			<br>
+			
+		</div>
+		<div class="col-md-8">
+			<div id="piechart" class="card">
+				
+			</div><br>
 
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.15/datatables.min.css"/>
- 
-<script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.15/datatables.min.js"></script>
-<script type="text/javascript">
-  $(document).ready(function(){
-      $('table').DataTable();
-  });
-  
-</script>
-<style type="text/css">
-  select{
-    display: initial;
-    color: initial;
-  }
-  label{
-    color: initial;
-  }
-</style>
+			<div class="card material-table">
+				<div class="table-header">
+					<span class="table-title">Attendance for <span style="color: teal;" class="student_name"></span></span>
+					<div class="actions">
+						<a href="#" class="search-toggle waves-effect btn-flat nopadding"><i class="material-icons">search</i></a>
+					</div>
+				</div>
 
-<div class="container card" style="padding: 1em;">
+				<table id="datatable" class="striped centered">
+					<thead>
+						<tr>
+							<th>Lecture Date</th>
+							<th>Lecture Time</th>
+							<th>Present/Absent</th>
+							<th>Duration of lecture(in Hours)</th>
+						</tr>
+					</thead>
+					<tbody>
+						<% for(var i=0 ; i<attendance.length; ++i){ %>
+						<% if(attendance[i].attendance !== "NA"){ %>
 
-	<div>
-		<h5 class="heading">STUDENT ATTENDANCE FOR EACH LECTURE:</h5>
-		<p class="marked-heading">*P: Present , A: Absent , NA: Not Applicable</p>
-		<table class="striped centered">
-			<thead>
-				<tr>
-					<th>Lecture Date and Time</th>
-					<th>Present / Absent</th>
-					<th>Duration of lecture(in Hours)</th>
-				</tr>
-			</thead>
-			<tbody>
-				<% for(var i=0 ; i<attendance.length; ++i){ %>
-				<tr>
-					<% var date = new Date(attendance[i].lecture_timestamp) %>
-					<td><%=date.toUTCString()%></td>
-					<td><%=attendance[i].attendance%></td>
-					<td><%=attendance[i].duration_of_class%></td>
-				</tr>    
-				<% } %>
-			</tbody>
-		</table>	
+						<tr>
+							<% var date = new Date(attendance[i].lecture_timestamp) %>
+							<td><%=  moment(date).format('DD/MM/YYYY')  %></td>
+							<td><%=date.toLocaleTimeString()%></td>
+							<td><%=attendance[i].attendance%></td>
+							<td><%=attendance[i].duration_of_class%></td>
+						</tr>   
+
+						<% } %>
+						<% } %>
+					</tbody>
+				</table>
+
+
+			</div>
+
+
+
+
+		</div>
 	</div>
 
 </div>
-
 
 
 <% include partials/footer %>

@@ -1,15 +1,18 @@
 var express = require('express');
 var router = express.Router();
 var passport = require('passport');
+var moment = require('moment')
 var LocalStrategy = require('passport-local').Strategy;
 
 var teacher = require('../models/teacher');
 var student = require('../models/students');
+var sub = require("../models/subjects")
 
 /* GET teacher login page. */
 router.get('/login', function(req, res, next) {
 	if(req.isAuthenticated() && req.user.instructor_id != null){
 		res.redirect("/teacher/dashboard");
+		return;
 	}
 	res.render("teacher_login");
 });
@@ -102,7 +105,7 @@ router.get('/dashboard', function(req, res){
 	if(req.user.instructor_id == null){
 		res.redirect("/teacher/login");
 	}
-	var sub = require("../models/subjects")
+	
 	var subjects = sub.getSubjectByTeacher(req.user.school, req.user.instructor_id, function(err, results){
 		if(err) throw new Error(err);
 		res.render('teacher_dashboard',{'subjects': results});
@@ -149,9 +152,11 @@ var findkey = function(obj, value){
 router.post('/attendance/:batch_id/:subject_id', function(req, res) {
 	if(!req.isAuthenticated()){
 		res.redirect("/teacher/login");
+		return;
 	}
 	if(req.user.instructor_id == null){
 		res.redirect("/teacher/login");
+		return;
 	}
 	req.checkParams('batch_id', 'invalid batch id parameter').notEmpty().isInt();
 	req.checkParams('subject_id', 'invalid subject id parameter').notEmpty().isInt();
@@ -167,20 +172,46 @@ router.post('/attendance/:batch_id/:subject_id', function(req, res) {
 
 	var att = require("../models/attendance")
 	var subject_id = req.params.subject_id;
-	var date = new Date(req.body.date + " " + req.body.time);
-	var students_present = req.body.present;
-	var students_absent = req.body.absent;
-	var students_notapplicable = req.body.na;
+	var date = moment(req.body.date + " " + req.body.time,"DD MMMM, YYYY HH:mma").toDate();
+
+	var students_present = JSON.parse(req.body.present);
+	var students_absent = JSON.parse(req.body.absent);
+	var students_notapplicable = JSON.parse(req.body.na);
 	var duration_of_class = req.body.hours;
 
 	var subjects = att.saveAttendance(req.user.school, subject_id, date, students_present, students_absent, students_notapplicable, duration_of_class, function(err, results){
-		if(err) throw new Error(err);
-		res.render('display_students', {'students_present': students_present,
-			'students_notapplicable': students_notapplicable,
-			'students_absent': students_absent,
-			'date': date,
-			'attendanceAwarded' : duration_of_class
+		if(err) {
+			throw new Error(err);
+			res.sendStatus(500);
+		}
+		sub.getStudentsByBatch(req.user.school, req.params.batch_id, function(err, results){
+			if(err) {
+				throw new Error(err);
+				res.sendStatus(500);
+			}
+
+			var temp = {};
+
+			for(var i in results){
+				temp[results[i].enrollment_no] = results[i];
+			}
+
+			att.getAttendanceByLecture(req.user.school, subject_id, date, function(err, attendance){
+				if(err) {
+					throw new Error(err);
+					res.sendStatus(500);
+				}
+				res.render('display_students', {'students': temp,
+					'attendance': attendance,
+					'date': date,
+					'subject_id': subject_id,
+					'batch_id': req.params.batch_id,
+					'duration_of_class' : duration_of_class
+				});
+			});
+
 		});
+
 	});	
 });
 
@@ -259,7 +290,7 @@ router.get('/attendance_marked/:batch_id/:subject_id/:enrollment_no', function(r
 			if(results == null){
 				res.sendStatus(404);
 			}
-			res.render('student_attendance',{'attendance': results, "enrollment_no": req.params.enrollment_no});
+			res.render('student_attendance',{'attendance': results, "enrollment_no": req.params.enrollment_no, "moment": moment});
 		});
 	
 });

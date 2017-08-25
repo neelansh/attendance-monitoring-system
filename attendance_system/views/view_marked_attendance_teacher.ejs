@@ -32,7 +32,7 @@
     letter-spacing: 0.2em;
   }
 </style>
-<script type="text/javascript">
+<!-- <script type="text/javascript">
   $(document).ready(function () {
       var subject_id = <%-subject_id%>;
       $.getJSON('/api/subjects/' + subject_id, function (data) {
@@ -40,71 +40,79 @@
     });
   });
 
-</script>
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.15/datatables.min.css"/>
- 
-<script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.15/datatables.min.js"></script>
-<script type="text/javascript">
-  $(document).ready(function(){
-      $('table').DataTable();
-  });
-  
-</script> 
-<style type="text/css">
-  select{
-    display: initial;
-    color: initial;
-  }
-  label{
-    color: initial;
-  }
-</style>
+</script> -->
+
+
 <h4 id="heading" class="heading container">ATTENDANCE FOR CLASS <br></h4><br>
 <h5 class="marked-heading">*CLICK ON ENROLLMENT NUMBER FOR MORE DETAILS</h5>
 <div class="container" style="display: flex; justify-content: space-between;">
 
-	<div class="card col-md-6" style="padding: 1em; margin: 1em;">
-		<h5 class="marked-heading">Student Present:</h5>
-		<table class="striped centered">
+
+
+
+
+	<div class="col-md-12" style="padding: 1em; margin: 1em;">
+    <div class="card material-table">
+      <div class="table-header">
+        <span class="table-title">Attendance for class</span>
+        <div class="actions">
+          <a href="#" class="search-toggle waves-effect btn-flat nopadding"><i class="material-icons">search</i></a>
+        </div>
+      </div>
+
+      <table id="datatable" class="striped centered">
         <thead>
-        <tr>
-              <th>Enrollment Number</th>
-               <th>Hours Present</th>
+          <tr>
+            <th>Enrollment Number</th>
+            <th>Attendance</th>
+            <th>Hours</th>
           </tr>
         </thead>
         <tbody>
-           <% for(var i=0; i<present.length ; ++i){ %>
-    <tr>
-      <td><a href="<%=present[i]['student']%>"><%=present[i]['student']%></a></td>
-      <td><%=present[i]['sum(duration_of_class)']%></td>
-    </tr>    
-    <% } %>
-        </tbody>
+        <% for(var i=0; i<present.length ; ++i){ %>
+        <tr>
+          <td><a href="<%=present[i]['student']%>" style="color: blue;"><%=present[i]['student']%></a></td>
+          <td>Present</td>
+          <td><%=present[i]['sum(duration_of_class)']%></td>
+        </tr>    
+        <% } %>
+        <% for(var i=0; i<absent.length ; ++i){ %>
+        <tr>
+          <td><a href="<%=absent[i]['student']%>" style="color: blue;"><%=absent[i]['student']%></a></td>
+          <td>Absent</td>
+          <td><%=absent[i]['sum(duration_of_class)']%></td>
+        </tr>    
+        <% } %>
+        
+      </tbody>
     </table>
-		
-	</div>
-	<div class="card col-md-6" style="padding: 1em; margin: 1em;">
-		<h5 class="marked-heading">Student Absent:</h5>
-		<table class="striped centered">
-        <thead>
-        <tr>
-              <th>Enrollment Number</th>
-               <th>Hours Absent</th>
-          </tr>
-        </thead>
-        <tbody>
-           <% for(var i=0; i<absent.length ; ++i){ %>
-    <tr>
+
+  </div>
+</div>
+
+
+<!-- <div class="card col-md-6" style="padding: 1em; margin: 1em;">
+  <h5 class="marked-heading">Student Absent:</h5>
+  <table class="striped centered">
+    <thead>
+      <tr>
+        <th>Enrollment Number</th>
+        <th>Hours Absent</th>
+      </tr>
+    </thead>
+    <tbody>
+     <% for(var i=0; i<absent.length ; ++i){ %>
+     <tr>
       <td><a href="<%=absent[i]['student']%>"><%=absent[i]['student']%></a></td>
       <td><%=absent[i]['sum(duration_of_class)']%></td>
     </tr>    
     <% } %>
-        </tbody>
-    </table>
-		
-	</div>
+  </tbody>
+</table>
 
-	
+</div> -->
+
+
 </div>
 
 
