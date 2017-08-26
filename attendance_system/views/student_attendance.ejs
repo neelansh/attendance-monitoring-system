@@ -12,11 +12,10 @@
 		color: darkslategray;
 	}
 	.heading{
-		/*text-align: center;*/
-		font-size: 2em;
-		font-weight: 700;
-		color: darkcyan;
-		letter-spacing: 0.2em;
+		font-size: 3em;
+	    text-align: center;
+	    font-weight: 200;
+	    color: teal;
 	}
 </style>
 
@@ -122,7 +121,11 @@
 							<% var date = new Date(attendance[i].lecture_timestamp) %>
 							<td><%=  moment(date).format('DD/MM/YYYY')  %></td>
 							<td><%=date.toLocaleTimeString()%></td>
-							<td><%=attendance[i].attendance%></td>
+							<% if(attendance[i].attendance === 'P'){ %>
+							<td style="color: green;">Present</td>
+							<% }else{ %>
+							<td style="color: red;">Absent</td>
+							<% } %>
 							<td><%=attendance[i].duration_of_class%></td>
 						</tr>   
 

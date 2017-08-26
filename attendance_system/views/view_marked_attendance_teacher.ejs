@@ -25,11 +25,10 @@
     color: darkslategray;
   }
   .heading{
+    font-size: 3em;
     text-align: center;
-    font-size: 2em;
-    font-weight: 700;
-    color: darkcyan;
-    letter-spacing: 0.2em;
+    font-weight: 200;
+    color: teal;
   }
 </style>
 <!-- <script type="text/javascript">
@@ -72,14 +71,14 @@
         <% for(var i=0; i<present.length ; ++i){ %>
         <tr>
           <td><a href="<%=present[i]['student']%>" style="color: blue;"><%=present[i]['student']%></a></td>
-          <td>Present</td>
+          <td style="color: green;">Present</td>
           <td><%=present[i]['sum(duration_of_class)']%></td>
         </tr>    
         <% } %>
         <% for(var i=0; i<absent.length ; ++i){ %>
         <tr>
           <td><a href="<%=absent[i]['student']%>" style="color: blue;"><%=absent[i]['student']%></a></td>
-          <td>Absent</td>
+          <td style="color: red;">Absent</td>
           <td><%=absent[i]['sum(duration_of_class)']%></td>
         </tr>    
         <% } %>

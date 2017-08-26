@@ -1,26 +1,87 @@
 <!DOCTYPE html>
 <% include partials/header %>
 
-<div id="lecture-display" class="container">
-<% if(lectures.length==0){ %>
+
+
+<div class="container">
+  <% if(lectures.length==0){ %>
   <h4 class="marked-heading">
     YOU HAVE NOT MARKED ANY ATTENDANCE FOR THIS SUBJECT
   </h4>
-<% } else {%>
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.15/se-1.2.2/datatables.min.css"/>
- 
-<script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.15/se-1.2.2/datatables.min.js"></script>
+  <% } %>
+  
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
+  <div class="row">
+    <div class="col-md-12">
+
+      <div class="card material-table">
+        <div class="table-header">
+          <span class="table-title">Attendance for class</span>
+          <div class="actions">
+            <a href="#" class="search-toggle waves-effect btn-flat nopadding"><i class="material-icons">search</i></a>
+          </div>
+        </div>
+        <table id="datatable">
+          <thead>
+            <tr>
+              <th>Lecture Date (DD/MM/YYYY)</th>
+              <th>Lecture Time</th>
+              <th>Edit this lecture</th>
+              <th>Delete this lecture</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% for(var i=0; i<lectures.length ; ++i){ 
+            var date = new Date(lectures[i].lecture_timestamp);%>
+            <tr>
+              <td><%=  moment(date).format('DD/MM/YYYY')  %></td>
+              <td><%=date.toLocaleTimeString()%></td>
+              <td><a style="color: blue;" href="/teacher/edit_attendance/<%=bid%>/<%=sid%>/<%=lectures[i].lecture_timestamp%>">Edit this lecture</a></td>
+              <td><a class="modal-trigger" style="color: red;" href="#modal_<%=lectures[i].lecture_timestamp%>">Delete this lecture</a></td>
+            </tr>
+
+            <% } %>
+          </tbody>
+        </table>
+
+      </div>
+
+    </div>
+  </div>
+
+  <% for(var i=0; i<lectures.length ; ++i){ 
+      var date = new Date(lectures[i].lecture_timestamp);%>
+  <div id="modal_<%=lectures[i].lecture_timestamp%>" class="modal">
+    <div class="modal-content">
+      <h4>Are you sure?</h4>
+      <p>Do you want to delete lecture: </p>
+      <p>Date: <%=  moment(date).format('DD/MM/YYYY')  %></p>
+      <p>Time: <%=date.toLocaleTimeString()%></p>
+    </div>
+    <div class="modal-footer">
+      <a href="/teacher/delete_attendance/<%=bid%>/<%=sid%>/<%=lectures[i].lecture_timestamp%>" class="modal-action modal-close waves-effect waves-green btn-flat">Agree</a>
+      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Disagree</a>
+    </div>
+  </div>
+
+  <% } %>
+  <script type="text/javascript">
+    $(document).ready(function(){
+      $('.modal').modal();
+    });
+  </script>
+
+
+</div>
+
+
+
+
+<!-- <div id="lecture-display" class="container">
+
+
 
 <style type="text/css">
-select{
-    display: initial;
-    color: initial;
-  }
-  label{
-    color: initial;
-  }
 .marked-heading{
     font-size: 1.1em;
     line-height: 110%;
@@ -42,7 +103,7 @@ select{
 
 <div class="container card" style="padding: 1em;">
 <h5 class="marked-heading">SELECT LECTURE TO EDIT OR DELETE :</h5>
-<table id="lectures" class="striped">
+<table id="datatable" class="striped">
 	<thead>
 		<th>Lecture date and time</th>
 		<th>Edit this lecture</th>
@@ -104,7 +165,6 @@ select{
   });
 
 </script>  
-<% } %>
-</div>
+</div> -->
 
 <% include partials/footer %>

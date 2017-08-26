@@ -134,20 +134,15 @@ router.get('/attendance/:batch_id/:subject_id', function(req, res){
 		if(results == null){
 			res.sendStatus(404);
 		}
-		res.render('attendance',{'students': results, 'batch_id': req.params.batch_id, 'subject_id': req.params.subject_id});
+		res.render('attendance',{'students': results, 
+			'batch_id': req.params.batch_id, 
+			'subject_id': req.params.subject_id
+		});
 		return;
 	});
 });
 
-var findkey = function(obj, value){
-	var res = [];
-	for (var key in obj) {
-    	if (obj[key] === value) {
-    		res.push(key);
-    	}
-	}
-	return res;
-}
+
 
 router.post('/attendance/:batch_id/:subject_id', function(req, res) {
 	if(!req.isAuthenticated()){
@@ -366,7 +361,7 @@ router.get('/edit_attendance/:batch_id/:subject_id', function(req, res){
 			var lecture = new Date(results[i].lecture_timestamp);
 			results[i].lecture_timestamp = dateFormat(lecture, "isoDateTime");
 		}
-		res.render('display_lectures',{ 'lectures': results, 'sid':req.params.subject_id, 'bid':req.params.batch_id });
+		res.render('display_lectures',{ 'lectures': results, 'sid':req.params.subject_id, 'bid':req.params.batch_id, "moment": moment });
 		return;
 	});
 
@@ -375,12 +370,14 @@ router.get('/edit_attendance/:batch_id/:subject_id', function(req, res){
 router.get('/edit_attendance/:batch_id/:subject_id/:lecture', function(req, res){
 	if(!req.isAuthenticated()){
 		res.redirect("/teacher/login");
+		return;
 	}
 	if(req.user.instructor_id == null){
 		res.redirect("/teacher/login");
+		return;
 	}
 	req.checkParams('batch_id', 'invalid batch id parameter').notEmpty().isInt();
-	req.checkParams('subject_id', 'invalid subject id').notEmpty().isInt();
+	req.checkParams('subject_id', 'invalid subject id parameter').notEmpty().isInt();
 	req.checkParams('lecture', 'invalid lecture parameter').notEmpty();
 	var errors = req.validationErrors();
 	if(errors){
@@ -407,7 +404,14 @@ router.get('/edit_attendance/:batch_id/:subject_id/:lecture', function(req, res)
 				res.redirect("/teacher/dashboard");
 				return;
 			}
-			res.render('edit_attendance',{'students': students, 'lecture': timestamp, 'attendance': attendance, 'batch_id': req.params.batch_id, 'subject_id': req.params.subject_id});
+			res.render('attendance',{'students': students,
+			 'lecture': timestamp,
+			 'attendance': attendance, 
+			 'batch_id': req.params.batch_id, 
+			 'subject_id': req.params.subject_id,
+			 'edit_mode': true,
+			 'moment': moment
+			});
 			return;
 		});
 	});
@@ -419,9 +423,11 @@ router.get('/edit_attendance/:batch_id/:subject_id/:lecture', function(req, res)
 router.post('/edit_attendance/:batch_id/:subject_id/:lecture', function(req, res) {
 	if(!req.isAuthenticated()){
 		res.redirect("/teacher/login");
+		return;
 	}
 	if(req.user.instructor_id == null){
 		res.redirect("/teacher/login");
+		return;
 	}
 	
 	req.checkParams('batch_id', 'invalid batch id parameter').notEmpty().isInt();
@@ -434,25 +440,75 @@ router.post('/edit_attendance/:batch_id/:subject_id/:lecture', function(req, res
 		return;
 	}
 
+
 	var att = require("../models/attendance")
 	var subject_id = req.params.subject_id;
-	var students_present = req.body.present;
-	var students_absent = req.body.absent;
-	var students_notapplicable = req.body.na;
-	
+	var date = moment(req.body.date + " " + req.body.time,"DD MMMM, YYYY HH:mma").toDate();
 
-	
-	var lecture = new Date(req.params.lecture);	
+	var students_present = JSON.parse(req.body.present);
+	var students_absent = JSON.parse(req.body.absent);
+	var students_notapplicable = JSON.parse(req.body.na);
+	var duration_of_class = req.body.hours;
 
-	var subjects = att.updateAttendance(req.user.school, subject_id, lecture, students_present, students_absent, students_notapplicable, function(err, results){
-		if(err) throw new Error(err);
-		res.render('display_students', {'students_present': students_present,
-			'students_notapplicable': students_notapplicable,
-			'students_absent': students_absent,
-			'date': lecture,
-			'attendanceAwarded' : req.body.hours
+	var subjects = att.updateAttendance(req.user.school, subject_id, date, students_present, students_absent, students_notapplicable, duration_of_class, function(err, results){
+		if(err) {
+			throw new Error(err);
+			res.sendStatus(500);
+			return;
+		}
+		sub.getStudentsByBatch(req.user.school, req.params.batch_id, function(err, results){
+			if(err) {
+				throw new Error(err);
+				res.sendStatus(500);
+				return;
+			}
+
+			var temp = {};
+
+			for(var i in results){
+				temp[results[i].enrollment_no] = results[i];
+			}
+
+			att.getAttendanceByLecture(req.user.school, subject_id, date, function(err, attendance){
+				if(err) {
+					throw new Error(err);
+					res.sendStatus(500);
+					return;
+				}
+				res.render('display_students', {'students': temp,
+					'attendance': attendance,
+					'date': date,
+					'subject_id': subject_id,
+					'batch_id': req.params.batch_id,
+					'duration_of_class' : duration_of_class
+				});
+			});
+
 		});
-	});	
+
+	});
+
+
+
+	// var att = require("../models/attendance")
+	// var subject_id = req.params.subject_id;
+	// var students_present = req.body.present;
+	// var students_absent = req.body.absent;
+	// var students_notapplicable = req.body.na;
+	
+
+	
+	// var lecture = new Date(req.params.lecture);	
+
+	// var subjects = att.updateAttendance(req.user.school, subject_id, lecture, students_present, students_absent, students_notapplicable, function(err, results){
+	// 	if(err) throw new Error(err);
+	// 	res.render('display_students', {'students_present': students_present,
+	// 		'students_notapplicable': students_notapplicable,
+	// 		'students_absent': students_absent,
+	// 		'date': lecture,
+	// 		'attendanceAwarded' : req.body.hours
+	// 	});
+	// });	
 });
 
 router.get('/delete_attendance/:batch_id/:subject_id/:lecture', function(req, res){
@@ -479,7 +535,11 @@ router.get('/delete_attendance/:batch_id/:subject_id/:lecture', function(req, re
 	// console.log(timestamp);
 	
 		att.deleteAttendance(req.user.school, req.params.subject_id, lecture, function(err, result){
-			if(err) throw new Error(err);
+			if(err){
+				throw new Error(err);
+				res.sendStatus(500);
+				return;
+			} 
 			
 			res.render('attendance_deleted',{'students': result, 'lecture': lecture, 'batch_id': req.params.batch_id, 'subject_id': req.params.subject_id});
 			return;
