@@ -6,12 +6,17 @@ var LocalStrategy = require('passport-local').Strategy;
 
 var teacher = require('../models/teacher');
 var student = require('../models/students');
-var sub = require("../models/subjects")
+var sub = require("../models/subjects");
+var att = require("../models/attendance");	
 
 /* GET teacher login page. */
 router.get('/login', function(req, res, next) {
 	if(req.isAuthenticated() && req.user.instructor_id != null){
 		res.redirect("/teacher/dashboard");
+		return;
+	}
+	if(req.isAuthenticated() && req.user.enrollment_no != null){
+		res.redirect("/student/dashboard");
 		return;
 	}
 	res.render("teacher_login");
@@ -128,17 +133,30 @@ router.get('/attendance/:batch_id/:subject_id', function(req, res){
 		res.render('index');
 		return;
 	}
-	var sub = require("../models/subjects")
-	var subjects = sub.getStudentsByBatch(req.user.school, req.params.batch_id, function(err, results){
-		if(err) throw new Error(err);
-		if(results == null){
-			res.sendStatus(404);
+
+	sub.check_teaching(req.user.school, req.user.instructor_id, req.params.subject_id, function(err, is_teaching){
+		if(err) {
+			throw new Error(err);
+			res.sendStatus(500);
+			return;
 		}
-		res.render('attendance',{'students': results, 
-			'batch_id': req.params.batch_id, 
-			'subject_id': req.params.subject_id
+		if(!is_teaching){
+			res.locals.errors = [{'msg': 'you are not teaching this subject', 'value': 'bad requests: 400'}];
+			res.render('index');
+			return;
+		}	
+
+		var subjects = sub.getStudentsByBatch(req.user.school, req.params.batch_id, function(err, results){
+			if(err) throw new Error(err);
+			if(results == null){
+				res.sendStatus(404);
+			}
+			res.render('attendance',{'students': results, 
+				'batch_id': req.params.batch_id, 
+				'subject_id': req.params.subject_id
+			});
+			return;
 		});
-		return;
 	});
 });
 
@@ -165,7 +183,7 @@ router.post('/attendance/:batch_id/:subject_id', function(req, res) {
 		return;
 	}
 
-	var att = require("../models/attendance")
+	
 	var subject_id = req.params.subject_id;
 	var date = moment(req.body.date + " " + req.body.time,"DD MMMM, YYYY HH:mma").toDate();
 
@@ -174,39 +192,52 @@ router.post('/attendance/:batch_id/:subject_id', function(req, res) {
 	var students_notapplicable = JSON.parse(req.body.na);
 	var duration_of_class = req.body.hours;
 
-	var subjects = att.saveAttendance(req.user.school, subject_id, date, students_present, students_absent, students_notapplicable, duration_of_class, function(err, results){
+	sub.check_teaching(req.user.school, req.user.instructor_id, subject_id, function(err, is_teaching){
 		if(err) {
 			throw new Error(err);
 			res.sendStatus(500);
+			return;
 		}
-		sub.getStudentsByBatch(req.user.school, req.params.batch_id, function(err, results){
+		if(!is_teaching){
+			res.locals.errors = [{'msg': 'you are not teaching this subject', 'value': 'bad requests: 400'}];
+			res.render('index');
+			return;
+		}
+		var subjects = att.saveAttendance(req.user.school, subject_id, date, students_present, students_absent, students_notapplicable, duration_of_class, function(err, results){
 			if(err) {
 				throw new Error(err);
 				res.sendStatus(500);
 			}
-
-			var temp = {};
-
-			for(var i in results){
-				temp[results[i].enrollment_no] = results[i];
-			}
-
-			att.getAttendanceByLecture(req.user.school, subject_id, date, function(err, attendance){
+			sub.getStudentsByBatch(req.user.school, req.params.batch_id, function(err, results){
 				if(err) {
 					throw new Error(err);
 					res.sendStatus(500);
+					return;
 				}
-				res.render('display_students', {'students': temp,
-					'attendance': attendance,
-					'date': date,
-					'subject_id': subject_id,
-					'batch_id': req.params.batch_id,
-					'duration_of_class' : duration_of_class
+
+				var temp = {};
+
+				for(var i in results){
+					temp[results[i].enrollment_no] = results[i];
+				}
+
+				att.getAttendanceByLecture(req.user.school, subject_id, date, function(err, attendance){
+					if(err) {
+						throw new Error(err);
+						res.sendStatus(500);
+					}
+					res.render('display_students', {'students': temp,
+						'attendance': attendance,
+						'date': date,
+						'subject_id': subject_id,
+						'batch_id': req.params.batch_id,
+						'duration_of_class' : duration_of_class
+					});
 				});
+
 			});
 
 		});
-
 	});	
 });
 
@@ -243,21 +274,57 @@ router.get('/attendance_marked/:batch_id/:subject_id', function(req, res){
 		return;
 	}
 
-	var att = require("../models/attendance")
-
-	var marked_attendance = att.getPresentBySubject(req.user.school, req.params.subject_id, function(err, results){
-		if(err) throw new Error(err);
-		if(results == null){
-			res.sendStatus(404);
+	sub.check_teaching(req.user.school, req.user.instructor_id, req.params.subject_id, function(err, is_teaching){
+		if(err) {
+			throw new Error(err);
+			res.sendStatus(500);
+			return;
 		}
-		var present = results;
-		att.getAbsentBySubject(req.user.school, req.params.subject_id, function(err, results){
-			if(err) throw new Error(err);
+		if(!is_teaching){
+			res.locals.errors = [{'msg': 'you are not teaching this subject', 'value': 'bad requests: 400'}];
+			res.render('index');
+			return;
+		}	
+		sub.getStudentsByBatch(req.user.school, req.params.batch_id, function(err, results){
+			if(err){
+				throw new Error(err);
+				res.sendStatus(500);
+				return;
+			}
 			if(results == null){
 				res.sendStatus(404);
+				return;
 			}
-			var absent = results;
-			res.render('view_marked_attendance_teacher',{'present': present, 'absent': absent, 'subject_id': req.params.subject_id});
+			var students = results;
+			
+			att.getPresentBySubject(req.user.school, req.params.subject_id, function(err, results){
+				if(err){
+					throw new Error(err);
+					return;
+				} 
+				if(results == null){
+					res.sendStatus(404);
+				}
+				var present = results;
+				var dict_present = {};
+				for(var i=0; i<present.length ; ++i){
+					dict_present[present[i]['student']] = present[i]['sum(duration_of_class)']
+				}
+				present = dict_present;
+				att.getAbsentBySubject(req.user.school, req.params.subject_id, function(err, results){
+					if(err) throw new Error(err);
+					if(results == null){
+						res.sendStatus(404);
+					}
+					var absent = results;
+					var dict_absent = {};
+					for(var i=0; i<absent.length ; ++i){
+						dict_absent[absent[i]['student']] = absent[i]['sum(duration_of_class)']
+					}
+					absent = dict_absent;
+					res.render('view_marked_attendance_teacher',{'students': students, 'present': present, 'absent': absent, 'subject_id': req.params.subject_id});
+				});
+			});
 		});
 	});
 });
@@ -279,15 +346,25 @@ router.get('/attendance_marked/:batch_id/:subject_id/:enrollment_no', function(r
 		return;
 	}
 
-	var att = require("../models/attendance")
-	att.getAttendanceByStudent(req.user.school, req.params.enrollment_no, req.params.subject_id, function(err, results){
+	sub.check_teaching(req.user.school, req.user.instructor_id, req.params.subject_id, function(err, is_teaching){
+		if(err) {
+			throw new Error(err);
+			res.sendStatus(500);
+			return;
+		}
+		if(!is_teaching){
+			res.locals.errors = [{'msg': 'you are not teaching this subject', 'value': 'bad requests: 400'}];
+			res.render('index');
+			return;
+		}
+		att.getAttendanceByStudent(req.user.school, req.params.enrollment_no, req.params.subject_id, function(err, results){
 			if(err) throw new Error(err);
 			if(results == null){
 				res.sendStatus(404);
 			}
 			res.render('student_attendance',{'attendance': results, "enrollment_no": req.params.enrollment_no, "moment": moment});
 		});
-	
+	});
 });
 
 router.get('/change_password', function(req, res){
@@ -352,17 +429,28 @@ router.get('/edit_attendance/:batch_id/:subject_id', function(req, res){
 		res.render('index');
 		return;
 	}
-	var att = require("../models/attendance");	
 	
-	var attendance = att.getLecturesBySubject(req.user.school, req.params.subject_id, function(err, results){
-		if(err) throw new Error(err);
-		var dateFormat = require('dateformat');
-		for(var i=0;i<results.length;++i){
-			var lecture = new Date(results[i].lecture_timestamp);
-			results[i].lecture_timestamp = dateFormat(lecture, "isoDateTime");
+	sub.check_teaching(req.user.school, req.user.instructor_id, req.params.subject_id, function(err, is_teaching){
+		if(err) {
+			throw new Error(err);
+			res.sendStatus(500);
+			return;
 		}
-		res.render('display_lectures',{ 'lectures': results, 'sid':req.params.subject_id, 'bid':req.params.batch_id, "moment": moment });
-		return;
+		if(!is_teaching){
+			res.locals.errors = [{'msg': 'you are not teaching this subject', 'value': 'bad requests: 400'}];
+			res.render('index');
+			return;
+		}
+		att.getLecturesBySubject(req.user.school, req.params.subject_id, function(err, results){
+			if(err) throw new Error(err);
+			var dateFormat = require('dateformat');
+			for(var i=0;i<results.length;++i){
+				var lecture = new Date(results[i].lecture_timestamp);
+				results[i].lecture_timestamp = dateFormat(lecture, "isoDateTime");
+			}
+			res.render('display_lectures',{ 'lectures': results, 'sid':req.params.subject_id, 'bid':req.params.batch_id, "moment": moment });
+			return;
+		});
 	});
 
 });
@@ -385,37 +473,48 @@ router.get('/edit_attendance/:batch_id/:subject_id/:lecture', function(req, res)
 		res.render('index');
 		return;
 	}
-	var att = require("../models/attendance");
-	var sub = require("../models/subjects");
+	
+	
 	var dateFormat = require('dateformat');
 	var lecture = new Date(req.params.lecture);
 	var timestamp = dateFormat(lecture, "isoDateTime");
 	// console.log(timestamp);
-	var subjects = sub.getStudentsByBatch(req.user.school, req.params.batch_id, function(err, students){
-		if(err) throw new Error(err);
-		if(students == null){
-			res.sendStatus(404);
+	sub.check_teaching(req.user.school, req.user.instructor_id, req.params.subject_id, function(err, is_teaching){
+		if(err) {
+			throw new Error(err);
+			res.sendStatus(500);
 			return;
 		}
-		att.getAttendanceByLecture(req.user.school, req.params.subject_id, lecture, function(err, attendance){
+		if(!is_teaching){
+			res.locals.errors = [{'msg': 'you are not teaching this subject', 'value': 'bad requests: 400'}];
+			res.render('index');
+			return;
+		}
+		sub.getStudentsByBatch(req.user.school, req.params.batch_id, function(err, students){
 			if(err) throw new Error(err);
-			if(attendance.length == 0){
-				req.flash('error_msg', 'Invalid lecture parameter. No record of attendance for lecture on ' + timestamp);
-				res.redirect("/teacher/dashboard");
+			if(students == null){
+				res.sendStatus(404);
 				return;
 			}
-			res.render('attendance',{'students': students,
-			 'lecture': timestamp,
-			 'attendance': attendance, 
-			 'batch_id': req.params.batch_id, 
-			 'subject_id': req.params.subject_id,
-			 'edit_mode': true,
-			 'moment': moment
+			att.getAttendanceByLecture(req.user.school, req.params.subject_id, lecture, function(err, attendance){
+				if(err) throw new Error(err);
+				if(attendance.length == 0){
+					req.flash('error_msg', 'Invalid lecture parameter. No record of attendance for lecture on ' + timestamp);
+					res.redirect("/teacher/dashboard");
+					return;
+				}
+				res.render('attendance',{'students': students,
+				 'lecture': timestamp,
+				 'attendance': attendance, 
+				 'batch_id': req.params.batch_id, 
+				 'subject_id': req.params.subject_id,
+				 'edit_mode': true,
+				 'moment': moment
+				});
+				return;
 			});
-			return;
 		});
 	});
-	
 
 });
 
@@ -441,7 +540,7 @@ router.post('/edit_attendance/:batch_id/:subject_id/:lecture', function(req, res
 	}
 
 
-	var att = require("../models/attendance")
+	
 	var subject_id = req.params.subject_id;
 	var date = moment(req.body.date + " " + req.body.time,"DD MMMM, YYYY HH:mma").toDate();
 
@@ -450,65 +549,56 @@ router.post('/edit_attendance/:batch_id/:subject_id/:lecture', function(req, res
 	var students_notapplicable = JSON.parse(req.body.na);
 	var duration_of_class = req.body.hours;
 
-	var subjects = att.updateAttendance(req.user.school, subject_id, date, students_present, students_absent, students_notapplicable, duration_of_class, function(err, results){
+	sub.check_teaching(req.user.school, req.user.instructor_id, req.params.subject_id, function(err, is_teaching){
 		if(err) {
 			throw new Error(err);
 			res.sendStatus(500);
 			return;
 		}
-		sub.getStudentsByBatch(req.user.school, req.params.batch_id, function(err, results){
+		if(!is_teaching){
+			res.locals.errors = [{'msg': 'you are not teaching this subject', 'value': 'bad requests: 400'}];
+			res.render('index');
+			return;
+		}
+		att.updateAttendance(req.user.school, subject_id, date, students_present, students_absent, students_notapplicable, duration_of_class, function(err, results){
 			if(err) {
 				throw new Error(err);
 				res.sendStatus(500);
 				return;
 			}
-
-			var temp = {};
-
-			for(var i in results){
-				temp[results[i].enrollment_no] = results[i];
-			}
-
-			att.getAttendanceByLecture(req.user.school, subject_id, date, function(err, attendance){
+			sub.getStudentsByBatch(req.user.school, req.params.batch_id, function(err, results){
 				if(err) {
 					throw new Error(err);
 					res.sendStatus(500);
 					return;
 				}
-				res.render('display_students', {'students': temp,
-					'attendance': attendance,
-					'date': date,
-					'subject_id': subject_id,
-					'batch_id': req.params.batch_id,
-					'duration_of_class' : duration_of_class
+
+				var temp = {};
+
+				for(var i in results){
+					temp[results[i].enrollment_no] = results[i];
+				}
+
+				att.getAttendanceByLecture(req.user.school, subject_id, date, function(err, attendance){
+					if(err) {
+						throw new Error(err);
+						res.sendStatus(500);
+						return;
+					}
+					res.render('display_students', {'students': temp,
+						'attendance': attendance,
+						'date': date,
+						'subject_id': subject_id,
+						'batch_id': req.params.batch_id,
+						'duration_of_class' : duration_of_class
+					});
 				});
+
 			});
 
 		});
-
 	});
 
-
-
-	// var att = require("../models/attendance")
-	// var subject_id = req.params.subject_id;
-	// var students_present = req.body.present;
-	// var students_absent = req.body.absent;
-	// var students_notapplicable = req.body.na;
-	
-
-	
-	// var lecture = new Date(req.params.lecture);	
-
-	// var subjects = att.updateAttendance(req.user.school, subject_id, lecture, students_present, students_absent, students_notapplicable, function(err, results){
-	// 	if(err) throw new Error(err);
-	// 	res.render('display_students', {'students_present': students_present,
-	// 		'students_notapplicable': students_notapplicable,
-	// 		'students_absent': students_absent,
-	// 		'date': lecture,
-	// 		'attendanceAwarded' : req.body.hours
-	// 	});
-	// });	
 });
 
 router.get('/delete_attendance/:batch_id/:subject_id/:lecture', function(req, res){
@@ -527,13 +617,23 @@ router.get('/delete_attendance/:batch_id/:subject_id/:lecture', function(req, re
 		res.render('index');
 		return;
 	}
-	var att = require("../models/attendance");
-	var sub = require("../models/subjects");
+	
+	
 	var dateFormat = require('dateformat');
 	var lecture = new Date(req.params.lecture);
 	var timestamp = dateFormat(lecture, "isoDateTime");
 	// console.log(timestamp);
-	
+	sub.check_teaching(req.user.school, req.user.instructor_id, req.params.subject_id, function(err, is_teaching){
+		if(err) {
+			throw new Error(err);
+			res.sendStatus(500);
+			return;
+		}
+		if(!is_teaching){
+			res.locals.errors = [{'msg': 'you are not teaching this subject', 'value': 'bad requests: 400'}];
+			res.render('index');
+			return;
+		}
 		att.deleteAttendance(req.user.school, req.params.subject_id, lecture, function(err, result){
 			if(err){
 				throw new Error(err);
@@ -544,7 +644,7 @@ router.get('/delete_attendance/:batch_id/:subject_id/:lecture', function(req, re
 			res.render('attendance_deleted',{'students': result, 'lecture': lecture, 'batch_id': req.params.batch_id, 'subject_id': req.params.subject_id});
 			return;
 		});	
-
+	});
 });
 
 module.exports = router;

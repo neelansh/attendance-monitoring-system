@@ -11,7 +11,7 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 
 var routes = require('./routes/index');
-var users = require('./routes/users');
+// var users = require('./routes/users');
 
 var app = express();
 
@@ -50,12 +50,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 var db = require('./db');
 
 // Connect to MySQL on start
-db.connect(function(err) {
-  if (err) {
-    console.log('Unable to connect to MySQL.')
-  } else{
-    console.log('mysql connection established')
-  }
+db.connect(function(pool) {
 });
 
 

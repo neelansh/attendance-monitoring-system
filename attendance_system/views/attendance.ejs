@@ -246,6 +246,8 @@
     var na = [];
 
     $("#confirm_submit").click(function(event){
+      
+      $("#confirm_submit").attr('disabled', true)
       var bid = <%- JSON.stringify(batch_id) %>
       var sid = <%- JSON.stringify(subject_id) %>
 
@@ -270,6 +272,7 @@
           $('main').html(data);
         },
         error: function(xhr, status, error){
+          $("#confirm_submit").attr('disabled', false)
           alert("Error.")
         }
       });

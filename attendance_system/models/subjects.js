@@ -9,6 +9,18 @@ module.exports.getSubjectById = function(school, id, callback){
 	});
 }
 
+module.exports.check_teaching = function(school, id, subject_id, callback){
+	var query = db.get().query("select count(*) from ?? where instructor_code = ? and subject_id = ?",[school+"_subject_allocation", id, subject_id],function(err, rows){
+		if(err)throw err;
+		console.log(rows)
+		if(rows[0]['count(*)'] === 1){
+			callback(null, true);
+		}else{
+			callback(null, false);
+		}
+	});
+}
+
 module.exports.getSubjectByTeacher = function(school, id, callback){
 	var query = db.get().query("select * from ?? as t1, ?? as t2 where instructor_code = ? and t1.batch_id = t2.batch_id",[school+"_subject_allocation",school+"_batch_allocation", id],function(err, rows){
 		if(err)throw err;
