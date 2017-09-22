@@ -3,6 +3,8 @@ var bcrypt = require('bcryptjs');
 
 
 module.exports.saveAttendance = function(school, subject_id, lecture_timestamp, students_present, students_absent, students_notapplicable, duration_of_class, callback){
+  //check if number of students equal to marked
+  //check if lecture alreay exist
   for(var i=0 ; i<students_present.length ; ++i){
     var query = db.get().query("insert into ?? values(?,?,?,?,'P')",[school+"_attendance", subject_id, lecture_timestamp, students_present[i], duration_of_class],function(err, rows){
       if(err)throw err;

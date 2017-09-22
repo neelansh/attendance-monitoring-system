@@ -11,6 +11,10 @@ router.get('/login', function(req, res, next) {
 	if(req.isAuthenticated() && req.user.enrollment_no != null){
 		res.redirect("/student/dashboard");
 	}
+	if(req.isAuthenticated() && req.user.instructor_id != null){
+		res.redirect("/teacher/dashboard");
+		return;
+	}
 	res.render("student_login");
 });
 

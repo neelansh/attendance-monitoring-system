@@ -24,11 +24,11 @@ exports.connection_for_sessions = connection;
 
 exports.connect = function(done) {
   state.pool = mysql.createPool({
-    host: process.env.mysql_host||'localhost',
-    user: process.env.mysql_user||'root',
-    port: process.env.mysql_port||3306,
-    password: process.env.mysql_password||'neelansh5',
-    database: exports.MODE_PRODUCTION ? PRODUCTION_DB : TEST_DB
+    host: options.host,
+    user: options.user,
+    port: options.port,
+    password: options.password,
+    database: options.database
   });
   if(exports.MODE_PRODUCTION){
     state.mode = 'production';
@@ -38,7 +38,9 @@ exports.connect = function(done) {
   done();
 }
 
+
+
 exports.get = function() {
-  return state.pool
+  return state.pool;
 }
 
