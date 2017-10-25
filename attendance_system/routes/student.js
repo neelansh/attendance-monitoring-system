@@ -25,7 +25,7 @@ passport.use('local.student',new LocalStrategy({
 	passReqToCallback: true
 },
 function(req, username, password, done) {
-	if(req.body.school !== 'usict' && req.body.school !== 'usms'){
+	if(req.body.school !== 'usict'){
 		return done(null, false, {message: 'Unknown School'});
 	}
 	var school = req.body.school;

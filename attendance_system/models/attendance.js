@@ -6,17 +6,17 @@ module.exports.saveAttendance = function(school, subject_id, lecture_timestamp, 
   //check if number of students equal to marked
   //check if lecture alreay exist
   for(var i=0 ; i<students_present.length ; ++i){
-    var query = db.get().query("insert into ?? values(?,?,?,?,'P')",[school+"_attendance", subject_id, lecture_timestamp, students_present[i], duration_of_class],function(err, rows){
+    var query = db.get().query("insert into ?? (`subject_id`, `lecture_timestamp`,  `student`, `duration_of_class`, `attendance`) values(?,?,?,?,'P')",[school+"_attendance", subject_id, lecture_timestamp, students_present[i], duration_of_class],function(err, rows){
       if(err)throw err;
     });
   }
   for(var i=0 ; i<students_absent.length ; ++i){
-    var query = db.get().query("insert into ?? values(?,?,?,?,'A')",[school+"_attendance", subject_id, lecture_timestamp, students_absent[i], duration_of_class],function(err, rows){
+    var query = db.get().query("insert into ?? (`subject_id`, `lecture_timestamp`,  `student`, `duration_of_class`, `attendance`) values(?,?,?,?,'A')",[school+"_attendance", subject_id, lecture_timestamp, students_absent[i], duration_of_class],function(err, rows){
       if(err)throw err;
     });
   }
   for(var i=0 ; i<students_notapplicable.length ; ++i){
-    var query = db.get().query("insert into ?? values(?,?,?,?,'NA')",[school+"_attendance", subject_id, lecture_timestamp, students_notapplicable[i], duration_of_class],function(err, rows){
+    var query = db.get().query("insert into ?? (`subject_id`, `lecture_timestamp`,  `student`, `duration_of_class`, `attendance`) values(?,?,?,?,'NA')",[school+"_attendance", subject_id, lecture_timestamp, students_notapplicable[i], duration_of_class],function(err, rows){
       if(err)throw err;
     });
   }
