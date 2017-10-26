@@ -296,8 +296,20 @@ router.get('/attendance_marked/:batch_id/:subject_id', function(req, res){
 				return;
 			}
 			var students = results;
+
+			var from_date = new Date(new Date().getFullYear(), 0, 1);
+			var to_date = new Date();
+
+			console.log(req.query.from_date);
+			if(req.query.from_date && req.query.to_date){
+				if(moment(req.query.from_date ,"DD MMMM, YYYY").isValid() && moment(req.query.to_date ,"DD MMMM, YYYY").isValid()){
+					from_date = moment(req.query.from_date ,"DD MMMM, YYYY").toDate();
+					to_date = moment(req.query.to_date ,"DD MMMM, YYYY").toDate();
+				}	
+			}
 			
-			att.getPresentBySubject(req.user.school, req.params.subject_id, function(err, results){
+
+			att.getPresentBySubject(req.user.school, req.params.subject_id, from_date, to_date, function(err, results){
 				if(err){
 					throw new Error(err);
 					return;
@@ -311,7 +323,7 @@ router.get('/attendance_marked/:batch_id/:subject_id', function(req, res){
 					dict_present[present[i]['student']] = present[i]['sum(duration_of_class)']
 				}
 				present = dict_present;
-				att.getAbsentBySubject(req.user.school, req.params.subject_id, function(err, results){
+				att.getAbsentBySubject(req.user.school, req.params.subject_id, from_date, to_date, function(err, results){
 					if(err) throw new Error(err);
 					if(results == null){
 						res.sendStatus(404);
@@ -322,7 +334,7 @@ router.get('/attendance_marked/:batch_id/:subject_id', function(req, res){
 						dict_absent[absent[i]['student']] = absent[i]['sum(duration_of_class)']
 					}
 					absent = dict_absent;
-					res.render('view_marked_attendance_teacher',{'students': students, 'present': present, 'absent': absent, 'subject_id': req.params.subject_id});
+					res.render('view_marked_attendance_teacher',{'students': students, 'present': present, 'absent': absent, 'subject_id': req.params.subject_id, 'from_date': from_date, 'to_date': to_date, 'moment': moment});
 				});
 			});
 		});

@@ -47,7 +47,30 @@
 <div class="container" style="display: flex; justify-content: space-between;">
 
 
+<div class="col-md-4">
+  <form method="GET">
+    <label for="datepicker1" >View Attendance From:</label>
+      <input type="text" id="datepicker1" class="datepicker" name="from_date" value="<%= moment(from_date).format( 'DD MMMM, YYYY') %>">
 
+
+    <label for="datepicker2" >View Attendance Till:</label>
+      <input type="text" id="datepicker2" class="datepicker" name="to_date" value="<%= moment(to_date).format( 'DD MMMM, YYYY') %>">
+
+      <script type="text/javascript">
+         $('.datepicker').pickadate({
+            selectMonths: true, // Creates a dropdown to control month
+            selectYears: 5, // Creates a dropdown of 15 years to control year,
+            today: 'Today',
+            clear: 'Clear',
+            close: 'Ok',
+            closeOnSelect: true ,
+            // formatSubmit: 'dd/mm/yyyy'
+          });
+      </script>
+
+    <input type="submit" name="submit" class="btn">
+  </form>
+</div>
 
 
 	<div class="col-md-12" style="padding: 1em; margin: 1em;">
@@ -66,26 +89,37 @@
             <th>Name</th>
             <th style="color: green;">Hours present</th>
             <th style="color: red;">Hours absent</th>
+            <th>Percentage attendance</th>
           </tr>
         </thead>
         <tbody>
-        <% for(var i=0; i<students.length ; ++i){ %>
+        <% for(var i=0; i<students.length ; ++i){ 
+          var hours_absent = 0;
+          var hours_present = 0;
+        %>
         <tr>
           <td><a href="<%=students[i]['enrollment_no']%>" style="color: blue;"><%=students[i]['enrollment_no']%></a></td>
           
           <td><a href="<%=students[i]['enrollment_no']%>" style="color: blue;"><%=students[i]['name']%></a></td>
           
-          <% if(present[students[i]['enrollment_no']]){ %>
+          <% if(present[students[i]['enrollment_no']]){ 
+          hours_present = present[students[i]['enrollment_no']]
+          %>
           <td style="color: green;"><span style="font-weight: bold;"><%=present[students[i]['enrollment_no']]%></span></td>
           <% }else{ %>
           <td style="color: green;"><span style="font-weight: bold;">0</span></td>
           <% } %>
 
-          <% if(absent[students[i]['enrollment_no']]){ %>
+          <% if(absent[students[i]['enrollment_no']]){ 
+          hours_absent = absent[students[i]['enrollment_no']]
+          %>
           <td style="color: red;"><span style="font-weight: bold;"><%=absent[students[i]['enrollment_no']]%></span></td>
           <% }else{ %>
           <td style="color: red;"><span style="font-weight: bold;">0</span></td>
           <% } %>
+
+          <td><span style="font-weight: bold;"><%= (hours_present*100/(hours_present+hours_absent)).toFixed(2) %> %</span></td>
+
           
         </tr>    
         <% } %>

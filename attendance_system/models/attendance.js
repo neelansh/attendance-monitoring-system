@@ -74,15 +74,15 @@ module.exports.getAttendanceByLecture = function(school, subject_id, lecture, ca
   });
 }
 
-module.exports.getPresentBySubject = function(school, subject_id, callback){
-  var query = db.get().query("select student, sum(duration_of_class) from ?? where subject_id = ? and attendance = 'P' group by student",[school+"_attendance", subject_id],function(err, rows){
+module.exports.getPresentBySubject = function(school, subject_id, from_date, to_date, callback){
+  var query = db.get().query("select student, sum(duration_of_class) from ?? where subject_id = ? and attendance = 'P' and DATE(lecture_timestamp) BETWEEN ? and ? group by student",[school+"_attendance", subject_id, from_date, to_date],function(err, rows){
     if(err)throw err;
     callback(null, rows);
   });
 }
 
-module.exports.getAbsentBySubject = function(school, subject_id, callback){
-  var query = db.get().query("select student, sum(duration_of_class) from ?? where subject_id = ? and attendance = 'A' group by student",[school+"_attendance", subject_id],function(err, rows){
+module.exports.getAbsentBySubject = function(school, subject_id, from_date, to_date, callback){
+  var query = db.get().query("select student, sum(duration_of_class) from ?? where subject_id = ? and attendance = 'A' and DATE(lecture_timestamp) BETWEEN ? and ? group by student",[school+"_attendance", subject_id, from_date, to_date],function(err, rows){
     if(err)throw err;
     callback(null, rows);
   });
