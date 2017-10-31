@@ -38,6 +38,10 @@ class UsictBatchAllocation(models.Model):
     class Meta:
         db_table = 'usict_batch_allocation'
 
+    def __str__(self):
+        return  self.course + ' ' + self.stream + ' ' + str(self.semester)
+
+
 
 class UsictStudents(models.Model):
     enrollment_no = models.BigIntegerField(primary_key=True)
@@ -53,6 +57,9 @@ class UsictStudents(models.Model):
     class Meta:
         db_table = 'usict_students'
 
+    def __str__(self):
+        return self.name
+
 
 class UsictSubjectAllocation(models.Model):
     subject_id = models.IntegerField(primary_key=True)
@@ -66,6 +73,8 @@ class UsictSubjectAllocation(models.Model):
     class Meta:
         db_table = 'usict_subject_allocation'
 
+    def __str__(self):
+        return self.subject_code
 
 class UsictTeacher(models.Model):
     instructor_id = models.CharField(primary_key=True, max_length=20)
@@ -76,6 +85,10 @@ class UsictTeacher(models.Model):
     password = models.CharField(max_length=200)
     designation = models.CharField(max_length=100)
     room_no = models.CharField(max_length=20, blank=True, null=True)
+    isDean = models.BooleanField(default=False)
 
     class Meta:
         db_table = 'usict_teacher'
+
+    def __str__(self):
+        return self.name
