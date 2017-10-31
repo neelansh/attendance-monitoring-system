@@ -110,11 +110,11 @@ router.get('/dashboard', function(req, res){
 	if(req.user.instructor_id == null){
 		res.redirect("/teacher/login");
 	}
-	
 	var subjects = sub.getSubjectByTeacher(req.user.school, req.user.instructor_id, function(err, results){
 		if(err) throw new Error(err);
 		res.render('teacher_dashboard',{'subjects': results});
 	});
+
 });
 
 
@@ -657,6 +657,13 @@ router.get('/delete_attendance/:batch_id/:subject_id/:lecture', function(req, re
 			return;
 		});	
 	});
+});
+
+router.get('/dean', function(req, res){
+	if( req.user.isDean )
+		res.render('dean_panel');
+	else 
+		res.redirect("/teacher/dashboard");
 });
 
 module.exports = router;
