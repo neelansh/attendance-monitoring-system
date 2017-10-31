@@ -114,7 +114,6 @@ router.get('/dashboard', function(req, res){
 		if(err) throw new Error(err);
 		res.render('teacher_dashboard',{'subjects': results});
 	});
-
 });
 
 
@@ -660,10 +659,20 @@ router.get('/delete_attendance/:batch_id/:subject_id/:lecture', function(req, re
 });
 
 router.get('/dean', function(req, res){
+
+	
 	if( req.user.isDean )
-		res.render('dean_panel');
+	{	
+		teacher.getTeachers(req.user.school, function(err, teachers){
+		
+			if(err) throw new Error(err);
+			console.log(JSON.stringify(teachers));	
+	
+			res.render('dean_panel', {'teachers' : teachers});
+		})
+	}
 	else 
-		res.redirect("/teacher/dashboard");
+		res.redirect("/teacher/dashboard") ;
 });
 
 module.exports = router;

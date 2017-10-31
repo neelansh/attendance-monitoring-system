@@ -16,8 +16,8 @@
     <div class="col-md-2">      
     </div>
     <div class="col-md-6" style="position: relative;">
-      <% if(user != null && !user.isDean){ %>
-      <a href="/teacher/dashboard" class="logout btn waves-effect waves-light">DEAN PANEL</a>
+      <% if(user != null && user.isDean){ %>
+      <a href="/teacher/dean" class="logout btn waves-effect waves-light">DEAN PANEL</a>
       <% } %>
       <a href="/teacher/dashboard" class="logout btn waves-effect waves-light">DASHBOARD</a>
       <a href="/teacher/profile" class="logout btn waves-effect waves-light">VIEW PROFILE</a>

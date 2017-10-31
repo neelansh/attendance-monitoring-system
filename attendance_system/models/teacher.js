@@ -38,3 +38,10 @@ module.exports.setPassword = function(school, new_password, id, callback){
     	});
 	});
 }
+
+module.exports.getTeachers = function(school, callback){
+	var query = db.get().query("select name, instructor_id from ?? ", [school+"_teacher"], function(err, rows){	
+		if(err) throw err;
+		callback(null, rows);
+	});
+}
