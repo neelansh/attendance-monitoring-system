@@ -658,21 +658,63 @@ router.get('/delete_attendance/:batch_id/:subject_id/:lecture', function(req, re
 	});
 });
 
-router.get('/dean', function(req, res){
+//Dean panel routes 
 
+router.get('/dean', function(req, res){
 	
+	if(!req.isAuthenticated() || req.user.instructor_id == null){
+		res.redirect("/teacher/login");
+	}
 	if( req.user.isDean )
 	{	
-		teacher.getTeachers(req.user.school, function(err, teachers){
+		teacher.getAllTeachers(req.user.school, function(err, teachers){
 		
-			if(err) throw new Error(err);
-			console.log(JSON.stringify(teachers));	
-	
-			res.render('dean_panel', {'teachers' : teachers});
+			sub.getAllSubjects(req.user.school, function(err, subjects){
+
+				student.getAllBatches(req.user.school, function(err, batches){
+
+					if(err) throw new Error(err);	
+					res.render('dean_panel', {'teachers' : teachers, 'subjects' : subjects, 'batches' : batches});
+
+				})
+			})
 		})
 	}
 	else 
 		res.redirect("/teacher/dashboard") ;
 });
+
+
+/*router.get('/subject/:instructor_id',function(req,res){
+
+	if(!req.isAuthenticated() || req.user.instructor_id == null){
+		res.redirect("/teacher/login");
+	}
+
+	if( req.user.isDean ){
+	sub.getSubjectByTeacher('usict',req.params.instructor_id, function(err, results){
+		if(err) throw new Error(err);
+		res.send(JSON.stringify(results));
+	});
+	}
+	else 
+		res.status(403).send({ error: "You do not have permission to access this resource." });
+});
+
+router.post('/:instructor_id',function(req,res){
+
+	if(!req.isAuthenticated() || req.user.instructor_id == null){
+		res.redirect("/teacher/login");
+	}
+
+	if( req.user.isDean ){
+	sub.getSubjectByTeacher('usict',req.params.instructor_id, function(err, results){
+		if(err) throw new Error(err);
+		res.send(JSON.stringify(results));
+	});
+	}
+	else 
+		res.status(403).send({ error: "You do not have permission to access this resource." });
+});*/
 
 module.exports = router;

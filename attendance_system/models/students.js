@@ -40,3 +40,10 @@ module.exports.setPassword = function(school, new_password, id, callback){
     	});
 	});
 }
+
+module.exports.getAllBatches = function(school, callback){
+	var query = db.get().query("select * from ??",[school+"_batch_allocation"],function(err, rows){
+		if(err)throw err;
+		callback(null, rows);
+	});
+}

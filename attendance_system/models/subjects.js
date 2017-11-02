@@ -40,3 +40,10 @@ module.exports.getSubjectOfBatch = function(batch_id, callback){
 		callback(null, rows);
 	});
 }
+
+module.exports.getAllSubjects = function(school, callback){
+	var query = db.get().query("select subject_id, subject_code, subject_name from ??",[school+"_subject_allocation"],function(err, rows){
+		if(err)throw err;
+		callback(null, rows);
+	});
+}
