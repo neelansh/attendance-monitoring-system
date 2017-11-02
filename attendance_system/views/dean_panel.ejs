@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+
+<% include partials/header %>
+<div class="container">
+	<div class="row">
+	<div class="col l2 s2">
+		<select id="select" onchange="selectMethod()">
+			<option value="teacher">Teacher</option>
+			<option value="batch">Batch</option>
+			<option value="subject">Subject</option>
+		</select>
+	</div>
+	<div class="col l2 s2" id="teacher">
+		<select id="selteacher">
+			<% for(var i=0; i<teachers.length ; ++i){ %>
+				<option value=<%= teachers[i] %>> <%= teachers[i].name %></option>
+			<% } %>
+		</select>
+	</div>
+	<div class="col l2 s2" id="batch" style="display:none">
+		<select id="selbatch">
+			<% for(var i=0; i<batches.length ; ++i){ %>
+				<option value=<% batches[i] %>> <%= batches[i].course + " " + batches[i].stream + " " + batches[i].semester%> </option>
+			<% } %>
+		</select>
+	</div>
+	<div class="col l2 s2" id="subject" style="display:none">
+		<select id="selsubject">
+			<% for(var i=0; i<subjects.length ; ++i){ %>
+				<option value=<% subjects[i] %>> <%= subjects[i].subject_code %></option>
+			<% } %>
+		</select>
+	</div>
+	<button onclick="submit()" class="btn col s1">Submit</button>
+	</div>
+</div>
+
+	
+<script>
+$(document).ready(function() {
+    $('select').material_select();
+})
+</script>
+
+<script type="text/javascript">
+var strUser = 'teacher';
+	function submit(){	
+		var value = 'sel' + strUser;
+		var e = document.getElementById(value);
+		var strUser1 = e.options[e.selectedIndex].text;
+	}
+	function selectMethod(){
+		var e = document.getElementById("select");
+		strUser = e.options[e.selectedIndex].value;
+		console.log(strUser);
+		document.getElementById("teacher").style.display = "none";
+		document.getElementById("batch").style.display = "none";
+		document.getElementById("subject").style.display = "none";
+		document.getElementById(strUser).style.display = "block";
+
+	}
+</script>
+<% include partials/footer %>
