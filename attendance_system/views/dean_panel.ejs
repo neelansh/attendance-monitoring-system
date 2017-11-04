@@ -1,63 +1,143 @@
 <!DOCTYPE html>
 
 <% include partials/header %>
+<style type="text/css">
+	.heading{
+	    text-align: left;
+	    font-size: 2em;
+	    font-weight: 700;
+	    color: darkcyan;
+	    letter-spacing: 0.2em;
+	  }
+</style>
+
 <div class="container">
+
 	<div class="row">
-	<div class="col l2 s2">
-		<select id="select" onchange="selectMethod()">
-			<option value="teacher">Teacher</option>
-			<option value="batch">Batch</option>
-			<option value="subject">Subject</option>
-		</select>
-	</div>
-	<div class="col l2 s2" id="teacher">
-		<select id="selteacher">
-			<% for(var i=0; i<teachers.length ; ++i){ %>
-				<option value=<%= teachers[i] %>> <%= teachers[i].name %></option>
-			<% } %>
-		</select>
-	</div>
-	<div class="col l2 s2" id="batch" style="display:none">
-		<select id="selbatch">
-			<% for(var i=0; i<batches.length ; ++i){ %>
-				<option value=<% batches[i] %>> <%= batches[i].course + " " + batches[i].stream + " " + batches[i].semester%> </option>
-			<% } %>
-		</select>
-	</div>
-	<div class="col l2 s2" id="subject" style="display:none">
-		<select id="selsubject">
-			<% for(var i=0; i<subjects.length ; ++i){ %>
-				<option value=<% subjects[i] %>> <%= subjects[i].subject_code %></option>
-			<% } %>
-		</select>
-	</div>
-	<button onclick="submit()" class="btn col s1">Submit</button>
-	</div>
+		<div class="col m12">
+			<h4 class="heading">FILTER:</h4>
+		</div>
+		<div class="input-field col m3">
+          <input id="teacher_search" type="text" class="validate">
+          <label for="teacher_search">Teacher Name</label>
+        </div>
+        <div class="input-field col m3">
+          <input id="subject_search" type="text" class="validate">
+          <label for="subject_search">Subject Name</label>
+        </div>
+        <div class="input-field col m2">
+          <input id="course_search" type="text" class="validate">
+          <label for="course_search">Course Name</label>
+        </div>
+        <div class="input-field col m2">
+          <input id="stream_search" type="text" class="validate">
+          <label for="stream_search">Stream Name</label>
+        </div>
+        <div class="input-field col m2">
+          <input id="semester_search" type="text" class="validate">
+          <label for="semester_search">Semester</label>
+        </div>
+
+   	</div>
+
+	<div class="card material-table">
+        <div class="table-header">
+          <span class="table-title" style="text-transform: uppercase;">LIST OF SUBJECTS IN <%=user.school%></span>
+          <div class="actions">
+            <a href="#" class="search-toggle waves-effect btn-flat nopadding"><i class="material-icons">search</i></a>
+          </div>
+        </div>
+
+        <table id="datatable" class="striped centered">
+          <thead>
+            <tr>
+              <th>Teacher Name</th>
+              <th>Subject Name</th>
+              <th>Course</th>
+              <th>Stream</th>
+              <!-- <th>Subject Code</th> -->
+              <th>Semester</th>
+              <th>Avg Attendance(%)</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% for(var i=0; i<subjects.length ; ++i){ %>
+            <tr>
+              <td><%=subjects[i]['name']%></td>
+              <td><%=subjects[i]['subject_name']%></td>
+              <td><%=subjects[i]['course']%></td>
+              <td><%=subjects[i]['stream']%></td>
+              <!-- <td><%=subjects[i]['subject_code']%></td> -->
+              <td><%=subjects[i]['semester']%></td>
+              <% if(subjects[i]['subject_id'] in avg_attendance){ 
+              		var p = avg_attendance[subjects[i].subject_id].hours_present;
+              		var a = avg_attendance[subjects[i].subject_id].hours_absent; %>
+              	<td style="font-weight: bold;"><%= (p/(p+a)*100).toFixed(2) %></td>
+              <% }else{ %>
+              	<td style="font-weight: bold;">0</td>
+              <% } %>
+              <td>
+              	<a href="/teacher/attendance_marked/<%=subjects[i].batch_id%>/<%=subjects[i].subject_id%>/" style="color: blue;">View</a>, &nbsp
+				<a href="/teacher/attendance/<%=subjects[i].batch_id%>/<%=subjects[i].subject_id%>/" style="color: blue;">Mark</a>, &nbsp
+				<a href="/teacher/edit_attendance/<%=subjects[i].batch_id%>/<%=subjects[i].subject_id%>/" style="color: blue;">Edit</a>
+
+              </td>
+              
+            </tr>
+            <% } %>
+          </tbody>
+        </table>
+
+    </div>
+	
 </div>
 
-	
-<script>
-$(document).ready(function() {
-    $('select').material_select();
-})
-</script>
 
 <script type="text/javascript">
-var strUser = 'teacher';
-	function submit(){	
-		var value = 'sel' + strUser;
-		var e = document.getElementById(value);
-		var strUser1 = e.options[e.selectedIndex].text;
-	}
-	function selectMethod(){
-		var e = document.getElementById("select");
-		strUser = e.options[e.selectedIndex].value;
-		console.log(strUser);
-		document.getElementById("teacher").style.display = "none";
-		document.getElementById("batch").style.display = "none";
-		document.getElementById("subject").style.display = "none";
-		document.getElementById(strUser).style.display = "block";
+	$(document).ready(function(){
+		var table = dataTable.get_table();
 
-	}
+		$('#teacher_search').on( 'keyup', function () {
+		    table
+		        .columns( 0 )
+		        .search( this.value )
+		        .draw();
+		} );
+
+		$('#subject_search').on( 'keyup', function () {
+		    table
+		        .columns( 1 )
+		        .search( this.value )
+		        .draw();
+		} );
+
+		$('#course_search').on( 'keyup', function () {
+		    table
+		        .columns( 2 )
+		        .search( this.value )
+		        .draw();
+		} );
+
+		$('#stream_search').on( 'keyup', function () {
+		    table
+		        .columns( 3 )
+		        .search( this.value )
+		        .draw();
+		} );
+
+		$('#semester_search').on( 'keyup', function () {
+		    table
+		        .columns( 4 )
+		        .search( this.value )
+		        .draw();
+		} );
+
+
+
+	});
+
 </script>
+
+
 <% include partials/footer %>

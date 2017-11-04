@@ -108,3 +108,53 @@ module.exports.getAttendanceByStudent = function(school, enrollment_no, subject_
     callback(null, rows);
   });
 }
+
+
+module.exports.getAvgAttendanceBySubject = function(school, subject_id, callback){
+  var query = db.get().query("SELECT SUM(duration_of_class) as hours, attendance FROM ?? WHERE subject_id = ? GROUP BY attendance",[school+"_attendance", subject_id],function(err, rows){
+    if(err)throw err;
+    var hours_present = 0;
+    var hours_absent = 0;
+
+    for(var i=0; i<rows.length ; ++i){
+      if(rows[i].attendance == 'P'){
+        hours_present = rows[i].hours;
+      }
+      if(rows[i].attendance == 'A'){
+        hours_absent = rows[i].hours;
+      }
+    }
+    callback(null, hours_present/(hours_present+hours_absent));
+  });
+}
+
+
+module.exports.getAvgAttendance = function(school, done){
+  var query = db.get().query("SELECT SUM(duration_of_class) as hours, attendance, subject_id FROM ?? GROUP BY attendance, subject_id",[school+"_attendance"],function(err, rows){
+    if(err)throw err;
+    var avg_attendance = {};
+
+    for(var i=0; i<rows.length ; ++i){
+      if(rows[i].subject_id in avg_attendance){
+        if(rows[i].attendance == 'P'){
+          avg_attendance[rows[i].subject_id].hours_present = rows[i].hours;
+        }
+        if(rows[i].attendance == 'A'){
+          avg_attendance[rows[i].subject_id].hours_absent = rows[i].hours;
+        }
+      }else{
+        avg_attendance[rows[i].subject_id] = {
+          "hours_absent": 0,
+          "hours_present": 0
+        }
+        if(rows[i].attendance == 'P'){
+          avg_attendance[rows[i].subject_id].hours_present = rows[i].hours;
+        }
+        if(rows[i].attendance == 'A'){
+          avg_attendance[rows[i].subject_id].hours_absent = rows[i].hours;
+        }
+      }
+    }
+    done(null, avg_attendance);
+  });
+}

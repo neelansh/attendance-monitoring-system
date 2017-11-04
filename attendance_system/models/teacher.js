@@ -28,14 +28,21 @@ module.exports.comparePassword = function(candidatePassword, hash, callback){
 module.exports.setPassword = function(school, new_password, id, callback){
 	bcrypt.genSalt(10, function(err, salt) {
 		bcrypt.hash(new_password, salt, function(err, hash) {
-			console.log(salt, hash, new_password);
+			// console.log(salt, hash, new_password);
 			var query = db.get().query("update ?? set password = ? where instructor_id = ?",[school+"_teacher", hash, id],function(err, rows){
 				if(err) throw err;
 				console.log(rows);
 				callback(null, rows);
 			});
-			console.log(query.sql);
+			// console.log(query.sql);
     	});
+	});
+}
+
+module.exports.isDean = function(school, instructor_id, callback){
+	var query = db.get().query("select isDean from ?? where instructor_id = ? ", [school+"_teacher", instructor_id], function(err, rows){	
+		if(err) throw err;
+		callback(null, rows);
 	});
 }
 

@@ -139,7 +139,7 @@ router.get('/attendance/:batch_id/:subject_id', function(req, res){
 			res.sendStatus(500);
 			return;
 		}
-		if(!is_teaching){
+		if(!is_teaching && !req.user.isDean){
 			res.locals.errors = [{'msg': 'you are not teaching this subject', 'value': 'bad requests: 400'}];
 			res.render('index');
 			return;
@@ -197,7 +197,7 @@ router.post('/attendance/:batch_id/:subject_id', function(req, res) {
 			res.sendStatus(500);
 			return;
 		}
-		if(!is_teaching){
+		if(!is_teaching && !req.user.isDean){
 			res.locals.errors = [{'msg': 'you are not teaching this subject', 'value': 'bad requests: 400'}];
 			res.render('index');
 			return;
@@ -279,7 +279,7 @@ router.get('/attendance_marked/:batch_id/:subject_id', function(req, res){
 			res.sendStatus(500);
 			return;
 		}
-		if(!is_teaching){
+		if(!is_teaching && !req.user.isDean){
 			res.locals.errors = [{'msg': 'you are not teaching this subject', 'value': 'bad requests: 400'}];
 			res.render('index');
 			return;
@@ -363,7 +363,7 @@ router.get('/attendance_marked/:batch_id/:subject_id/:enrollment_no', function(r
 			res.sendStatus(500);
 			return;
 		}
-		if(!is_teaching){
+		if(!is_teaching && !req.user.isDean){
 			res.locals.errors = [{'msg': 'you are not teaching this subject', 'value': 'bad requests: 400'}];
 			res.render('index');
 			return;
@@ -447,7 +447,7 @@ router.get('/edit_attendance/:batch_id/:subject_id', function(req, res){
 			res.sendStatus(500);
 			return;
 		}
-		if(!is_teaching){
+		if(!is_teaching && !req.user.isDean){
 			res.locals.errors = [{'msg': 'you are not teaching this subject', 'value': 'bad requests: 400'}];
 			res.render('index');
 			return;
@@ -496,7 +496,7 @@ router.get('/edit_attendance/:batch_id/:subject_id/:lecture', function(req, res)
 			res.sendStatus(500);
 			return;
 		}
-		if(!is_teaching){
+		if(!is_teaching && !req.user.isDean){
 			res.locals.errors = [{'msg': 'you are not teaching this subject', 'value': 'bad requests: 400'}];
 			res.render('index');
 			return;
@@ -566,7 +566,7 @@ router.post('/edit_attendance/:batch_id/:subject_id/:lecture', function(req, res
 			res.sendStatus(500);
 			return;
 		}
-		if(!is_teaching){
+		if(!is_teaching && !req.user.isDean){
 			res.locals.errors = [{'msg': 'you are not teaching this subject', 'value': 'bad requests: 400'}];
 			res.render('index');
 			return;
@@ -640,7 +640,7 @@ router.get('/delete_attendance/:batch_id/:subject_id/:lecture', function(req, re
 			res.sendStatus(500);
 			return;
 		}
-		if(!is_teaching){
+		if(!is_teaching && !req.user.isDean){
 			res.locals.errors = [{'msg': 'you are not teaching this subject', 'value': 'bad requests: 400'}];
 			res.render('index');
 			return;
@@ -667,21 +667,20 @@ router.get('/dean', function(req, res){
 	}
 	if( req.user.isDean )
 	{	
-		teacher.getAllTeachers(req.user.school, function(err, teachers){
 		
-			sub.getAllSubjects(req.user.school, function(err, subjects){
-
-				student.getAllBatches(req.user.school, function(err, batches){
-
-					if(err) throw new Error(err);	
-					res.render('dean_panel', {'teachers' : teachers, 'subjects' : subjects, 'batches' : batches});
-
-				})
-			})
+		sub.getSubjectsWithAllData(req.user.school, function(err, subjects){
+			if(err) throw new Error(err);
+			
+			att.getAvgAttendance(req.user.school, function(error, avg_attendance){
+				if(error) throw new Error(error);
+				res.render('dean_panel', {'subjects' : subjects, 'avg_attendance': avg_attendance});
+			});
+			
 		})
-	}
-	else 
+
+	}else{
 		res.redirect("/teacher/dashboard") ;
+	}
 });
 
 

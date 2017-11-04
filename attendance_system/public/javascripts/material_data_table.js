@@ -1,3 +1,16 @@
+var dataTable = (function(){
+  var data_table;
+  var set_table = function(table){
+    data_table = table;
+  }
+  var get_table = function(){
+    return data_table;
+  }
+  return {
+    'set_table': set_table,
+    'get_table': get_table
+  }
+})();
 $(document).ready(function(){
 
 (function(window, document, undefined) {
@@ -203,9 +216,7 @@ $(document).ready(function(){
     bAutoWidth: false
   });
 
-function get_table(){
-  return table;
-}
+  dataTable.set_table(table);
 
 
 });
