@@ -37,6 +37,14 @@
           <input id="semester_search" type="text" class="validate">
           <label for="semester_search">Semester</label>
         </div>
+        <div class="input-field col m2">
+          <input id="min" type="text" class="validate">
+          <label for="min">Attendance greater than</label>
+        </div>
+        <div class="input-field col m2">
+          <input id="max" type="text" class="validate">
+          <label for="max">Attendance less than</label>
+        </div>
 
    	</div>
 
@@ -131,6 +139,31 @@
 		        .columns( 4 )
 		        .search( this.value )
 		        .draw();
+		} );
+
+		$.fn.dataTable.ext.search.push(
+		    function( settings, data, dataIndex ) {
+		        var min = parseInt( $('#min').val(), 10 );
+		        var max = parseInt( $('#max').val(), 10 );
+		        var age = parseFloat( data[5] ) || 0; // use data for the age column
+		 
+		        if ( ( isNaN( min ) && isNaN( max ) ) ||
+		             ( isNaN( min ) && age <= max ) ||
+		             ( min <= age   && isNaN( max ) ) ||
+		             ( min <= age   && age <= max ) )
+		        {
+		            return true;
+		        }
+		        return false;
+		    }
+		);
+
+		$('#min').on( 'keyup', function () {
+		    table.draw();
+		} );
+
+		$('#max').on( 'keyup', function () {
+		    table.draw();
 		} );
 
 

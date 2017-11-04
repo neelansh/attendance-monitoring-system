@@ -683,37 +683,4 @@ router.get('/dean', function(req, res){
 	}
 });
 
-
-/*router.get('/subject/:instructor_id',function(req,res){
-
-	if(!req.isAuthenticated() || req.user.instructor_id == null){
-		res.redirect("/teacher/login");
-	}
-
-	if( req.user.isDean ){
-	sub.getSubjectByTeacher('usict',req.params.instructor_id, function(err, results){
-		if(err) throw new Error(err);
-		res.send(JSON.stringify(results));
-	});
-	}
-	else 
-		res.status(403).send({ error: "You do not have permission to access this resource." });
-});
-
-router.post('/:instructor_id',function(req,res){
-
-	if(!req.isAuthenticated() || req.user.instructor_id == null){
-		res.redirect("/teacher/login");
-	}
-
-	if( req.user.isDean ){
-	sub.getSubjectByTeacher('usict',req.params.instructor_id, function(err, results){
-		if(err) throw new Error(err);
-		res.send(JSON.stringify(results));
-	});
-	}
-	else 
-		res.status(403).send({ error: "You do not have permission to access this resource." });
-});*/
-
 module.exports = router;
