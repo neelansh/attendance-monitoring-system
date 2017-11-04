@@ -10,13 +10,61 @@
   </h4>
   <% } %>
   
+  
 
   <div class="row">
-    <div class="col-md-12">
+
+
+<div class="col-md-4 card">
+      <h5>SUBJECT DETAILS :</h5>
+    <table>
+      <tr><td style="font-weight: bold;">Subject Name :</td>
+      <td class="subject_name"></td></tr>
+      
+      <tr><td style="font-weight: bold;">Teacher Name :</td>
+      <td class="teacher_name"></td></tr>
+
+      <tr><td style="font-weight: bold;">Subject Code :</td>
+      <td class="subject_code"></td></tr>
+
+      <tr><td style="font-weight: bold;">Teacher ID :</td>
+      <td class="teacher_code"></td></tr>
+
+      <tr><td style="font-weight: bold;">Course :</td>
+      <td class="course"></td></tr>
+
+      <tr><td style="font-weight: bold;">Stream :</td>
+      <td class="stream"></td></tr>
+
+      <tr><td style="font-weight: bold;">Semester : </td>
+      <td class="semester"></td></tr>
+      
+    </table>
+    <script type="text/javascript">
+      $(document).ready(function(){
+        var subject_id = <%- JSON.stringify(sid) %>;
+        $.get("/teacher/get_subject_details/"+subject_id, function(data){
+          // data = JSON.parse(data)
+          $(".subject_code").append(data.subject_code);
+          $(".subject_name").append(data.subject_name);
+          $(".teacher_name").append(data.name);
+          $(".teacher_code").append(data.instructor_code);
+          $(".course").append(data.course);
+          $(".stream").append(data.stream);
+          $(".semester").append(data.semester);
+        })
+
+      })
+    </script>
+    </div>
+
+
+
+    <div class="col-md-8">
 
       <div class="card material-table">
         <div class="table-header">
-          <span class="table-title">Attendance for class</span>
+          <span class="table-title">Edit Attendance</span>
           <div class="actions">
             <a href="#" class="search-toggle waves-effect btn-flat nopadding"><i class="material-icons">search</i></a>
           </div>

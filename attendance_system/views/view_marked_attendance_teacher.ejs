@@ -2,34 +2,34 @@
 
 <% include partials/header %>
 <style type="text/css">
-  .date-attendance{
-    text-align: center;
-    font-size: 2em;
-    font-weight: 700;
-    color: darkcyan;
-    letter-spacing: 0.2em;
-  }
-  .attendance-heading{
-    font-size: 3em;
-    text-align: center;
-    font-weight: 200;
-  }
-  .marked-heading{
-    font-size: 1.1em;
-    line-height: 110%;
-    margin: 1.14rem 0 0.912rem 0;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    text-align: center;
-    font-weight: 900;
-    color: darkslategray;
-  }
-  .heading{
-    font-size: 3em;
-    text-align: center;
-    font-weight: 200;
-    color: teal;
-  }
+.date-attendance{
+  text-align: center;
+  font-size: 2em;
+  font-weight: 700;
+  color: darkcyan;
+  letter-spacing: 0.2em;
+}
+.attendance-heading{
+  font-size: 3em;
+  text-align: center;
+  font-weight: 200;
+}
+.marked-heading{
+  font-size: 1.1em;
+  line-height: 110%;
+  margin: 1.14rem 0 0.912rem 0;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  text-align: center;
+  font-weight: 900;
+  color: darkslategray;
+}
+.heading{
+  font-size: 3em;
+  text-align: center;
+  font-weight: 200;
+  color: teal;
+}
 </style>
 <!-- <script type="text/javascript">
   $(document).ready(function () {
@@ -40,24 +40,91 @@
   });
 
 </script> -->
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<div class="container">
+    <h2 class="heading">SUBJECT DETAILS</h2>
+  <div class="col-md-6 left-align">
+    <table>
+      <tr><td style="font-weight: bold;">Subject Name :</td>
+      <td class="subject_name"></td></tr>
+      
+      <tr><td style="font-weight: bold;">Teacher Name :</td>
+      <td class="teacher_name"></td></tr>
+
+      <tr><td style="font-weight: bold;">Subject Code :</td>
+      <td class="subject_code"></td></tr>
+
+      <tr><td style="font-weight: bold;">Teacher ID :</td>
+      <td class="teacher_code"></td></tr>
+
+      <tr><td style="font-weight: bold;">Course :</td>
+      <td class="course"></td></tr>
+
+      <tr><td style="font-weight: bold;">Stream :</td>
+      <td class="stream"></td></tr>
+
+      <tr><td style="font-weight: bold;">Semester : </td>
+      <td class="semester"></td></tr>
+      
+    </table>
+
+  </div>
+
+  <div class="col-md-4 left-align">
+
+    <div id="piechart">
+
+    </div>
+    <script type="text/javascript">
+      $(document).ready(function () {
+        var subject_id = <%- JSON.stringify(subject_id) %>;
+        var attendance = 0;
+        $.get( "/teacher/get_attendance/"+subject_id, function( data ) {
+          attendance = parseInt(data*100);
+          google.charts.load('current', {'packages':['corechart']});
+          google.charts.setOnLoadCallback(drawChart);
+
+          function drawChart() {
+
+            var data = google.visualization.arrayToDataTable([
+              ['Attendance', '%'],
+              ['Present', attendance],
+              ['Absent', 100-attendance],
+              ]);
+
+            var options = {
+              title: 'Average Attendance'
+            };
+
+            var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+
+            chart.draw(data, options);
+          }
+
+        });
+
+      });
+    </script>
+
+    </div>
+</div>
 
 
-<h4 id="heading" class="heading container">ATTENDANCE FOR CLASS <br></h4><br>
+<h4 id="heading" class="heading container">ATTENDANCE FOR CLASS <span class="subject_code"></span></h4><br>
 <h5 class="marked-heading">CLICK ON ENROLLMENT NUMBER OR NAME FOR MORE DETAILS</h5>
 <div class="container" style="display: flex; justify-content: space-between;">
 
-
-<div class="col-md-4">
+<div class="col-md-3">
   <form method="GET">
-    <label for="datepicker1" >View Attendance From:</label>
+      <label for="datepicker1" >View Attendance From:</label>
       <input type="text" id="datepicker1" class="datepicker" name="from_date" value="<%= moment(from_date).format( 'DD MMMM, YYYY') %>">
 
 
-    <label for="datepicker2" >View Attendance Till:</label>
+      <label for="datepicker2" >View Attendance Till:</label>
       <input type="text" id="datepicker2" class="datepicker" name="to_date" value="<%= moment(to_date).format( 'DD MMMM, YYYY') %>">
 
       <script type="text/javascript">
-         $('.datepicker').pickadate({
+       $('.datepicker').pickadate({
             selectMonths: true, // Creates a dropdown to control month
             selectYears: 5, // Creates a dropdown of 15 years to control year,
             today: 'Today',
@@ -66,70 +133,70 @@
             closeOnSelect: true ,
             // formatSubmit: 'dd/mm/yyyy'
           });
-      </script>
+        </script>
 
-    <input type="submit" name="submit" class="btn">
-  </form>
+        <input type="submit" name="submit" class="btn">
+      </form>
 </div>
 
 
-	<div class="col-md-12" style="padding: 1em; margin: 1em;">
-    <div class="card material-table">
-      <div class="table-header">
-        <span class="table-title">Attendance for class</span>
-        <div class="actions">
-          <a href="#" class="search-toggle waves-effect btn-flat nopadding"><i class="material-icons">search</i></a>
+    <div class="col-md-9" style="padding: 1em; margin: 1em;">
+      <div class="card material-table">
+        <div class="table-header">
+          <span class="table-title">Attendance for <span class="subject_code"></span></span>
+          <div class="actions">
+            <a href="#" class="search-toggle waves-effect btn-flat nopadding"><i class="material-icons">search</i></a>
+          </div>
         </div>
+
+        <table id="datatable" class="striped centered">
+          <thead>
+            <tr>
+              <th>Enrollment Number</th>
+              <th>Name</th>
+              <th style="color: green;">Hours present</th>
+              <th style="color: red;">Hours absent</th>
+              <th>Percentage attendance</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% for(var i=0; i<students.length ; ++i){ 
+            var hours_absent = 0;
+            var hours_present = 0;
+            %>
+            <tr>
+              <td><a href="<%=students[i]['enrollment_no']%>" style="color: blue;"><%=students[i]['enrollment_no']%></a></td>
+
+              <td><a href="<%=students[i]['enrollment_no']%>" style="color: blue;"><%=students[i]['name']%></a></td>
+
+              <% if(present[students[i]['enrollment_no']]){ 
+              hours_present = present[students[i]['enrollment_no']]
+              %>
+              <td style="color: green;"><span style="font-weight: bold;"><%=present[students[i]['enrollment_no']]%></span></td>
+              <% }else{ %>
+              <td style="color: green;"><span style="font-weight: bold;">0</span></td>
+              <% } %>
+
+              <% if(absent[students[i]['enrollment_no']]){ 
+              hours_absent = absent[students[i]['enrollment_no']]
+              %>
+              <td style="color: red;"><span style="font-weight: bold;"><%=absent[students[i]['enrollment_no']]%></span></td>
+              <% }else{ %>
+              <td style="color: red;"><span style="font-weight: bold;">0</span></td>
+              <% } %>
+
+              <td><span style="font-weight: bold;"><%= (hours_present*100/(hours_present+hours_absent)).toFixed(2) %> %</span></td>
+
+
+            </tr>    
+            <% } %>
+
+
+          </tbody>
+        </table>
+
       </div>
-
-      <table id="datatable" class="striped centered">
-        <thead>
-          <tr>
-            <th>Enrollment Number</th>
-            <th>Name</th>
-            <th style="color: green;">Hours present</th>
-            <th style="color: red;">Hours absent</th>
-            <th>Percentage attendance</th>
-          </tr>
-        </thead>
-        <tbody>
-        <% for(var i=0; i<students.length ; ++i){ 
-          var hours_absent = 0;
-          var hours_present = 0;
-        %>
-        <tr>
-          <td><a href="<%=students[i]['enrollment_no']%>" style="color: blue;"><%=students[i]['enrollment_no']%></a></td>
-          
-          <td><a href="<%=students[i]['enrollment_no']%>" style="color: blue;"><%=students[i]['name']%></a></td>
-          
-          <% if(present[students[i]['enrollment_no']]){ 
-          hours_present = present[students[i]['enrollment_no']]
-          %>
-          <td style="color: green;"><span style="font-weight: bold;"><%=present[students[i]['enrollment_no']]%></span></td>
-          <% }else{ %>
-          <td style="color: green;"><span style="font-weight: bold;">0</span></td>
-          <% } %>
-
-          <% if(absent[students[i]['enrollment_no']]){ 
-          hours_absent = absent[students[i]['enrollment_no']]
-          %>
-          <td style="color: red;"><span style="font-weight: bold;"><%=absent[students[i]['enrollment_no']]%></span></td>
-          <% }else{ %>
-          <td style="color: red;"><span style="font-weight: bold;">0</span></td>
-          <% } %>
-
-          <td><span style="font-weight: bold;"><%= (hours_present*100/(hours_present+hours_absent)).toFixed(2) %> %</span></td>
-
-          
-        </tr>    
-        <% } %>
-        
-        
-      </tbody>
-    </table>
-
-  </div>
-</div>
+    </div>
 
 
 <!-- <div class="card col-md-6" style="padding: 1em; margin: 1em;">
@@ -155,6 +222,21 @@
 
 
 </div>
+<script type="text/javascript">
+  $(document).ready(function(){
+    var subject_id = <%- JSON.stringify(subject_id) %>;
+    $.get("/teacher/get_subject_details/"+subject_id, function(data){
+      // data = JSON.parse(data)
+      $(".subject_code").append(data.subject_code);
+      $(".subject_name").append(data.subject_name);
+      $(".teacher_name").append(data.name);
+      $(".teacher_code").append(data.instructor_code);
+      $(".course").append(data.course);
+      $(".stream").append(data.stream);
+      $(".semester").append(data.semester);
+    })
 
+  })
+</script>
 
 <% include partials/footer %>

@@ -3,7 +3,7 @@ var db = require('../db.js');
 //Subjects model
 
 module.exports.getSubjectById = function(school, id, callback){
-	var query = db.get().query("select * from ?? where subject_id = ?",[school+"_subject_allocation", id],function(err, rows){
+	var query = db.get().query("select * from ?? t1 INNER JOIN ?? t2 ON t1.instructor_code = t2.instructor_id INNER JOIN ?? t3 ON t1.batch_id = t3.batch_id where t1.subject_id = ?",[school+"_subject_allocation", school+"_teacher", school+"_batch_allocation", id],function(err, rows){
 		if(err)throw err;
 		callback(null, rows);
 	});

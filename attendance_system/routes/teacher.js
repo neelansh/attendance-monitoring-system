@@ -299,7 +299,7 @@ router.get('/attendance_marked/:batch_id/:subject_id', function(req, res){
 			var from_date = new Date(new Date().getFullYear(), 0, 1);
 			var to_date = new Date();
 
-			console.log(req.query.from_date);
+			// console.log(req.query.from_date);
 			if(req.query.from_date && req.query.to_date){
 				if(moment(req.query.from_date ,"DD MMMM, YYYY").isValid() && moment(req.query.to_date ,"DD MMMM, YYYY").isValid()){
 					from_date = moment(req.query.from_date ,"DD MMMM, YYYY").toDate();
@@ -681,6 +681,58 @@ router.get('/dean', function(req, res){
 	}else{
 		res.redirect("/teacher/dashboard") ;
 	}
+});
+
+
+router.get('/get_attendance/:subject_id', function(req, res){
+	if(!req.isAuthenticated()){
+		res.redirect("/teacher/login");
+	}
+	if(req.user.instructor_id == null){
+		res.redirect("/teacher/login");
+	}
+	req.checkParams('subject_id','invalid subject_id').notEmpty().isInt();
+	var errors = req.validationErrors();
+	if(errors){
+		res.locals.errors = errors;
+		res.render('index');
+		return;
+	}
+
+	att.getAvgAttendanceBySubject(req.user.school, req.params.subject_id, function(err, results){
+		if(err) throw err;
+		if(results == null){
+			res.sendStatus(404);
+		}
+	    res.json(results);
+	});
+});
+
+
+router.get('/get_subject_details/:subject_id', function(req, res){
+	if(!req.isAuthenticated()){
+		res.redirect("/teacher/login");
+	}
+	if(req.user.instructor_id == null){
+		res.redirect("/teacher/login");
+	}
+	req.checkParams('subject_id','invalid subject_id').notEmpty().isInt();
+	var errors = req.validationErrors();
+	if(errors){
+		res.locals.errors = errors;
+		res.render('index');
+		return;
+	}
+
+	sub.getSubjectById(req.user.school, req.params.subject_id, function(err, results){
+		if(err) throw err;
+		if(results == null){
+			res.sendStatus(404);
+		}
+		delete results[0].password;
+		delete results[0].isDean;
+	    res.json(results[0]);
+	});
 });
 
 module.exports = router;
