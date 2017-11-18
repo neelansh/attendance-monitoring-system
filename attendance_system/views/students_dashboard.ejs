@@ -11,11 +11,12 @@
             "A" : 0,
             "NA" : 0,
             "subject_name": elem.subject_name,
-            "subject_id": elem.subject_id
+            "subject_id": elem.subject_id,
           }
         }	
-        arr[elem.subject_code][elem.attendance] ++;
+        arr[elem.subject_code][elem.attendance]=arr[elem.subject_code][elem.attendance]+ elem.duration_of_class;
       });
+      console.log(arr);
       html = '';
       Object.keys(arr).forEach(function (elem) {
         html += '<tr>';
@@ -23,7 +24,7 @@
         html += '<td>' + arr[elem]['subject_name'] + '</td>';
         html += '<td>' + arr[elem]["P"] + '</td>';
         html += '<td>' + arr[elem]["A"] + '</td>';
-        html += '<td>' + arr[elem]["P"]*100/(arr[elem]["P"] + arr[elem]["A"]) + '</td>';
+        html += '<td>' + (arr[elem]["P"]*100/(arr[elem]["P"] + arr[elem]["A"])).toFixed(2) + '</td>';
         html += '</tr>';
       });
       $('.attendance-table').html(html);

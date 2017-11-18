@@ -5,5 +5,6 @@ from .models import *
 # admin.site.register(UsictBatchAllocation)
 admin.site.register(UsictStudents)
 admin.site.register(UsictSubjectAllocation)
+admin.site.register(UsictBatchAllocation)
 admin.site.register(UsictTeacher)
 admin.site.register(Sessions)
