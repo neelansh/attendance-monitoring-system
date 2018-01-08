@@ -2,6 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Attendance Monitoring System</title>
 
   <!-- jQuery -->
@@ -15,25 +16,14 @@
 
   <!-- Compiled and minified JavaScript -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.1/js/materialize.min.js"></script>
-
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
-
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
-
   <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700" rel="stylesheet">
-
   <link rel="stylesheet" href="/css/bootstrap.min.css">
   <link rel="stylesheet" href="/css/style.css" media="screen" title="no title">
-
-
-
   <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.15/datatables.min.js"></script>
-
-<link rel="stylesheet" type="text/css" href="/css/material_data_table.css"/>
-<script type="text/javascript" src="/javascripts/material_data_table.js"></script>
-
-
+  <link rel="stylesheet" type="text/css" href="/css/material_data_table.css"/>
+  <script type="text/javascript" src="/javascripts/material_data_table.js"></script>
 
   <style type="text/css">
     html{
@@ -50,23 +40,21 @@
 <body>
   <header>
     <nav>
-     <div class="nav-wrapper container">
-     <img class="left logo-img" height="100" style="position: relative !important;z-index: 10;" src='/images/logomain.png' />
-       <a href="#" class="brand-logo center main-title">GURU GOBIND SINGH INDRAPRASTHA UNIVERSITY</a>
-     </div>
-   </nav>
-
-
+      <div class="nav-wrapper container">
+        <img class="responsive-img left logo-img" height="100" style="position: relative !important;z-index: 10;" src='/images/logomain.png' />
+          <a href="#" class="hide-on-med-and-down center main-title">GURU GOBIND SINGH INDRAPRASTHA UNIVERSITY</a>
+          <a href="#" class="center hide-on-large-only">GGSIPU</a>
+      </div>
+    </nav>
    <nav>
-    <div class="nav-wrapper sub-nav">
-      <a href="/" class="brand-logo center sub-title">ATTENDANCE MONITORING SYSTEM</a>
-    </div>
-  </nav>
-</header>
+      <div class="nav-wrapper sub-nav">
+        <a href="/" class="brand-logo hide-on-med-and-down center sub-title">ATTENDANCE MONITORING SYSTEM</a>
+        <a href="/" class="center hide-on-large-only">Attendance Monitoring System</a>
+      </div>
+    </nav>
+  </header>
 <main>
 <% include ./user_card %>
-
-
   <div class="row">
     <% if(success_msg != "") {%>
     <div class="center-align card-panel green-text col s4 offset-s4"><%=success_msg%></div>
@@ -83,10 +71,3 @@
       <% } %>
     <% } %>
   </div>
-
-<style type="text/css">
-   .logo-img {
-        margin-top: 1em !important;
-    }
-
-</style>

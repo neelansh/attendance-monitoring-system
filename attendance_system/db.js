@@ -16,7 +16,11 @@ var options = {
     host: process.env.mysql_host||'localhost',
     user: process.env.mysql_user||'root',
     port: process.env.mysql_port||3306,
+// <<<<<<< HEAD
     password: process.env.mysql_password||'9630',
+// =======
+//     password: process.env.mysql_password||'root',
+// >>>>>>> ed9cf43b1feffb6b614154517ada54beccb56b17
     database: exports.MODE_PRODUCTION ? PRODUCTION_DB : TEST_DB
 };
 var connection = mysql.createConnection(options);
