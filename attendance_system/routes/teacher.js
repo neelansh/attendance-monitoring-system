@@ -306,6 +306,9 @@ router.get('/attendance_marked/:batch_id/:subject_id', function(req, res){
 				if(moment(req.query.from_date ,"DD MMMM, YYYY").isValid() && moment(req.query.to_date ,"DD MMMM, YYYY").isValid()){
 					from_date = moment(req.query.from_date ,"DD MMMM, YYYY").toDate();
 					to_date = moment(req.query.to_date ,"DD MMMM, YYYY").toDate();
+					// increasing 1 more day so that we can check the current attendence status.
+					to_date = moment(to_date).add(1, 'days').toDate();
+					console.log(to_date);
 				}
 			}
 
@@ -318,6 +321,7 @@ router.get('/attendance_marked/:batch_id/:subject_id', function(req, res){
 				if(results == null){
 					res.sendStatus(404);
 				}
+
 				var present = results;
 				var dict_present = {};
 				for(var i=0; i<present.length ; ++i){
@@ -335,6 +339,10 @@ router.get('/attendance_marked/:batch_id/:subject_id', function(req, res){
 						dict_absent[absent[i]['student']] = absent[i]['sum(duration_of_class)']
 					}
 					absent = dict_absent;
+
+					// decreasing 1 day as we increased 1 day above.
+					to_date = moment(to_date).subtract(1, 'days');
+
 					res.render('view_marked_attendance_teacher',{'students': students, 'present': present, 'absent': absent, 'subject_id': req.params.subject_id, 'from_date': from_date, 'to_date': to_date, 'moment': moment});
 				});
 			});

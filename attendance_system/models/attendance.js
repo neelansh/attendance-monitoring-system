@@ -76,8 +76,7 @@ module.exports  = {
   },
 
   getPresentBySubject: function(school, subject_id, from_date, to_date, callback) {
-    var query = db.get().query("select student, sum(duration_of_class) from ?? where subject_id = ? and attendance = 'P' and DATE(lecture_timestamp) BETWEEN ? and ? group by student",[school+"_attendance", subject_id, from_date, to_date],function(err, rows) {
-      if(err)throw err;
+var query = db.get().query("select student, sum(duration_of_class) from ?? where subject_id = ? and attendance = 'P' and DATE(lecture_timestamp) BETWEEN ? and ? group by student",[school+"_attendance", subject_id, from_date, to_date],function(err, rows) {      if(err)throw err;
       callback(null, rows);
     });
   },
