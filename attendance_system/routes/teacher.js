@@ -301,6 +301,7 @@ router.get('/attendance_marked/:batch_id/:subject_id', function(req, res){
 			var from_date = new Date(new Date().getFullYear(), 0, 1);
 			var to_date = new Date();
 
+
 			// console.log(req.query.from_date);
 			if(req.query.from_date && req.query.to_date){
 				if(moment(req.query.from_date ,"DD MMMM, YYYY").isValid() && moment(req.query.to_date ,"DD MMMM, YYYY").isValid()){
@@ -308,8 +309,9 @@ router.get('/attendance_marked/:batch_id/:subject_id', function(req, res){
 					to_date = moment(req.query.to_date ,"DD MMMM, YYYY").toDate();
 					// increasing 1 more day so that we can check the current attendence status.
 					to_date = moment(to_date).add(1, 'days').toDate();
-					console.log(to_date);
 				}
+			} else {
+				to_date = moment(to_date).add(1, 'days').toDate();
 			}
 
 
@@ -340,8 +342,14 @@ router.get('/attendance_marked/:batch_id/:subject_id', function(req, res){
 					}
 					absent = dict_absent;
 
-					// decreasing 1 day as we increased 1 day above.
-					to_date = moment(to_date).subtract(1, 'days');
+					if (req.query.to_date && req.query.from_date) {
+						if(moment(req.query.from_date ,"DD MMMM, YYYY").isValid() && moment(req.query.to_date ,"DD MMMM, YYYY").isValid()){
+							// decreasing 1 day as we increased 1 day above.
+							to_date = moment(to_date).subtract(1, 'days');
+						}
+					} else {
+						to_date = moment(to_date).subtract(1, 'days');
+					}
 
 					res.render('view_marked_attendance_teacher',{'students': students, 'present': present, 'absent': absent, 'subject_id': req.params.subject_id, 'from_date': from_date, 'to_date': to_date, 'moment': moment});
 				});
@@ -383,6 +391,7 @@ router.get('/attendance_marked/:batch_id/:subject_id/:enrollment_no', function(r
 			if(results == null){
 				res.sendStatus(404);
 			}
+
 			res.render('student_attendance',{'attendance': results, "enrollment_no": req.params.enrollment_no, "moment": moment});
 		});
 	});
@@ -499,7 +508,7 @@ router.get('/edit_attendance/:batch_id/:subject_id/:lecture', function(req, res)
 	var dateFormat = require('dateformat');
 	var lecture = new Date(req.params.lecture);
 	var timestamp = dateFormat(lecture, "isoDateTime");
-	// console.log(timestamp);
+
 	sub.check_teaching(req.user.school, req.user.instructor_id, req.params.subject_id, function(err, is_teaching){
 		if(err) {
 			throw new Error(err);
@@ -643,7 +652,7 @@ router.get('/delete_attendance/:batch_id/:subject_id/:lecture', function(req, re
 	var dateFormat = require('dateformat');
 	var lecture = new Date(req.params.lecture);
 	var timestamp = dateFormat(lecture, "isoDateTime");
-	// console.log(timestamp);
+
 	sub.check_teaching(req.user.school, req.user.instructor_id, req.params.subject_id, function(err, is_teaching){
 		if(err) {
 			throw new Error(err);
