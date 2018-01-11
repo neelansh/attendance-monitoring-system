@@ -7,7 +7,7 @@ var LocalStrategy = require('passport-local').Strategy;
 var teacher = require('../models/teacher');
 var student = require('../models/students');
 var sub = require("../models/subjects");
-var att = require("../models/attendance");	
+var att = require("../models/attendance");
 
 /* GET teacher login page. */
 router.get('/login', function(req, res, next) {
@@ -117,7 +117,7 @@ router.get('/dashboard', function(req, res){
 });
 
 
-router.get('/attendance/:batch_id/:subject_id', function(req, res){
+router.get('/attendance/:batch_id/:subject_id', function(req, res) {
 	if(!req.isAuthenticated()){
 		res.redirect("/teacher/login");
 	}
@@ -143,15 +143,15 @@ router.get('/attendance/:batch_id/:subject_id', function(req, res){
 			res.locals.errors = [{'msg': 'you are not teaching this subject', 'value': 'bad requests: 400'}];
 			res.render('index');
 			return;
-		}	
+		}
 
 		var subjects = sub.getStudentsByBatch(req.user.school, req.params.batch_id, function(err, results){
 			if(err) throw new Error(err);
 			if(results == null){
 				res.sendStatus(404);
 			}
-			res.render('attendance',{'students': results, 
-				'batch_id': req.params.batch_id, 
+			res.render('attendance',{'students': results,
+				'batch_id': req.params.batch_id,
 				'subject_id': req.params.subject_id
 			});
 			return;
@@ -172,7 +172,7 @@ router.post('/attendance/:batch_id/:subject_id', function(req, res) {
 	}
 	req.checkParams('batch_id', 'invalid batch id parameter').notEmpty().isInt();
 	req.checkParams('subject_id', 'invalid subject id parameter').notEmpty().isInt();
-	req.checkBody('hours','teaching hours invalid').notEmpty().isInt();	
+	req.checkBody('hours','teaching hours invalid').notEmpty().isInt();
 	req.checkBody('date','attendance date is empty').notEmpty();
 	req.checkBody('time','attendance time is empty').notEmpty();
 	var errors = req.validationErrors();
@@ -182,7 +182,7 @@ router.post('/attendance/:batch_id/:subject_id', function(req, res) {
 		return;
 	}
 
-	
+
 	var subject_id = req.params.subject_id;
 	var date = moment(req.body.date + " " + req.body.time,"DD MMMM, YYYY HH:mma").toDate();
 
@@ -220,6 +220,8 @@ router.post('/attendance/:batch_id/:subject_id', function(req, res) {
 					temp[results[i].enrollment_no] = results[i];
 				}
 
+				console.log(temp);
+
 				att.getAttendanceByLecture(req.user.school, subject_id, date, function(err, attendance){
 					if(err) {
 						throw new Error(err);
@@ -237,7 +239,7 @@ router.post('/attendance/:batch_id/:subject_id', function(req, res) {
 			});
 
 		});
-	});	
+	});
 });
 
 router.get('/profile', function(req, res){
@@ -283,7 +285,7 @@ router.get('/attendance_marked/:batch_id/:subject_id', function(req, res){
 			res.locals.errors = [{'msg': 'you are not teaching this subject', 'value': 'bad requests: 400'}];
 			res.render('index');
 			return;
-		}	
+		}
 		sub.getStudentsByBatch(req.user.school, req.params.batch_id, function(err, results){
 			if(err){
 				throw new Error(err);
@@ -304,15 +306,15 @@ router.get('/attendance_marked/:batch_id/:subject_id', function(req, res){
 				if(moment(req.query.from_date ,"DD MMMM, YYYY").isValid() && moment(req.query.to_date ,"DD MMMM, YYYY").isValid()){
 					from_date = moment(req.query.from_date ,"DD MMMM, YYYY").toDate();
 					to_date = moment(req.query.to_date ,"DD MMMM, YYYY").toDate();
-				}	
+				}
 			}
-			
+
 
 			att.getPresentBySubject(req.user.school, req.params.subject_id, from_date, to_date, function(err, results){
 				if(err){
 					throw new Error(err);
 					return;
-				} 
+				}
 				if(results == null){
 					res.sendStatus(404);
 				}
@@ -440,7 +442,7 @@ router.get('/edit_attendance/:batch_id/:subject_id', function(req, res){
 		res.render('index');
 		return;
 	}
-	
+
 	sub.check_teaching(req.user.school, req.user.instructor_id, req.params.subject_id, function(err, is_teaching){
 		if(err) {
 			throw new Error(err);
@@ -484,8 +486,8 @@ router.get('/edit_attendance/:batch_id/:subject_id/:lecture', function(req, res)
 		res.render('index');
 		return;
 	}
-	
-	
+
+
 	var dateFormat = require('dateformat');
 	var lecture = new Date(req.params.lecture);
 	var timestamp = dateFormat(lecture, "isoDateTime");
@@ -516,8 +518,8 @@ router.get('/edit_attendance/:batch_id/:subject_id/:lecture', function(req, res)
 				}
 				res.render('attendance',{'students': students,
 				 'lecture': timestamp,
-				 'attendance': attendance, 
-				 'batch_id': req.params.batch_id, 
+				 'attendance': attendance,
+				 'batch_id': req.params.batch_id,
 				 'subject_id': req.params.subject_id,
 				 'edit_mode': true,
 				 'moment': moment
@@ -539,7 +541,7 @@ router.post('/edit_attendance/:batch_id/:subject_id/:lecture', function(req, res
 		res.redirect("/teacher/login");
 		return;
 	}
-	
+
 	req.checkParams('batch_id', 'invalid batch id parameter').notEmpty().isInt();
 	req.checkParams('subject_id', 'invalid subject id parameter').notEmpty().isInt();
 	req.checkParams('lecture', 'invalid lecture parameter').notEmpty();
@@ -551,7 +553,7 @@ router.post('/edit_attendance/:batch_id/:subject_id/:lecture', function(req, res
 	}
 
 
-	
+
 	var subject_id = req.params.subject_id;
 	var date = moment(req.body.date + " " + req.body.time,"DD MMMM, YYYY HH:mma").toDate();
 
@@ -628,8 +630,8 @@ router.get('/delete_attendance/:batch_id/:subject_id/:lecture', function(req, re
 		res.render('index');
 		return;
 	}
-	
-	
+
+
 	var dateFormat = require('dateformat');
 	var lecture = new Date(req.params.lecture);
 	var timestamp = dateFormat(lecture, "isoDateTime");
@@ -650,32 +652,32 @@ router.get('/delete_attendance/:batch_id/:subject_id/:lecture', function(req, re
 				throw new Error(err);
 				res.sendStatus(500);
 				return;
-			} 
-			
+			}
+
 			res.render('attendance_deleted',{'students': result, 'lecture': lecture, 'batch_id': req.params.batch_id, 'subject_id': req.params.subject_id});
 			return;
-		});	
+		});
 	});
 });
 
-//Dean panel routes 
+//Dean panel routes
 
 router.get('/dean', function(req, res){
-	
+
 	if(!req.isAuthenticated() || req.user.instructor_id == null){
 		res.redirect("/teacher/login");
 	}
 	if( req.user.isDean )
-	{	
-		
+	{
+
 		sub.getSubjectsWithAllData(req.user.school, function(err, subjects){
 			if(err) throw new Error(err);
-			
+
 			att.getAvgAttendance(req.user.school, function(error, avg_attendance){
 				if(error) throw new Error(error);
 				res.render('dean_panel', {'subjects' : subjects, 'avg_attendance': avg_attendance});
 			});
-			
+
 		})
 
 	}else{

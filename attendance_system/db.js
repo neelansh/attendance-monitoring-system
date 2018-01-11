@@ -1,8 +1,8 @@
 var mysql = require('mysql')
   , async = require('async');
 
-var PRODUCTION_DB = process.env.mysql_db||'sdc_ams'
-  , TEST_DB = 'sdc_ams';
+var PRODUCTION_DB = process.env.mysql_db||'sdc2'
+  , TEST_DB = 'sdc2';
 
 exports.MODE_TEST = process.env.development||true;
 exports.MODE_PRODUCTION = process.env.production||false;
@@ -16,11 +16,7 @@ var options = {
     host: process.env.mysql_host||'localhost',
     user: process.env.mysql_user||'root',
     port: process.env.mysql_port||3306,
-// <<<<<<< HEAD
-    password: process.env.mysql_password||'9630',
-// =======
-//     password: process.env.mysql_password||'root',
-// >>>>>>> ed9cf43b1feffb6b614154517ada54beccb56b17
+    password: process.env.mysql_password||'root',
     database: exports.MODE_PRODUCTION ? PRODUCTION_DB : TEST_DB
 };
 var connection = mysql.createConnection(options);
