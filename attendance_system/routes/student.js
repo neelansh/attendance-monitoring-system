@@ -90,7 +90,7 @@ router.get('/dashboard', function(req, res){
 			});
 		});
 	});
-	
+
 	// res.send("okay" + req.user.enrollment_no);
 });
 
@@ -194,7 +194,19 @@ router.get('/attendance/:subject_id', function(req, res){
 			}
 			res.render('attendance_details_student',{'attendance': results, "enrollment_no": req.user.enrollment_no});
 		});
-	
 });
+
+router.get('/:something', function(req, res) {
+
+	if (!req.isAuthenticated()) {
+		res.redirect("/student/login");
+	}
+	if (req.user.instructor_id == null) {
+		res.redirect("/student/login");
+	}
+
+	res.redirect("/student/dashboard");
+});
+
 
 module.exports = router;

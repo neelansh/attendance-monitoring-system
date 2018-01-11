@@ -737,4 +737,18 @@ router.get('/get_subject_details/:subject_id', function(req, res){
 	});
 });
 
+router.get('/:something', function(req, res) {
+
+	if (!req.isAuthenticated()) {
+		res.redirect("/teacher/login");
+	}
+	if (req.user.instructor_id == null) {
+		res.redirect("/teacher/login");
+	}
+
+	res.redirect("/teacher/dashboard");
+});
+
+
+
 module.exports = router;
