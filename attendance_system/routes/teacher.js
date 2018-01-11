@@ -302,16 +302,11 @@ router.get('/attendance_marked/:batch_id/:subject_id', function(req, res){
 			var to_date = new Date();
 
 
-			// console.log(req.query.from_date);
 			if(req.query.from_date && req.query.to_date){
 				if(moment(req.query.from_date ,"DD MMMM, YYYY").isValid() && moment(req.query.to_date ,"DD MMMM, YYYY").isValid()){
 					from_date = moment(req.query.from_date ,"DD MMMM, YYYY").toDate();
 					to_date = moment(req.query.to_date ,"DD MMMM, YYYY").toDate();
-					// increasing 1 more day so that we can check the current attendence status.
-					to_date = moment(to_date).add(1, 'days').toDate();
 				}
-			} else {
-				to_date = moment(to_date).add(1, 'days').toDate();
 			}
 
 
@@ -341,15 +336,6 @@ router.get('/attendance_marked/:batch_id/:subject_id', function(req, res){
 						dict_absent[absent[i]['student']] = absent[i]['sum(duration_of_class)']
 					}
 					absent = dict_absent;
-
-					if (req.query.to_date && req.query.from_date) {
-						if(moment(req.query.from_date ,"DD MMMM, YYYY").isValid() && moment(req.query.to_date ,"DD MMMM, YYYY").isValid()){
-							// decreasing 1 day as we increased 1 day above.
-							to_date = moment(to_date).subtract(1, 'days');
-						}
-					} else {
-						to_date = moment(to_date).subtract(1, 'days');
-					}
 
 					res.render('view_marked_attendance_teacher',{'students': students, 'present': present, 'absent': absent, 'subject_id': req.params.subject_id, 'from_date': from_date, 'to_date': to_date, 'moment': moment});
 				});
