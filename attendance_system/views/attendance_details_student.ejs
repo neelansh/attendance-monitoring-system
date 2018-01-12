@@ -21,10 +21,15 @@
 </style>
 
 
+
+<%- subject.subjectType %>
+<%- subject.instructor %>
+
 <div class="container card">
 
 	<div>
-		<h5 class="heading">DETAILS OF STUDENT FOR EACH LECTURE:</h5>
+		<h5 class="heading" style="text-transform: uppercase;"><%- subject.subjectName %></h5>
+		<h6  style="text-transform: uppercase;"><%- subject.subjectCode%></h6>
 		<p class="marked-heading">*P: Present , A: Absent , NA: Not Applicable</p>
 		<table class="striped centered">
 			<thead>
@@ -38,7 +43,7 @@
 				<% for(var i=0 ; i<attendance.length; ++i){ %>
 				<tr>
 					<% var date = new Date(attendance[i].lecture_timestamp) %>
-					<td><%=date.getDate()%>/<%=date.getMonth()%>/<%=date.getFullYear()%></td>
+					<td><%=date.getDate()%>/<%=date.getMonth()+1%>/<%=date.getFullYear()%></td>
 					<td><%=attendance[i].attendance%></td>
 					<td><%=attendance[i].duration_of_class%></td>
 				</tr>    

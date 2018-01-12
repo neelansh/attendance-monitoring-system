@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <% include partials/header %>
+<% include partials/user_card %>
 <script type="text/javascript">
   $(document).ready(function () {
     $.getJSON('/student/get_attendance', function (data) {
@@ -22,9 +23,13 @@
         html += '<tr>';
         html += '<td><a href=\"/student/attendance/'+ arr[elem]['subject_id'] + "\">" + elem + '</a></td>';
         html += '<td>' + arr[elem]['subject_name'] + '</td>';
-        html += '<td>' + arr[elem]["P"] + '</td>';
-        html += '<td>' + arr[elem]["A"] + '</td>';
-        html += '<td>' + (arr[elem]["P"]*100/(arr[elem]["P"] + arr[elem]["A"])).toFixed(2) + '</td>';
+        //html += '<td>' + arr[elem]["P"] + '</td>';
+        //html += '<td>' + arr[elem]["A"] + '</td>';
+        percentage = (arr[elem]["P"]*100/(arr[elem]["P"] + arr[elem]["A"])).toFixed(2);
+        if(percentage > 75) { borderclass="bgreen";}
+        if(percentage < 75 && percentage > 50) { borderclass="byellow";}
+        if(percentage < 50) { borderclass="bred";}
+        html += '<td class="' + borderclass + '">' + percentage + '</td>';
         html += '</tr>';
       });
       $('.attendance-table').html(html);
@@ -81,8 +86,8 @@
         <tr>
           <th data-field="id">Subject Code</th>
           <th data-field="id">Subject Name</th>
-          <th data-field="name">Present</th>
-          <th data-field="price">Absent</th>
+          <!-- <th data-field="name">Present</th>
+          <th data-field="price">Absent</th> -->
           <th data-field="price">Percentage</th>
         </tr>
       </thead>
