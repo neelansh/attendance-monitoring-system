@@ -2,22 +2,41 @@
 <% if(user != null && user.isTeacher){ %>
 <div id="grad" class="container student-card card">
   <div class=" card-content row">
-    <div class="col-md-4">
+    <div class="col-sm-6">
+
+      <% if(user != null && user.isDean){ %>
+        <a href="/teacher/dean" class="logout btn waves-effect waves-light">DEAN PANEL</a>
+      <% } %>
+      <a href="/teacher/dashboard" class="logout btn waves-effect waves-light">DASHBOARD</a>
+    </div>
+    <div class="col-sm-6">
+      <div clas="row">
+        <div class="col-sm-8">
+          <a href="/teacher/profile" class="logout btn waves-effect waves-light pull-right">VIEW PROFILE</a>
+        </div>
+        <div class="col-sm-4">
+          <a href="/teacher/logout" class="logout btn waves-effect waves-light pull-right">LOG OUT</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6">
       <% if(user != null && user.instructor_id != null) {%>
       <div class='greeting'>HELLO</div>
       <div class="student-name details-field"><%=user.name%></div>
       <div class="student-enroll details-field"><%=user.instructor_id%></div>
       <% } %>
     </div>
-    <div class="col-md-8">
-      <% if(user != null && user.isDean){ %>
-        <a href="/teacher/dean" class="logout btn waves-effect waves-light">DEAN PANEL</a>
-      <% } %> 
-      <a href="/teacher/dashboard" class="logout btn waves-effect waves-light">DASHBOARD</a>
-      <a href="/teacher/profile" class="logout btn waves-effect waves-light">VIEW PROFILE</a>
-      <a href="/teacher/logout" class="logout btn waves-effect waves-light">LOG OUT</a>
+    <div class="col-sm-6">
       <img src="/instructor_images/<%=user.school%>/<%-user.instructor_id%>.jpg" class="instructor_image">
+      <div>
+        <form action="/upload" method="post" enctype ="multipart/form-data">
+            <div>
+              <input type=file name="files">
+            </div>
+        </form>
+      </div>
     </div>
+
   </div>
 </div>
 <style type="text/css">
@@ -94,10 +113,10 @@
       border-radius: 60px;
       margin-top: 10px;
       width: 120px; height: 120px;
-      border: 3px solid; 
-      border-color: #b6b5b5; 
-      position: absolute; 
-      right: 3%; 
+      border: 3px solid;
+      border-color: #b6b5b5;
+      position: absolute;
+      right: 3%;
       top: 100%;
     }
   }
@@ -108,9 +127,9 @@
       margin-top: 10px;
       margin-left: 23%;
       width: 120px; height: 120px;
-      border: 3px solid; 
+      border: 3px solid;
       border-color: #b6b5b5;
-      right: 3%; 
+      right: 3%;
       top: 100%;
     }
     .logout {

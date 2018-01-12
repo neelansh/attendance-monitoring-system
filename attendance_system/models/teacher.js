@@ -1,8 +1,6 @@
 var db = require('../db.js');
 var bcrypt = require('bcryptjs');
 
-//Teacher user model
-
 module.exports = {
 
 	getUserByUsername : function(school, username, callback) {
@@ -32,12 +30,22 @@ module.exports = {
 				// console.log(salt, hash, new_password);
 				var query = db.get().query("update ?? set password = ? where instructor_id = ?",[school+"_teacher", hash, id],function(err, rows) {
 					if(err) throw err;
-					console.log(rows);
 					callback(null, rows);
 				});
 				// console.log(query.sql);
 	    	});
 		});
+	},
+
+	update_information: function(school, user_information, instructor_id, callback) {
+		var query = db.get().query("update ?? set email = ?, phone = ?, designation = ? where instructor_id = ?",[school + '_teacher', user_information.email, user_information.phone, user_information.designation, instructor_id], function(err, rows) {
+			if (err) {
+				console.log(err);
+				throw err;
+			}
+
+			callback(null, rows);
+		})
 	},
 
 	isDean : function(school, instructor_id, callback) {

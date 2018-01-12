@@ -1,14 +1,18 @@
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var expressValidator = require('express-validator');
-var flash = require('connect-flash');
-var session = require('express-session');
-var passport = require('passport');
-var LocalStrategy = require('passport-local').Strategy;
+var express             = require('express');
+var path                = require('path');
+var favicon             = require('serve-favicon');
+var logger              = require('morgan');
+var cookieParser        = require('cookie-parser');
+var bodyParser          = require('body-parser');
+var expressValidator    = require('express-validator');
+var flash               = require('connect-flash');
+var session             = require('express-session');
+var passport            = require('passport');
+var LocalStrategy       = require('passport-local').Strategy;
+var methodOverride      = require('method-override');
+var multer              = require("multer");
+var upload              = multer({ dest: 'public/test_images' });
+
 
 var routes = require('./routes/index');
 // var users = require('./routes/users');
@@ -24,6 +28,8 @@ app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(methodOverride("_method"));
+
 //Express validator
 app.use(expressValidator({
   errorFormatter: function(param, msg, value) {
@@ -76,7 +82,7 @@ var sessionStore = new MySQLStore({
         }
     }
   }, db.connection_for_sessions);
- 
+
 app.use(session({
     key: 'attendance.key',
     secret: '$76b+_t*j_%$15(_96v(r=1u4yelple=ds^!w-raio8^2qys7w',
@@ -113,7 +119,7 @@ app.use('/api',require('./routes/api'));
 
 function isLoggedIn(url, req, res, next) {
 
-    // if user is authenticated in the session, carry on 
+    // if user is authenticated in the session, carry on
     if (req.isAuthenticated())
         return next();
 
@@ -153,6 +159,5 @@ if(process.env.production){
     });
   });
 }
-
 
 module.exports = app;
