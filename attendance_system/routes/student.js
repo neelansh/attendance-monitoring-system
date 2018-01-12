@@ -5,6 +5,7 @@ var LocalStrategy = require('passport-local').Strategy;
 
 var student = require('../models/students');
 var att = require('../models/attendance');
+var sub = require("../models/subjects");
 
 /* GET student login page. */
 router.get('/login', function(req, res, next) {
@@ -192,8 +193,22 @@ router.get('/attendance/:subject_id', function(req, res){
 			if(results == null){
 				res.sendStatus(404);
 			}
-			res.render('attendance_details_student',{'attendance': results, "enrollment_no": req.user.enrollment_no});
+			sub.getSubjectById(req.user.school, req.params.subject_id,function(error, subject){
+				if(error) throw error;
+				if(subject == null){
+					res.sendStatus(404);
+				}
+			subject = {
+				
+				'subjectName' : subject[0].subject_name,
+				'subjectCode' : subject[0].subject_code,
+				'subjectType' : subject[0].type,			
+				'instructor' : subject[0].name
+			}
+			res.render('attendance_details_student',{'attendance': results, "enrollment_no": req.user.enrollment_no, 'subject':subject});
+			});
 		});
+
 });
 
 router.get('/:something', function(req, res) {
