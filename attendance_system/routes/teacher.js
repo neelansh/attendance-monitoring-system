@@ -386,18 +386,26 @@ router.get('/attendance_marked/:batch_id/:subject_id/:enrollment_no', function(r
 
 router.get('/update_information', function(req, res) {
 	if (!req.isAuthenticated() || req.user.instructor_id == null) {
+		req.flash("error_msg", "authentication failed, Please login again")
 		res.redirect("/teacher/login")
 	}
 
-	res.render('update_information');
+	teacher.getInformation(req.user.instructor_id, req.user.school, function(err, teacherInformation) {
+		if (err) {
+			console.log(err);
+			throw new Error(err);
+			return;
+		}
+
+		res.render('update_information', { teacherInformation: teacherInformation });
+	})
+
 
 });
 
 router.put('/update_information', function(req, res) {
-	console.log("qwewqe");
 
 	if (!req.isAuthenticated()) {
-		console.log("")
 		res.redirect("/teacher/login");
 	}
 
@@ -430,15 +438,11 @@ router.put('/update_information', function(req, res) {
 		email: req.body.email
 	}
 
-	console.log(typeof req.user);
-	console.log(req.user.instructor_id)
 	teacher.update_information(req.user.school, user_information, req.user.instructor_id, function(err, UpdatedUser) {
 		if (err) {
 			console.log(err);
 			throw new Error(err);
 		}
-
-		console.log(UpdatedUser);
 
 		if (!UpdatedUser) {
 			req.flash("error_msg", "something went wrong please try again");
