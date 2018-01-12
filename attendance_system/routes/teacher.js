@@ -397,10 +397,8 @@ router.get('/update_information', function(req, res) {
 			return;
 		}
 
-		res.render('update_information', { teacherInformation: teacherInformation });
+		res.render('update_information', { teacherInformation: teacherInformation[0] });
 	})
-
-
 });
 
 router.put('/update_information', function(req, res) {
@@ -452,17 +450,6 @@ router.put('/update_information', function(req, res) {
 			res.redirect("/teacher/profile");
 		}
 	});
-});
-
-
-router.get('/change_password', function(req, res){
-	if(!req.isAuthenticated()){
-		res.redirect("/teacher/login");
-	}
-	if(req.user.instructor_id == null){
-		res.redirect("/teacher/login");
-	}
-	res.render('change_password');
 });
 
 router.post('/change_password', function(req, res){
