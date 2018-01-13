@@ -63,6 +63,10 @@ router.get('/logout', function(req, res){
 });
 
 router.get('/dashboard', function(req, res){
+	var prev_links = [
+	];
+	var curr_link = '<i class="tiny material-icons">home</i> Home';
+
 	if(!req.isAuthenticated()){
 		res.redirect("/student/login");
 	}
@@ -87,7 +91,7 @@ router.get('/dashboard', function(req, res){
 					throw err;
 				}
 				notapplicable = attendance;
-				res.render('students_dashboard', {'user': req.user, 'present': present, 'absent': absent, 'notapplicable': notapplicable});
+				res.render('students_dashboard', {'prevLinks':prev_links, 'currLink' : curr_link, 'user': req.user, 'present': present, 'absent': absent, 'notapplicable': notapplicable});
 			});
 		});
 	});
@@ -111,6 +115,13 @@ router.get('/get_attendance', function(req, res){
 });
 
 router.get('/profile', function(req, res){
+	
+	var prev_links = [
+	{'text' : '<i class="tiny material-icons">home</i> Home','link' :'/'},
+	];
+	var curr_link = 'profile';
+	
+
 	if(!req.isAuthenticated()){
 		res.redirect("/student/login");
 	}
@@ -122,7 +133,7 @@ router.get('/profile', function(req, res){
 		if(results == null){
 			res.sendStatus(404);
 		}
-		res.render('student_profile',{'user': results});
+		res.render('student_profile',{'prevLinks':prev_links, 'currLink' : curr_link,'user': results});
 	});
 });
 
@@ -174,6 +185,12 @@ router.post('/change_password', function(req, res){
 
 
 router.get('/attendance/:subject_id', function(req, res){
+	
+	var prev_links = [
+	{'text' : '<i class="tiny material-icons">home</i> Home','link' :'/'},
+	];
+	
+	
 	if(!req.isAuthenticated()){
 		res.redirect("/student/login");
 	}
@@ -205,7 +222,8 @@ router.get('/attendance/:subject_id', function(req, res){
 				'subjectType' : subject[0].type,			
 				'instructor' : subject[0].name
 			}
-			res.render('attendance_details_student',{'attendance': results, "enrollment_no": req.user.enrollment_no, 'subject':subject});
+			var curr_link = subject['subjectName'] + ' ( ' + subject['subjectCode'] + ' )';
+			res.render('attendance_details_student',{'prevLinks':prev_links, 'currLink' : curr_link, 'attendance': results, "enrollment_no": req.user.enrollment_no, 'subject':subject});
 			});
 		});
 

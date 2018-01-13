@@ -1,0 +1,9 @@
+<% if(typeof currLink != 'undefined') { %>  
+<div class="navpath container-fluid">
+  YOU ARE AT : 
+  <% prevLinks.forEach(function(prevlink) { %>
+  <a href='<%= prevlink.link%>' class="prevlink"> <%- prevlink.text %> </a>
+<% });%>
+  <a href="#" class="currlink"><%- currLink %></a>
+</div>
+<% } %>

@@ -104,6 +104,10 @@ router.get('/logout', function(req, res){
 });
 
 router.get('/dashboard', function(req, res){
+	var prev_links = [
+	];
+	var curr_link = '<i class="tiny material-icons">home</i> Home';
+
 	if(!req.isAuthenticated()){
 		res.redirect("/teacher/login");
 	}
@@ -112,12 +116,18 @@ router.get('/dashboard', function(req, res){
 	}
 	var subjects = sub.getSubjectByTeacher(req.user.school, req.user.instructor_id, function(err, results){
 		if(err) throw new Error(err);
-		res.render('teacher_dashboard',{'subjects': results});
+		res.render('teacher_dashboard',{'prevLinks':prev_links, 'currLink' : curr_link, 'subjects': results});
 	});
 });
 
 
 router.get('/attendance/:batch_id/:subject_id', function(req, res) {
+
+	var prev_links = [
+	{'text' : '<i class="tiny material-icons">home</i> Home','link' :'/'},
+	];
+	var curr_link = 'Mark Attendance';
+
 	if(!req.isAuthenticated()){
 		res.redirect("/teacher/login");
 	}
@@ -140,7 +150,7 @@ router.get('/attendance/:batch_id/:subject_id', function(req, res) {
 			return;
 		}
 		if(!is_teaching && !req.user.isDean){
-			res.locals.errors = [{'msg': 'you are not teaching this subject', 'value': 'bad requests: 400'}];
+			res.locals.errors = [{'msg': 'You are not teaching this subject.', 'value': 'bad requests: 400'}];
 			res.render('index');
 			return;
 		}
@@ -150,7 +160,7 @@ router.get('/attendance/:batch_id/:subject_id', function(req, res) {
 			if(results == null){
 				res.sendStatus(404);
 			}
-			res.render('attendance',{'students': results,
+			res.render('attendance',{'prevLinks':prev_links, 'currLink' : curr_link, 'students': results,
 				'batch_id': req.params.batch_id,
 				'subject_id': req.params.subject_id
 			});
@@ -162,6 +172,13 @@ router.get('/attendance/:batch_id/:subject_id', function(req, res) {
 
 
 router.post('/attendance/:batch_id/:subject_id', function(req, res) {
+	
+	var prev_links = [
+	{'text' : '<i class="tiny material-icons">home</i> Home','link' :'/'},
+	];
+	var curr_link = 'Mark Attendance';
+
+
 	if(!req.isAuthenticated()){
 		res.redirect("/teacher/login");
 		return;
@@ -198,7 +215,7 @@ router.post('/attendance/:batch_id/:subject_id', function(req, res) {
 			return;
 		}
 		if(!is_teaching && !req.user.isDean){
-			res.locals.errors = [{'msg': 'you are not teaching this subject', 'value': 'bad requests: 400'}];
+			res.locals.errors = [{'msg': 'You are not teaching this subject.', 'value': 'bad requests: 400'}];
 			res.render('index');
 			return;
 		}
@@ -227,7 +244,8 @@ router.post('/attendance/:batch_id/:subject_id', function(req, res) {
 						throw new Error(err);
 						res.sendStatus(500);
 					}
-					res.render('display_students', {'students': temp,
+					res.render('display_students', {'prevLinks':prev_links, 'currLink' : curr_link, 
+						'students': temp,
 						'attendance': attendance,
 						'date': date,
 						'subject_id': subject_id,
@@ -243,6 +261,11 @@ router.post('/attendance/:batch_id/:subject_id', function(req, res) {
 });
 
 router.get('/profile', function(req, res){
+	var prev_links = [
+	{'text' : '<i class="tiny material-icons">home</i> Home','link' :'/'},
+	];
+	var curr_link = 'My Account';
+
 	if(!req.isAuthenticated()){
 		res.redirect("/teacher/login");
 	}
@@ -255,7 +278,7 @@ router.get('/profile', function(req, res){
 		if(results == null){
 			res.sendStatus(404);
 		}
-		res.render('teacher_profile',{'user': results});
+		res.render('teacher_profile',{'prevLinks':prev_links, 'currLink' : curr_link,'user': results});
 	});
 });
 
@@ -288,7 +311,7 @@ router.get('/attendance_marked/:batch_id/:subject_id', function(req, res){
 			return;
 		}
 		if(!is_teaching && !req.user.isDean){
-			res.locals.errors = [{'msg': 'you are not teaching this subject', 'value': 'bad requests: 400'}];
+			res.locals.errors = [{'msg': 'You are not teaching this subject.', 'value': 'bad requests: 400'}];
 			res.render('index');
 			return;
 		}
@@ -351,6 +374,8 @@ router.get('/attendance_marked/:batch_id/:subject_id', function(req, res){
 });
 
 router.get('/attendance_marked/:batch_id/:subject_id/:enrollment_no', function(req, res){
+	
+
 	if(!req.isAuthenticated()){
 		res.redirect("/teacher/login");
 	}
@@ -374,7 +399,7 @@ router.get('/attendance_marked/:batch_id/:subject_id/:enrollment_no', function(r
 			return;
 		}
 		if(!is_teaching && !req.user.isDean){
-			res.locals.errors = [{'msg': 'you are not teaching this subject', 'value': 'bad requests: 400'}];
+			res.locals.errors = [{'msg': 'You are not teaching this subject.', 'value': 'bad requests: 400'}];
 			res.render('index');
 			return;
 		}
@@ -384,14 +409,26 @@ router.get('/attendance_marked/:batch_id/:subject_id/:enrollment_no', function(r
 				res.sendStatus(404);
 			}
 
-			res.render('student_attendance',{'attendance': results, "enrollment_no": req.params.enrollment_no, "moment": moment});
+			var prev_links = [
+			{'text' : '<i class="tiny material-icons">home</i> Home','link' :'/'},
+			{'text' : 'View Class' , 'link': '/teacher/attendance_marked/' + req.params.batch_id + '/' + req.params.subject_id}
+			];
+			var curr_link = req.params.enrollment_no;
+
+			res.render('student_attendance',{'prevLinks':prev_links, 'currLink' : curr_link,'attendance': results, "enrollment_no": req.params.enrollment_no, "moment": moment});
 		});
 	});
 });
 
 
 router.get('/update_information', function(req, res) {
-	if (!req.isAuthenticated() || req.user.instructor_id == null) {
+		var prev_links = [
+		{'text' : '<i class="tiny material-icons">home</i> Home','link' :'/'},
+		{'text' : 'My Account' , 'link': '/teacher/profile' + req.params.batch_id + '/' + req.params.subject_id}
+		];
+		var curr_link = 'Update Profile';
+
+		if (!req.isAuthenticated() || req.user.instructor_id == null) {
 		req.flash("error_msg", "authentication failed, Please login again")
 		res.redirect("/teacher/login")
 	}
@@ -403,7 +440,7 @@ router.get('/update_information', function(req, res) {
 			return;
 		}
 
-		res.render('update_information', { teacherInformation: teacherInformation[0] });
+		res.render('update_information', { 'prevLinks':prev_links, 'currLink' : curr_link, teacherInformation: teacherInformation[0] });
 	})
 });
 
@@ -452,7 +489,7 @@ router.put('/update_information', function(req, res) {
 			req.flash("error_msg", "something went wrong please try again");
 			res.redirect("/teacher/update_information");
 		} else {
-			req.flash("success_msg", "your details has been changed successfully");
+			req.flash("success_msg", "Your details has been changed successfully.");
 			res.redirect("/teacher/profile");
 		}
 	});
@@ -496,6 +533,12 @@ router.post('/change_password', function(req, res){
 });
 
 router.get('/edit_attendance/:batch_id/:subject_id', function(req, res){
+
+	var prev_links = [
+	{'text' : '<i class="tiny material-icons">home</i> Home','link' :'/'},
+	];
+	var curr_link = 'Edit Attendance';
+
 	if(!req.isAuthenticated()){
 		res.redirect("/teacher/login");
 	}
@@ -518,7 +561,7 @@ router.get('/edit_attendance/:batch_id/:subject_id', function(req, res){
 			return;
 		}
 		if(!is_teaching && !req.user.isDean){
-			res.locals.errors = [{'msg': 'you are not teaching this subject', 'value': 'bad requests: 400'}];
+			res.locals.errors = [{'msg': 'You are not teaching this subject.', 'value': 'bad requests: 400'}];
 			res.render('index');
 			return;
 		}
@@ -529,7 +572,7 @@ router.get('/edit_attendance/:batch_id/:subject_id', function(req, res){
 				var lecture = new Date(results[i].lecture_timestamp);
 				results[i].lecture_timestamp = dateFormat(lecture, "isoDateTime");
 			}
-			res.render('display_lectures',{ 'lectures': results, 'sid':req.params.subject_id, 'bid':req.params.batch_id, "moment": moment });
+			res.render('display_lectures',{ 'prevLinks':prev_links, 'currLink' : curr_link, 'lectures': results, 'sid':req.params.subject_id, 'bid':req.params.batch_id, "moment": moment });
 			return;
 		});
 	});
@@ -537,6 +580,12 @@ router.get('/edit_attendance/:batch_id/:subject_id', function(req, res){
 });
 
 router.get('/edit_attendance/:batch_id/:subject_id/:lecture', function(req, res){
+	var prev_links = [
+	{'text' : '<i class="tiny material-icons">home</i> Home','link' :'/'},
+	{'text' : 'Edit Attendance','link' :'/teacher/edit_attendance/' + req.params.batch_id + '/' + req.params.subject_id},
+	];
+	var curr_link = req.params.lecture;
+
 	if(!req.isAuthenticated()){
 		res.redirect("/teacher/login");
 		return;
@@ -567,7 +616,7 @@ router.get('/edit_attendance/:batch_id/:subject_id/:lecture', function(req, res)
 			return;
 		}
 		if(!is_teaching && !req.user.isDean){
-			res.locals.errors = [{'msg': 'you are not teaching this subject', 'value': 'bad requests: 400'}];
+			res.locals.errors = [{'msg': 'You are not teaching this subject.', 'value': 'bad requests: 400'}];
 			res.render('index');
 			return;
 		}
@@ -584,7 +633,8 @@ router.get('/edit_attendance/:batch_id/:subject_id/:lecture', function(req, res)
 					res.redirect("/teacher/dashboard");
 					return;
 				}
-				res.render('attendance',{'students': students,
+				res.render('attendance',{'prevLinks':prev_links, 'currLink' : curr_link,
+				 'students': students,
 				 'lecture': timestamp,
 				 'attendance': attendance,
 				 'batch_id': req.params.batch_id,
@@ -637,7 +687,7 @@ router.post('/edit_attendance/:batch_id/:subject_id/:lecture', function(req, res
 			return;
 		}
 		if(!is_teaching && !req.user.isDean){
-			res.locals.errors = [{'msg': 'you are not teaching this subject', 'value': 'bad requests: 400'}];
+			res.locals.errors = [{'msg': 'You are not teaching this subject.', 'value': 'bad requests: 400'}];
 			res.render('index');
 			return;
 		}
@@ -683,6 +733,14 @@ router.post('/edit_attendance/:batch_id/:subject_id/:lecture', function(req, res
 });
 
 router.get('/delete_attendance/:batch_id/:subject_id/:lecture', function(req, res){
+	var prev_links = [
+	{'text' : '<i class="tiny material-icons">home</i> Home','link' :'/'},
+	{'text' : 'Edit Attendance','link' :'/teacher/edit_attendance/' + req.params.batch_id + '/' + req.params.subject_id},
+	{'text' : 'Delete Attendance','link' :'/teacher/edit_attendance/' + req.params.batch_id + '/' + req.params.subject_id},
+	];
+	var curr_link = req.params.lecture;
+
+
 	if(!req.isAuthenticated()){
 		res.redirect("/teacher/login");
 	}
@@ -711,7 +769,7 @@ router.get('/delete_attendance/:batch_id/:subject_id/:lecture', function(req, re
 			return;
 		}
 		if(!is_teaching && !req.user.isDean){
-			res.locals.errors = [{'msg': 'you are not teaching this subject', 'value': 'bad requests: 400'}];
+			res.locals.errors = [{'msg': 'You are not teaching this subject.', 'value': 'bad requests: 400'}];
 			res.render('index');
 			return;
 		}
@@ -722,7 +780,7 @@ router.get('/delete_attendance/:batch_id/:subject_id/:lecture', function(req, re
 				return;
 			}
 
-			res.render('attendance_deleted',{'students': result, 'lecture': lecture, 'batch_id': req.params.batch_id, 'subject_id': req.params.subject_id});
+			res.render('attendance_deleted',{'prevLinks':prev_links, 'currLink' : curr_link, 'students': result, 'lecture': lecture, 'batch_id': req.params.batch_id, 'subject_id': req.params.subject_id});
 			return;
 		});
 	});
@@ -731,6 +789,11 @@ router.get('/delete_attendance/:batch_id/:subject_id/:lecture', function(req, re
 //Dean panel routes
 
 router.get('/dean', function(req, res){
+
+	var prev_links = [
+	{'text' : '<i class="tiny material-icons">home</i> Home','link' :'/'},
+	];
+	var curr_link = 'Dean Admin Panel';
 
 	if(!req.isAuthenticated() || req.user.instructor_id == null){
 		res.redirect("/teacher/login");
@@ -743,7 +806,7 @@ router.get('/dean', function(req, res){
 
 			att.getAvgAttendance(req.user.school, function(error, avg_attendance){
 				if(error) throw new Error(error);
-				res.render('dean_panel', {'subjects' : subjects, 'avg_attendance': avg_attendance});
+				res.render('dean_panel', {'prevLinks':prev_links, 'currLink' : curr_link, 'subjects' : subjects, 'avg_attendance': avg_attendance});
 			});
 
 		})
