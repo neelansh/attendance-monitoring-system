@@ -37,13 +37,24 @@ module.exports = {
 		});
 	},
 
+	getInformation: function(instructor_id, school, callback) {
+		var query = db.get().query("select designation, phone, email from ?? where instructor_id = ?",[ school + "_teacher", instructor_id ], function(err, rows) {
+			if (err) {
+				console.log(err);
+				throw err;
+			}
+
+			callback(null, rows)
+		})
+	},
+
 	update_information: function(school, user_information, instructor_id, callback) {
 		var query = db.get().query("update ?? set email = ?, phone = ?, designation = ? where instructor_id = ?",[school + '_teacher', user_information.email, user_information.phone, user_information.designation, instructor_id], function(err, rows) {
 			if (err) {
 				console.log(err);
 				throw err;
 			}
-
+			console.log(rows);
 			callback(null, rows);
 		})
 	},
