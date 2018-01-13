@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 
 <% include partials/header %>
+<div class="navpath container-fluid">
+  YOU ARE AT : 
+  <% prevLinks.forEach(function(prevlink) { %>
+  <a href='<%= prevlink.link%>' class="prevlink"> <%- prevlink.text %> </a>
+<% });%>
+  <a href="#" class="currlink"><%- currLink %></a>
+</div>
+
+
+
 <style type="text/css">
 .date-attendance{
   text-align: center;
@@ -15,21 +25,40 @@
   font-weight: 200;
 }
 .marked-heading{
-  font-size: 1.1em;
+  font-size: 1em;
   line-height: 110%;
   margin: 1.14rem 0 0.912rem 0;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   text-align: center;
   font-weight: 900;
-  color: darkslategray;
+  color: #999;
 }
 .heading{
-  font-size: 3em;
+  font-size: 2.5em;
   text-align: center;
   font-weight: 200;
   color: teal;
 }
+ .headingsm{
+    text-align: center;
+    font-size: 2em;
+    font-weight: 700;
+    color: darkcyan;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+ .headingsub {
+    text-align: center;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }  
+
+#piechart {
+  margin-top: 30px;
+}
+
 </style>
 <!-- <script type="text/javascript">
   $(document).ready(function () {
@@ -41,9 +70,10 @@
 
 </script> -->
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
 <div class="container">
-    <h2 class="heading">SUBJECT DETAILS</h2>
-  <div class="col-md-6 left-align">
+
+ <!--  <div class="col-md-6 left-align hide-on-med-and-down">
     <table>
       <tr><td style="font-weight: bold;">Subject Name :</td>
       <td class="subject_name"></td></tr>
@@ -68,12 +98,19 @@
       
     </table>
 
-  </div>
+  </div> -->
 
-  <div class="col-md-4 left-align">
+  <div class="col-sm-12 left-align">
+    <div class="row">
 
-    <div id="piechart">
-
+        <div class="heading col-sm-12 subject_name"></div>
+        <div class="headingsub col-sm-12 subject_code"></div>
+        <div class="col-sm-12 headingsub center-align">
+        <div class="course" style="display: inline-block;"></div>
+        <div class="stream" style="display: inline-block;"></div>
+        Semester
+        <div class="semester" style="display: inline-block;"></div>
+      </div>
     </div>
     <script type="text/javascript">
       $(document).ready(function () {
@@ -110,11 +147,9 @@
 </div>
 
 
-<h4 id="heading" class="heading container">ATTENDANCE FOR CLASS <span class="subject_code"></span></h4><br>
-<h5 class="marked-heading">CLICK ON ENROLLMENT NUMBER OR NAME FOR MORE DETAILS</h5>
 <div class="container" style="display: flex; justify-content: space-between;">
-
-<div class="col-md-3">
+<div class="row">
+<div class="col-sm-12 col-md-3">
   <form method="GET">
       <label for="datepicker1" >View Attendance From:</label>
       <input type="text" id="datepicker1" class="datepicker" name="from_date" value="<%= moment(from_date).format( 'DD MMMM, YYYY') %>">
@@ -137,11 +172,16 @@
 
         <input type="submit" name="submit" class="btn">
       </form>
+      <div id="piechart" class="hide-on-med-and-down">
+
+    </div>
 </div>
 
 
-    <div class="col-md-9" style="padding: 1em; margin: 1em;">
+    <div class="col-sm-12 col-md-9">
       <div class="card material-table">
+        <br>
+        <h5 class="marked-heading">CLICK ON ENROLLMENT NUMBER OR NAME FOR MORE DETAILS</h5>
         <div class="table-header">
           <span class="table-title">Attendance for <span class="subject_code"></span></span>
           <div class="actions">
@@ -152,11 +192,11 @@
         <table id="datatable" class="striped centered">
           <thead>
             <tr>
-              <th>Enrollment Number</th>
-              <th>Name</th>
-              <th style="color: green;">Hours present</th>
-              <th style="color: red;">Hours absent</th>
-              <th>Percentage attendance</th>
+              <th>Enroll<span class="hide-on-med-and-down">ment Number</span><span class="hide-on-large-only">. No.</span></th>
+              <th style="padding: 0">Name</th>
+              <th style="color: green;" class="hide-on-med-and-down">Hours present</th>
+              <th style="color: red;" class="hide-on-med-and-down">Hours absent</th>
+              <th>%age attendance</th>
             </tr>
           </thead>
           <tbody>
@@ -167,22 +207,22 @@
             <tr>
               <td><a href="<%=students[i]['enrollment_no']%>" style="color: blue;"><%=students[i]['enrollment_no']%></a></td>
 
-              <td><a href="<%=students[i]['enrollment_no']%>" style="color: blue;"><%=students[i]['name']%></a></td>
+              <td style="padding: 0"><a href="<%=students[i]['enrollment_no']%>" style="color: blue;"><%=students[i]['name']%></a></td>
 
               <% if(present[students[i]['enrollment_no']]){ 
               hours_present = present[students[i]['enrollment_no']]
               %>
-              <td style="color: green;"><span style="font-weight: bold;"><%=present[students[i]['enrollment_no']]%></span></td>
+              <td style="color: green;" class="hide-on-med-and-down"><span style="font-weight: bold;"><%=present[students[i]['enrollment_no']]%></span></td>
               <% }else{ %>
-              <td style="color: green;"><span style="font-weight: bold;">0</span></td>
+              <td style="color: green;" class="hide-on-med-and-down"><span style="font-weight: bold;">0</span></td>
               <% } %>
 
               <% if(absent[students[i]['enrollment_no']]){ 
               hours_absent = absent[students[i]['enrollment_no']]
               %>
-              <td style="color: red;"><span style="font-weight: bold;"><%=absent[students[i]['enrollment_no']]%></span></td>
+              <td style="color: red;" class="hide-on-med-and-down"><span style="font-weight: bold;"><%=absent[students[i]['enrollment_no']]%></span></td>
               <% }else{ %>
-              <td style="color: red;"><span style="font-weight: bold;">0</span></td>
+              <td style="color: red;" class="hide-on-med-and-down"><span style="font-weight: bold;">0</span></td>
               <% } %>
 
               <td><span style="font-weight: bold;"><%= (hours_present*100/(hours_present+hours_absent)).toFixed(2) %> %</span></td>
@@ -197,7 +237,7 @@
 
       </div>
     </div>
-
+</div>
 
 <!-- <div class="card col-md-6" style="padding: 1em; margin: 1em;">
   <h5 class="marked-heading">Student Absent:</h5>

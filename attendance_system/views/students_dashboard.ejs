@@ -23,12 +23,14 @@
         html += '<tr>';
         html += '<td><a href=\"/student/attendance/'+ arr[elem]['subject_id'] + "\">" + elem + '</a></td>';
         html += '<td>' + arr[elem]['subject_name'] + '</td>';
-        //html += '<td>' + arr[elem]["P"] + '</td>';
-        //html += '<td>' + arr[elem]["A"] + '</td>';
+        html += '<td class="hide-on-med-and-down">' + arr[elem]["P"] + '</td>';
+        html += '<td class="hide-on-med-and-down">' + arr[elem]["A"] + '</td>';
         percentage = (arr[elem]["P"]*100/(arr[elem]["P"] + arr[elem]["A"])).toFixed(2);
-        if(percentage > 75) { borderclass="bgreen";}
-        if(percentage < 75 && percentage > 50) { borderclass="byellow";}
-        if(percentage < 50) { borderclass="bred";}
+        var borderclass;
+        console.log(percentage);
+        if(percentage >= 75.0) { borderclass="bgreen";}
+        if(percentage < 75.0 && percentage >= 50.0) { borderclass="byellow";}
+        if(percentage < 50.0) { borderclass="bred";}
         html += '<td class="' + borderclass + '">' + percentage + '</td>';
         html += '</tr>';
       });
@@ -86,8 +88,8 @@
         <tr>
           <th data-field="id">Subject Code</th>
           <th data-field="id">Subject Name</th>
-          <!-- <th data-field="name">Present</th>
-          <th data-field="price">Absent</th> -->
+          <th class="hide-on-med-and-down" data-field="name">Present</th>
+          <th class="hide-on-med-and-down" data-field="price">Absent</th>
           <th data-field="price">Percentage</th>
         </tr>
       </thead>

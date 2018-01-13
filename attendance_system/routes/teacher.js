@@ -260,6 +260,12 @@ router.get('/profile', function(req, res){
 });
 
 router.get('/attendance_marked/:batch_id/:subject_id', function(req, res){
+	
+	var prev_links = [
+	{'text' : '<i class="tiny material-icons">home</i> Home','link' :'/'},
+	];
+	var curr_link = 'View Class';
+
 	if(!req.isAuthenticated()){
 		res.redirect("/teacher/login");
 	}
@@ -337,7 +343,7 @@ router.get('/attendance_marked/:batch_id/:subject_id', function(req, res){
 					}
 					absent = dict_absent;
 
-					res.render('view_marked_attendance_teacher',{'students': students, 'present': present, 'absent': absent, 'subject_id': req.params.subject_id, 'from_date': from_date, 'to_date': to_date, 'moment': moment});
+					res.render('view_marked_attendance_teacher',{'prevLinks':prev_links, 'currLink' : curr_link, 'students': students, 'present': present, 'absent': absent, 'subject_id': req.params.subject_id, 'from_date': from_date, 'to_date': to_date, 'moment': moment});
 				});
 			});
 		});

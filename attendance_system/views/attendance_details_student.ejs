@@ -2,7 +2,7 @@
 <% include partials/header %>
 <style type="text/css">
 	.marked-heading{
-		font-size: 1.1em;
+		font-size: 0.8em;
 		line-height: 110%;
 		margin: 1.14rem 0 0.912rem 0;
 		text-transform: uppercase;
@@ -18,25 +18,40 @@
 		color: darkcyan;
 		letter-spacing: 0.2em;
 	}
+	.headingsub {
+		text-align: center;
+		font-weight: 700;
+		letter-spacing: 0.2em;
+		text-transform: uppercase;
+	}
 </style>
 
-
-
-<%- subject.subjectType %>
-<%- subject.instructor %>
 
 <div class="container card">
 
 	<div>
 		<h5 class="heading" style="text-transform: uppercase;"><%- subject.subjectName %></h5>
-		<h6  style="text-transform: uppercase;"><%- subject.subjectCode%></h6>
-		<p class="marked-heading">*P: Present , A: Absent , NA: Not Applicable</p>
+		<div class="row">
+			<div class="headingsub col-sm-12"><%- subject.subjectType %></div>
+			<div class="headingsub col-sm-12"><%- subject.instructor %></div>
+			<div class="headingsub col-sm-12"><%- subject.subjectCode%></div>
+		</div>
+		<!-- <div class="row">
+			<div class="col-sm-12">Total Lecture Hours : </div>
+			<div class="col-sm-12">Total Present Hours :</div>
+			<div class="col-sm-12">Total Absent Hours :</div>
+			<div class="col-sm-12">Percentage :</div>
+			<div class="progress">
+		      <div class="determinate" style="width: 70%"></div>
+		  	</div>
+		</div> Add this later-->
+		<p class="marked-heading">*P: Present , A: Absent</p>
 		<table class="striped centered">
 			<thead>
 				<tr>
 					<th>Lecture Date</th>
 					<th>Present / Absent</th>
-					<th>hours of lecture</th>
+					<th>Hours of lecture</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -50,6 +65,7 @@
 				<% } %>
 			</tbody>
 		</table>	
+		<br>
 	</div>
 
 </div>

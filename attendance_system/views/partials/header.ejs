@@ -54,8 +54,8 @@
     </nav>
   </header>
 <main>
-<div class="container"> 
-  <div class="row">
+
+
     <% if(success_msg != "") {%>
     <div class="center-align card-panel green-text col s4 offset-s4"><%=success_msg%></div>
     <% } %>
@@ -70,5 +70,4 @@
         <div class="center-align card-panel red-text col s4 offset-s4"><%= errors[i].msg %>, value: <%= errors[i].value %></div>
       <% } %>
     <% } %>
-  </div>
-</div>
+

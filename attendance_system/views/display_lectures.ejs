@@ -3,7 +3,7 @@
 
 
 
-<div class="container">
+<div class="container-fluid">
   <% if(lectures.length==0){ %>
   <h4 class="marked-heading">
     YOU HAVE NOT MARKED ANY ATTENDANCE FOR THIS SUBJECT
@@ -15,7 +15,7 @@
   <div class="row">
 
 
-<div class="col-md-4 card">
+<div class="col-md-4 card hide-on-med-and-down">
       <h5>SUBJECT DETAILS :</h5>
     <table>
       <tr><td style="font-weight: bold;">Subject Name :</td>
@@ -60,8 +60,17 @@
 
 
 
-    <div class="col-md-8">
-
+    <div class="col-sm-12 col-md-8">
+      <div class="row hide-on-large-only">
+        <div class="heading col-sm-12 subject_name"></div>
+        <div class="headingsub col-sm-12 subject_code"></div>
+        <div class="col-sm-12 headingsub center-align">
+        <div class="course" style="display: inline-block;"></div>
+        <div class="stream" style="display: inline-block;"></div>
+        Semester
+        <div class="semester" style="display: inline-block;"></div>
+      </div>
+    </div>
       <div class="card material-table">
         <div class="table-header">
           <span class="table-title">Edit Attendance</span>
@@ -72,10 +81,10 @@
         <table id="datatable">
           <thead>
             <tr>
-              <th>Lecture Date (DD/MM/YYYY)</th>
-              <th>Lecture Time</th>
-              <th>Edit this lecture</th>
-              <th>Delete this lecture</th>
+              <th>Lecture Date <span class="hide-on-med-and-down">(DD/MM/YYYY)</span></th>
+              <th><span class="hide-on-med-and-down">Lecture</span> Time</th>
+              <th>Edit <span class="hide-on-med-and-down">this lecture</span></th>
+              <th>Delete <span class="hide-on-med-and-down">this lecture</span></th>
             </tr>
           </thead>
           <tbody>
@@ -84,8 +93,8 @@
             <tr>
               <td><%=  moment(date).format('DD/MM/YYYY')  %></td>
               <td><%=date.toLocaleTimeString()%></td>
-              <td><a style="color: blue;" href="/teacher/edit_attendance/<%=bid%>/<%=sid%>/<%=lectures[i].lecture_timestamp%>">Edit this lecture</a></td>
-              <td><a class="modal-trigger" style="color: red;" href="#modal_<%=lectures[i].lecture_timestamp%>">Delete this lecture</a></td>
+              <td><a style="color: blue;" href="/teacher/edit_attendance/<%=bid%>/<%=sid%>/<%=lectures[i].lecture_timestamp%>">Edit <span class="hide-on-med-and-down">this lecture</span></a></td>
+              <td><a class="modal-trigger" style="color: red;" href="#modal_<%=lectures[i].lecture_timestamp%>">Delete <span class="hide-on-med-and-down">this lecture</span></a></td>
             </tr>
 
             <% } %>
@@ -123,14 +132,15 @@
 </div>
 
 
-
-
-<!-- <div id="lecture-display" class="container">
-
-
-
 <style type="text/css">
-.marked-heading{
+  .headingsub {
+    text-align: center;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  .marked-heading{
     font-size: 1.1em;
     line-height: 110%;
     margin: 1.14rem 0 0.912rem 0;
@@ -146,7 +156,16 @@
     font-weight: 700;
     color: darkcyan;
     letter-spacing: 0.2em;
+    text-transform: uppercase;
   }
+
+</style>
+
+<!-- <div id="lecture-display" class="container">
+
+
+
+<style type="text/css">
 </style>
 
 <div class="container card" style="padding: 1em;">

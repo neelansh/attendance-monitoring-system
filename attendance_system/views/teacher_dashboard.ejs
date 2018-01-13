@@ -12,41 +12,45 @@
 <div class="container">
 	<div class="row">
 		<div class="login-card-title center-align">
-			<h5 class="heading">YOUR SUBJECTS :</h4>
+			<h5 class="heading">YOUR SUBJECTS:</h4>
 		</div>
 	</div>
 </div>
-<div class="container" style="text-align: center;">
-	<div class="align-center">
-		<div class="card row valign-wrapper" style="width: 100%; padding: 10px;">
-			<div class="col-md-4 valign center-align">
-				<span class="sub-course">SUBJECT NAME :</span>
+<div class="container-fluid" style="text-align: center;">
+	<div class="align-center row">
+		<div class="card valign-wrapper" style="width: 100%; padding: 10px;">
+			<div class="col-sm-4 valign center-align">
+				<span class="sub-course">SUBJECT NAME:</span>
 			</div>
-			<div class="col-md-4 valign center-align">
-				<span class="sub-course">COURSE : </span>
-				<span class="sub-course">STREAM : </span>
+			<div class="col-sm-4 valign center-align">
+				<span class="sub-course">COURSE: </span>
+				<span class="sub-course">STREAM: </span>
 				<span class="sub-course">SUBJECT CODE</span>
 			</div>
-			<div class="col-md-4 valign center-align">
-				<span class="sub-course">ACTIONS :</span>
+			<div class="col-sm-4 valign center-align">
+				<span class="sub-course">ACTIONS:</span>
 			</div>
 		</div>
 		<% for(var i=0; i<subjects.length ; ++i){ %>
-		<div class="card row valign-wrapper" style="width: 100%; padding: 10px;">
+		<div class="card valign-wrapper" style="width: 100%; padding: 10px;">
+
 			<div class="col-md-4 valign center-align">
-				<span class="sub-code"><%=subjects[i].subject_name%></span>
+				<a href="/teacher/attendance_marked/<%=subjects[i].batch_id%>/<%=subjects[i].subject_id%>/"><span class="sub-code" style="text-decoration: underline;"><%=subjects[i].subject_name%></span>
+				</a>	
 			</div>
 			<div class="col-md-4 valign center-align">
-				<span class="sub-course"><%=subjects[i].course%>&nbsp;:&nbsp;</span>
-				<span class="sub-stream"><%=subjects[i].stream%>&nbsp;:&nbsp;</span>
+				<span class="sub-course"><%=subjects[i].course%>:</span>
+				<span class="sub-stream"><%=subjects[i].stream%>:</span>
 				<span class="sub-code"><%=subjects[i].subject_code%></span>
 			</div>
 			<div class="col-md-4 valign center-align">
-				<a href="/teacher/attendance_marked/<%=subjects[i].batch_id%>/<%=subjects[i].subject_id%>/" class="btn waves-effect waves-light">View</a>
-				<a href="/teacher/attendance/<%=subjects[i].batch_id%>/<%=subjects[i].subject_id%>/" class=" btn waves-effect waves-light">Mark</a>
-				<a href="/teacher/edit_attendance/<%=subjects[i].batch_id%>/<%=subjects[i].subject_id%>/" class=" btn waves-effect waves-light">Edit</a>
+				<a href="/teacher/attendance_marked/<%=subjects[i].batch_id%>/<%=subjects[i].subject_id%>/" class="btn waves-effect waves-light actionbtn">View<span class="hide-on-med-and-down">&nbsp;Class</span></a>
+				<a href="/teacher/attendance/<%=subjects[i].batch_id%>/<%=subjects[i].subject_id%>/" class=" btn waves-effect waves-light actionbtn">Mark</a>
+				<a href="/teacher/edit_attendance/<%=subjects[i].batch_id%>/<%=subjects[i].subject_id%>/" class=" btn waves-effect waves-light actionbtn">Edit</a>
 			</div>
+
 		</div>
+		
 		<% } %>
 	</div>
 </div>
@@ -123,5 +127,9 @@
 		color: #009688;
 		font-weight: 500;
 		letter-spacing: 0.1em;
+	}
+	.actionbtn {
+		margin-top: 1em;
+		margin-bottom: 1em;
 	}
 </style>
