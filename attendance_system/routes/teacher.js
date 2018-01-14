@@ -172,7 +172,7 @@ router.get('/attendance/:batch_id/:subject_id', function(req, res) {
 
 
 router.post('/attendance/:batch_id/:subject_id', function(req, res) {
-	
+
 	var prev_links = [
 	{'text' : '<i class="tiny material-icons">home</i> Home','link' :'/'},
 	];
@@ -244,7 +244,7 @@ router.post('/attendance/:batch_id/:subject_id', function(req, res) {
 						throw new Error(err);
 						res.sendStatus(500);
 					}
-					res.render('display_students', {'prevLinks':prev_links, 'currLink' : curr_link, 
+					res.render('display_students', {'prevLinks':prev_links, 'currLink' : curr_link,
 						'students': temp,
 						'attendance': attendance,
 						'date': date,
@@ -283,7 +283,7 @@ router.get('/profile', function(req, res){
 });
 
 router.get('/attendance_marked/:batch_id/:subject_id', function(req, res){
-	
+
 	var prev_links = [
 	{'text' : '<i class="tiny material-icons">home</i> Home','link' :'/'},
 	];
@@ -374,7 +374,7 @@ router.get('/attendance_marked/:batch_id/:subject_id', function(req, res){
 });
 
 router.get('/attendance_marked/:batch_id/:subject_id/:enrollment_no', function(req, res){
-	
+
 
 	if(!req.isAuthenticated()){
 		res.redirect("/teacher/login");
@@ -578,6 +578,52 @@ router.get('/edit_attendance/:batch_id/:subject_id', function(req, res){
 	});
 
 });
+
+router.get("/delete/:batch_id/:subject_id", function(req, res) {
+
+	console.log("asssss");
+
+
+	if (req.isAuthenticated() || req.user.instructor_id == null) {
+		res.redirect("/teacher/login");
+	}
+
+	var batch_id 	= req.params.batch_id;
+	var subject_id 	= req.params.subject_id;
+
+	sub.check_teaching(req.user.school, req.user.instructor_id, subject_id, function(err, is_teaching){
+		if(err) {
+			throw new Error(err);
+			res.sendStatus(500);
+			return;
+		}
+
+		if(!is_teaching && !req.user.isDean){
+			res.locals.errors = [{'msg': 'You are not teaching this subject.', 'value': 'bad requests: 400'}];
+			res.render('index');
+			return;
+		}
+
+
+		att.deleteWholeAttendance(req.user.school, "30742", subject_id, batch_id, function(err, is_deleted) {
+			if (err) {
+				console.log(err);
+				res.sendStatus(500);
+				throw new Error(err);
+			}
+
+			if (is_deleted) {
+				req.header("success_msg", "successfully deleted");
+				res.redirect("/teacher/dashboard");
+			} else {
+				req.header("error_msg", "something went wrong. Please try again");
+				res.redirect("/teacher/edit_attendance/" + batch_id + "/" + subject_id + "/");
+			}
+		})
+	});
+
+});
+
 
 router.get('/edit_attendance/:batch_id/:subject_id/:lecture', function(req, res){
 	var prev_links = [
@@ -786,6 +832,7 @@ router.get('/delete_attendance/:batch_id/:subject_id/:lecture', function(req, re
 	});
 });
 
+
 //Dean panel routes
 
 router.get('/dean', function(req, res){
@@ -867,6 +914,15 @@ router.get('/get_subject_details/:subject_id', function(req, res){
 	    res.json(results[0]);
 	});
 });
+
+router.get("/add_subject", function(req, res) {
+	if (!req.isAuthenticated() || req.user.instructor_id == null) {
+		res.redirect("/teacher/login");
+	}
+
+	res.render("teacher_add_subject");
+});
+
 
 router.get('/:something', function(req, res) {
 

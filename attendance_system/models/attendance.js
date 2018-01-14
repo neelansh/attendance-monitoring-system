@@ -54,6 +54,18 @@ module.exports  = {
     callback(null, "all entries done")
   },
 
+  deleteWholeAttendance: function(school, instructor_id, subject_id, batch_id , callback) {
+
+    var query = db.get().query("update ?? set instructor_code = ? where batch_id = ? and subject_id = ?", [school+"_subject_allocation", instructor_id, batch_id, subject_id], function(err, rows) {
+      if(err) {
+        console.log(err);
+        throw err;
+      }
+
+      callback(null, "successfull");
+    })
+  },
+
   getAttendanceBySubject : function(school, subject_id, callback) {
     var query = db.get().query("select * from ?? where subject_id = ?",[school+"_attendance", subject_id],function(err, rows) {
       if(err)throw err;
