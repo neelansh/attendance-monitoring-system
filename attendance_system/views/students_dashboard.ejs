@@ -39,7 +39,22 @@
   })
 </script>
 <div id="grad" class="container student-card card">
-
+<div class="card-action attendance-report">ATTENDANCE REPORT</div>
+    <br>
+    <table class="striped centered">
+      <thead>
+        <tr>
+          <th data-field="id">Subject Code</th>
+          <th data-field="id">Subject Name</th>
+          <th class="hide-on-med-and-down" data-field="name">Present</th>
+          <th class="hide-on-med-and-down" data-field="price">Absent</th>
+          <th data-field="price">Percentage</th>
+        </tr>
+      </thead>
+      <tbody class="attendance-table">
+      </tbody>
+    </table>
+    <p>* click on subject code to view details</p>
   <div class="card-action">
     <div class="row">
       <div class="col-md-3">
@@ -76,27 +91,10 @@
   </div>
   <div class="card-action">
     <div class="row">			
-      <a href="/student/change_password" class="change-password btn waves-effect waves-light right">CHANGE
-        PASSWORD </a>
-        
+      <a href="/student/change_password" class="change-password btn waves-effect waves-light right">CHANGE PASSWORD </a>
       </div>
     </div>
-    <div class="card-action attendance-report">ATTENDANCE REPORT</div>
-    <br>
-    <table class="striped centered">
-      <thead>
-        <tr>
-          <th data-field="id">Subject Code</th>
-          <th data-field="id">Subject Name</th>
-          <th class="hide-on-med-and-down" data-field="name">Present</th>
-          <th class="hide-on-med-and-down" data-field="price">Absent</th>
-          <th data-field="price">Percentage</th>
-        </tr>
-      </thead>
-      <tbody class="attendance-table">
-      </tbody>
-    </table>
-    <p>* click on subject code to view details</p>
+    
   </div>
 </div>
 </div>

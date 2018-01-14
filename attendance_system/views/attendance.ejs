@@ -42,26 +42,114 @@
     font-size: 1.5rem;
   }
   .marked-heading{
-    font-size: 1.1em;
-    line-height: 110%;
-    margin: 1.14rem 0 0.912rem 0;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    text-align: center;
-    font-weight: 900;
-    color: darkslategray;
-  }
-  .heading{
+  font-size: 1em;
+  line-height: 110%;
+  margin: 1.14rem 0 0.912rem 0;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  text-align: center;
+  font-weight: 900;
+  color: #999;
+}
+.heading{
+  font-size: 2.5em;
+  text-align: center;
+  font-weight: 200;
+  color: teal;
+}
+ .headingsm{
     text-align: center;
     font-size: 2em;
     font-weight: 700;
     color: darkcyan;
     letter-spacing: 0.2em;
+    text-transform: uppercase;
   }
-  
+ .headingsub {
+    text-align: center;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  } 
+ .submitbtn {
+  display: inline-block;
+  padding: 8px 12px 8px 12px;
+  margin:-15px;
+  background-color: crimson;
+  border-radius: 5px;
+  cursor: pointer;
+  color: white;
+  box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);
+  transition: .2s ease-out;
+    transition-property: initial;
+    transition-duration: 0.2s;
+    transition-timing-function: ease-out;
+    transition-delay: initial;
+}
+
+.submitbtn:hover {
+  box-shadow: 0 3px 3px 0 rgba(0,0,0,0.14), 0 1px 7px 0 rgba(0,0,0,0.12), 0 3px 1px -1px rgba(0,0,0,0.2);
+}
+
+.submitbtn-bottom:hover {
+  box-shadow: 0 3px 3px 0 rgba(0,0,0,0.14), 0 1px 7px 0 rgba(0,0,0,0.12), 0 3px 1px -1px rgba(0,0,0,0.2);
+}
+
+.submitbtn-bottom {
+  display: inline-block;
+  padding: 8px 12px 8px 12px;
+  text-align: center;
+  width: 100%;
+  background-color: crimson;
+  border-radius: 5px;
+  cursor: pointer;
+  color: white;
+  box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);
+  transition: .2s ease-out;
+    transition-property: initial;
+    transition-duration: 0.2s;
+    transition-timing-function: ease-out;
+    transition-delay: initial;
+}
+
+@media screen and (max-width: 720px) {
+.responsive-rows {
+  display: block !important;
+}
+}
+.responsive-rows:hover {
+  background-color: #fbfbfb!important;
+}
+
+.responsive-td {
+  padding: 15px 5px!important;
+  font-size: 15px!important;
+  font-family: Lato;
+}
+
+.bluelabel {
+  color: teal;
+  font-size: 15px;
+}
+
+.strong {
+  font-weight: bold;
+}
 </style>
 
+  <div class="container-fluid">
+  <div class="row">
 
+        <div class="heading col-sm-12 subject_name"></div>
+        <div class="headingsub col-sm-12 subject_code"></div>
+        <div class="col-sm-12 headingsub center-align">
+        <div class="course" style="display: inline-block;"></div>
+        <div class="stream" style="display: inline-block;"></div>
+        Semester
+        <div class="semester" style="display: inline-block;"></div>
+      </div>
+    </div>
+  </div>
 
 <div class="container">
 
@@ -74,11 +162,13 @@
     <div class="col-md-4 card">
       
     <div id="lecture_details" class="">
+      <br>
       <p class="marked-heading">LECTURE DETAILS :</p>
-      <label for="datepicker" >Date:</label>
+      <br>
+      <label for="datepicker" class="bluelabel">Date :</label>
       <input type="text" id="datepicker" class="datepicker" name="date_of_attendance">
       <script type="text/javascript">
-         $('.datepicker').pickadate({
+         var date = $('.datepicker').pickadate({
             selectMonths: true, // Creates a dropdown to control month
             selectYears: 15, // Creates a dropdown of 15 years to control year,
             today: 'Today',
@@ -91,7 +181,7 @@
       <!-- <input type="date" id="datepicker" class="datepicker" name="date_of_attendance" required> -->
       <br><br>
 
-      <label for="timepicker">Time At Which Lecture Started :</label>
+      <label for="timepicker" class="bluelabel">Time At Which Lecture Started :</label>
       <input id="timepicker" type="text" class="timepicker" name="time_of_attendance">
       <!-- <input id="timepicker" class="timepicker" name="time_of_attendance" type="time"> -->
       <script type="text/javascript">
@@ -105,7 +195,7 @@
       </script>
       <br><br>
 
-      <label>Duration of lecture in hours:</label>
+      <label class="bluelabel">Duration of lecture in hours:</label>
       <div class="row center">
         <br>
         <input name="duration_of_lecture" type="radio" id="test1" value="1" />
@@ -117,9 +207,9 @@
         <input name="duration_of_lecture" type="radio" id="test4" value="4" />
         <label for="test4">4</label> &nbsp;&nbsp;
       </div>
-
+      <br>
     </div>
-
+    <div class="subject-details hide-on-med-and-down">
     <div class="divider"></div>
     <h2 class="marked-heading">SUBJECT DETAILS :</h2>
     <table>
@@ -145,6 +235,7 @@
       <td class="semester"></td></tr>
       
     </table>
+  </div>
     <script type="text/javascript">
       $(document).ready(function(){
         var subject_id = <%- JSON.stringify(subject_id) %>;
@@ -167,31 +258,32 @@
  
 
 
-    <div class="col-md-8">
+    <div class="col-md-8 card">
 
 
-      <div class="card material-table">
+      <div class="material-table">
         <div class="table-header">
-          <span class="table-title">Mark Attendance For <span class="subject_code"></span></span>
+          <span class="table-title"><span class="hide-on-med-and-down">Mark</span> Attendance For <span class="subject_code"></span></span>
           <div class="actions">
             <a href="#" class="search-toggle waves-effect btn-flat nopadding"><i class="material-icons">search</i></a>
           </div>
         </div>
 
-        <table id="datatable" class="striped centered">
-          <thead>
+        <table id="datatable" class="striped centered responsive-table">
+          <thead class="hide-on-med-and-down">
             <tr>
-              <th>Roll No.</th>
-              <th>Name</th>
-              <th>Attendance</th>
+              <th class="responsive-td">Roll No.</th>
+              <th class="responsive-td">Name</th>
+              <th class="responsive-td">Attendance</th>
             </tr>
           </thead>
           <tbody>
             <% for(var i=0; i<students.length ; ++i){ %>
-            <tr>
-              <td><%=students[i]['enrollment_no']%></td>
-              <td><%=students[i]['name']%></td>
-              <td>
+            <tr class="responsive-rows">
+             
+              <td class="responsive-td"><%=students[i]['enrollment_no']%></td>
+              <td class="responsive-td strong"><%=students[i]['name']%></td>
+              <td class="responsive-td">
               <form id="radio_<%=students[i]['enrollment_no']%>">
                 <input id="present_<%=students[i]['enrollment_no']%>" type="radio" class="attendance_present" name="<%=students[i]['enrollment_no']%>" value="P"/>
                 <label for="present_<%=students[i]['enrollment_no']%>">P</label>
@@ -211,25 +303,32 @@
             <% } %>
           </tbody>
         </table>
-
+        
       </div>
-
+      <br>
+      <div class="submit submitbtn-bottom" >
+            SUBMIT ATTENDANCE
+      </div>
+      <br>
+      <br>
 
 
     </div>
-  </div>
+
+         
+  
 
 
-<div id="submit" class="fixed-action-btn">
-  <a  class="btn-floating btn-large red">
-    <i class="large material-icons">send</i>
+<div class="submit fixed-action-btn">
+    <a>
+    <div class="btn-floating btn-large"><i class="large material-icons">send</i></div>
   </a>
 </div>
 
 </form>
 
 <div id="confirm_modal" class="modal">
-  <div class="modal-content">
+  <div class="modal-content" style="text-align: center;">
     <h4>Are you sure?</h4>
     <p>You are marking attendance for</p>
     <p>
@@ -315,7 +414,6 @@
           "na" : JSON.stringify(na)
         },
         success: function(data, status, xhr){
-          // console.log(data)
           $('#confirm_modal').modal('close');
           $('main').html(data);
         },
@@ -326,7 +424,7 @@
       });
     })
 
-    $("#submit").click(function(event){
+    $(".submit").click(function(event){
       
       date="";
       time="";
@@ -385,6 +483,15 @@
     
 
   })
+
+  // var myEvent = window.attachEvent || window.addEventListener;
+  // var chkevent = window.attachEvent ? 'onbeforeunload' : 'beforeunload'; /// make IE7, IE8 compatable
+
+  // myEvent(chkevent, function(e) { // For >=IE7, Chrome, Firefox
+  //     var confirmationMessage = ' ';  // a space
+  //     (e || window.event).returnValue = confirmationMessage;
+  //     return confirmationMessage;
+  // });
 
 </script>
 

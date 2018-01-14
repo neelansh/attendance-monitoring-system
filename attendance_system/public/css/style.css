@@ -96,7 +96,7 @@
 }
 
 .greeting {
-  margin-top:4em;
+  /*margin-top:4em;*/
   font-weight:900;
   font-size:16px;
   color:#008B8B;
@@ -307,18 +307,12 @@ nav,footer {
   border-bottom: 2px solid #d29c14;
 }
 
-.navpath {
-  background-color: ;
-  padding-top: 10px;
-  border-bottom: 2px dotted #f2f2f2;
-  margin-bottom: 2em;
-}
-
 .prevlink {
   color : darkslategray;
   font-style: italic;
   /*border-bottom: 1px dotted #ccc;*/
   font-size: 14px;
+  font-family: 'Lato';
 }
 
 .prevlink::after {
@@ -326,13 +320,16 @@ nav,footer {
 }
 .currlink {
   color : #ccc;
-  border-bottom: 1px dotted #ccc;
+  border-bottom: 1px dotted darkslategray;
   font-style: italic;
   font-size: 14px;
+  font-family: 'Lato';
 }
 .navpath {
-  color : #ccc;
-  border-bottom: 1px dotted #ccc;
+  padding-top: 10px;
+  border-bottom: 2px solid #f2f2f2;
+  margin-bottom: 2em;
   font-style: italic;
   font-size: 14px; 
+  font-family: 'Lato';
 }

@@ -1,6 +1,6 @@
 <% if(typeof currLink != 'undefined') { %>  
 <div class="navpath container-fluid">
-  YOU ARE AT : 
+  <span style="font-style:normal">You're at: </span> 
   <% prevLinks.forEach(function(prevlink) { %>
   <a href='<%= prevlink.link%>' class="prevlink"> <%- prevlink.text %> </a>
 <% });%>

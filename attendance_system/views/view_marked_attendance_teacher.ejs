@@ -18,7 +18,7 @@
 .marked-heading{
   font-size: 1em;
   line-height: 110%;
-  margin: 1.14rem 0 0.912rem 0;
+  margin: 0 1em 0 1em;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   text-align: center;
@@ -169,8 +169,8 @@
 </div>
 
 
-    <div class="col-sm-12 col-md-9">
-      <div class="card material-table">
+    <div class="col-sm-12 col-md-9 card" style="padding: 0">
+      <div class="material-table">
         <br>
         <h5 class="marked-heading">CLICK ON ENROLLMENT NUMBER OR NAME FOR MORE DETAILS</h5>
         <div class="table-header">
@@ -196,9 +196,9 @@
             var hours_present = 0;
             %>
             <tr>
-              <td><a href="<%=students[i]['enrollment_no']%>" style="color: blue;"><%=students[i]['enrollment_no']%></a></td>
+              <td><a href="<%=students[i]['enrollment_no']%>" target="_blank" style="color: blue;"><%=students[i]['enrollment_no']%></a></td>
 
-              <td style="padding: 0"><a href="<%=students[i]['enrollment_no']%>" style="color: blue;"><%=students[i]['name']%></a></td>
+              <td style="padding: 0"><a href="<%=students[i]['enrollment_no']%>" target="_blank" style="color: blue;"><%=students[i]['name']%></a></td>
 
               <% if(present[students[i]['enrollment_no']]){ 
               hours_present = present[students[i]['enrollment_no']]

@@ -3,7 +3,7 @@
 
 
 
-<div class="container-fluid">
+<div class="container">
   <% if(lectures.length==0){ %>
   <h4 class="marked-heading">
     YOU HAVE NOT MARKED ANY ATTENDANCE FOR THIS SUBJECT
@@ -78,23 +78,23 @@
             <a href="#" class="search-toggle waves-effect btn-flat nopadding"><i class="material-icons">search</i></a>
           </div>
         </div>
-        <table id="datatable">
-          <thead>
+        <table id="datatable" class="responsive-table striped centered">
+          <thead class="hide-on-med-and-down">
             <tr>
-              <th>Lecture Date <span class="hide-on-med-and-down">(DD/MM/YYYY)</span></th>
-              <th><span class="hide-on-med-and-down">Lecture</span> Time</th>
-              <th>Edit <span class="hide-on-med-and-down">this lecture</span></th>
-              <th>Delete <span class="hide-on-med-and-down">this lecture</span></th>
+              <th class="responsive-td">Lecture Date <span class="hide-on-med-and-down">(DD/MM/YYYY)</span></th>
+              <th class="responsive-td"><span class="hide-on-med-and-down">Lecture</span> Time</th>
+              <th class="responsive-td">Edit <span class="hide-on-med-and-down">this lecture</span></th>
+              <th class="responsive-td">Delete <span class="hide-on-med-and-down">this lecture</span></th>
             </tr>
           </thead>
           <tbody>
             <% for(var i=0; i<lectures.length ; ++i){ 
             var date = new Date(lectures[i].lecture_timestamp);%>
-            <tr>
-              <td><%=  moment(date).format('DD/MM/YYYY')  %></td>
-              <td><%=date.toLocaleTimeString()%></td>
-              <td><a style="color: blue;" href="/teacher/edit_attendance/<%=bid%>/<%=sid%>/<%=lectures[i].lecture_timestamp%>">Edit <span class="hide-on-med-and-down">this lecture</span></a></td>
-              <td><a class="modal-trigger" style="color: red;" href="#modal_<%=lectures[i].lecture_timestamp%>">Delete <span class="hide-on-med-and-down">this lecture</span></a></td>
+            <tr class="responsive-rows">
+              <td class="responsive-td strong"><%=  moment(date).format('DD/MM/YYYY')  %></td>
+              <td class="responsive-td"><%=date.toLocaleTimeString()%></td>
+              <td class="responsive-td"><a style="color: blue;" href="/teacher/edit_attendance/<%=bid%>/<%=sid%>/<%=lectures[i].lecture_timestamp%>">Edit this lecture</a></td>
+              <td class="responsive-td"><a class="modal-trigger" style="color: red;" href="#modal_<%=lectures[i].lecture_timestamp%>">Delete this lecture</a></td>
             </tr>
 
             <% } %>
@@ -133,24 +133,23 @@
 
 
 <style type="text/css">
-  .headingsub {
-    text-align: center;
-    font-weight: 700;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-  }
-
-  .marked-heading{
-    font-size: 1.1em;
-    line-height: 110%;
-    margin: 1.14rem 0 0.912rem 0;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    text-align: center;
-    font-weight: 900;
-    color: darkslategray;
-  }
-  .heading{
+.marked-heading{
+  font-size: 1em;
+  line-height: 110%;
+  margin: 1.14rem 0 0.912rem 0;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  text-align: center;
+  font-weight: 900;
+  color: #999;
+}
+.heading{
+  font-size: 2.5em;
+  text-align: center;
+  font-weight: 200;
+  color: teal;
+}
+ .headingsm{
     text-align: center;
     font-size: 2em;
     font-weight: 700;
@@ -158,7 +157,29 @@
     letter-spacing: 0.2em;
     text-transform: uppercase;
   }
+ .headingsub {
+    text-align: center;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  } 
+@media screen and (max-width: 720px) {
+.responsive-rows {
+  display: block !important;
+  border-top: 2px solid black;
+}
+}
+.responsive-rows:hover {
+  background-color: #fbfbfb!important;
+}
 
+.responsive-td {
+  padding: 15px 5px!important;
+
+}
+.strong {
+  font-weight: bold;
+}
 </style>
 
 <!-- <div id="lecture-display" class="container">
