@@ -99,6 +99,22 @@ router.get('/dashboard', function(req, res){
 	// res.send("okay" + req.user.enrollment_no);
 });
 
+router.get('/profile', function(req, res){
+	var prev_links = [
+	{'text' : '<i class="tiny material-icons">home</i> Home','link' :'/'},
+	];
+	var curr_link = 'My Account';
+
+	if(!req.isAuthenticated()){
+		res.redirect("/student/login");
+	}
+	else if(req.user.enrollment_no == null){
+		res.redirect("/student/login");
+	}
+
+	else res.render('student_profile',{'prevLinks':prev_links, 'currLink' : curr_link,'user': req.user});
+});
+
 router.get('/get_attendance', function(req, res){
 	if(!req.isAuthenticated()){
 		res.redirect("/student/login");
@@ -164,7 +180,7 @@ router.post('/change_password', function(req, res){
 		return;
 	}
 	if(req.body.new_password !== req.body.confirm_password){
-		req.flash('error_msg', 'new password and confirm new password do NOT match');
+		req.flash('error_msg', 'New password and confirm password do not match.');
 	}
 
 	student.comparePassword(req.body.old_password, req.user.password, function(err, isMatch){
@@ -176,7 +192,7 @@ router.post('/change_password', function(req, res){
 				res.redirect('/student/change_password');
 			});
 		} else if(!isMatch){
-			req.flash('error_msg', 'Incorrect password');
+			req.flash('error_msg', 'Incorrect password. Please try again.');
 			res.redirect('/student/change_password');
 		}
 	});

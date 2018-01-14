@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<% include partials/header %>
+
+<div class="container card">
+  <br>
+  <div class="row">
+  <div class="col-md-12"><a href="/student/dashboard" class="change-password btn waves-effect waves-light right">BACK TO HOME</a></div>
+</div>
+    <div class="row">
+      <div class="col s6 m3">
+        <div class="small-title">SCHOOL</div>
+        <div class="small-content school" style="text-transform: uppercase;"><%=user.school%></div>
+      </div>
+      <div class="col s6 m3">
+        <div class="small-title">COURSE</div>
+        <div class="small-content course"><%= user.course %></div>
+      </div>
+      <div class="col s6 m3">
+        <div class="small-title">STREAM</div>
+        <div class="small-content stream"><%= user.stream %></div>
+      </div>
+      <div class="col s6 m3">
+        <div class="small-title">YEAR OF ADMISSION</div>
+        <div class="small-contenty yoa"><%= user.year_of_admission %></div>
+      </div>
+    </div>
+
+  <div class="card-action">
+    <div class="row">
+        <div class="input-field col-md-6">
+          <div class="small-title">EMAIL ID</div>
+          <div class="details-field small-content email-id"><%= user.email %></div>
+        </div>
+        <div class="input-field col-md-6">
+          <div class="small-title">PHONE</div>
+          <div class="details-field small-content phone"><%= user.phone %></div>
+        </div>
+      </div>
+    </div>
+  <div class="card-action">
+    <div class="row">			
+      <a href="/student/change_password" class="change-password btn waves-effect waves-light right">CHANGE PASSWORD </a>
+      <a href="/student/change_password" class="change-password btn waves-effect waves-light right">UPDATE INFORMATION </a>
+      </div>
+    </div>
+</div>    
+
+
+<% include partials/footer %>

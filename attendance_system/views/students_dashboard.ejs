@@ -54,48 +54,8 @@
       <tbody class="attendance-table">
       </tbody>
     </table>
-    <p>* click on subject code to view details</p>
-  <div class="card-action">
-    <div class="row">
-      <div class="col-md-3">
-        <div class="small-title">SCHOOL</div>
-        <div class="small-content school" style="text-transform: uppercase;"><%=user.school%></div>
-      </div>
-      <div class="col-md-3">
-        <div class="small-title">COURSE</div>
-        <div class="small-content course"><%= user.course %></div>
-      </div>
-      <div class="col-md-3">
-        <div class="small-title">STREAM</div>
-        <div class="small-content stream"><%= user.stream %></div>
-      </div>
-      <div class="col-md-3">
-        <div class="small-title">YEAR OF ADMISSION</div>
-        <div class="small-contenty yoa"><%= user.year_of_admission %></div>
-      </div>
-    </div>
-  </div>
-  <div class="card-action">
-    <div class="row">
-      <div class="col-md-12">
-        <div class="input-field col-md-6">
-          <div class="small-title">EMAIL ID</div>
-          <div class="details-field small-content email-id"><%= user.email %></div>
-        </div>
-        <div class="input-field col-md-6">
-          <div class="small-title">PHONE</div>
-          <div class="details-field small-content phone"><%= user.phone %></div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="card-action">
-    <div class="row">			
-      <a href="/student/change_password" class="change-password btn waves-effect waves-light right">CHANGE PASSWORD </a>
-      </div>
-    </div>
-    
-  </div>
+    <p style="color: grey;">* click on subject code to view details</p>
+  
 </div>
 </div>
 <% include partials/footer %>

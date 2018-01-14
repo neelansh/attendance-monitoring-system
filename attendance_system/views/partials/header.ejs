@@ -60,6 +60,21 @@
 <main>
 <% include ./pathnav%>
 
+<% if(user != null && user.isTeacher){ %>
+<div class="bottomnav center row hide-on-large-only">
+    <div class="navbottomicon waves-effect"><a href="/teacher/dashboard" class="navbottomlink"><i class="material-icons">home</i></a></div>
+    <div class="navbottomicon waves-effect"><a href="/teacher/profile" class="navbottomlink"><i class="material-icons">person</i></a></div>
+    <div class="navbottomicon waves-effect"><a href="/teacher/logout" class="navbottomlink"><i class="material-icons">exit_to_app</i><span style="font-size:8px">Log out</span></a></div>
+</div>
+<% } %>
+
+<% if(user != null && user.isStudent){ %>
+<div class="bottomnav center row hide-on-large-only">
+    <div class="navbottomicon waves-effect"><a href="/student/dashboard" class="navbottomlink"><i class="material-icons">home</i></a></div>
+    <div class="navbottomicon waves-effect"><a href="/student/profile" class="navbottomlink"><i class="material-icons">person</i></a></div>
+    <div class="navbottomicon waves-effect"><a href="/student/logout" class="navbottomlink"><i class="material-icons">exit_to_app</i></a></div>
+</div>
+<% } %>
     <% if(success_msg != "") {%>
     <div class="center-align card-panel green-text col s4 offset-s4"><%=success_msg%></div>
     <% } %>

@@ -486,7 +486,7 @@ router.put('/update_information', function(req, res) {
 		}
 
 		if (!UpdatedUser) {
-			req.flash("error_msg", "something went wrong please try again");
+			req.flash("error_msg", "Something went wrong please try again");
 			res.redirect("/teacher/update_information");
 		} else {
 			req.flash("success_msg", "Your details has been changed successfully.");
@@ -623,7 +623,7 @@ router.get("/delete/:batch_id/:subject_id", function(req, res) {
 				req.header("success_msg", "successfully deleted");
 				res.redirect("/teacher/dashboard");
 			} else {
-				req.header("error_msg", "something went wrong. Please try again");
+				req.header("error_msg", "Something went wrong. Please try again");
 				res.redirect("/teacher/edit_attendance/" + batch_id + "/" + subject_id + "/");
 			}
 		})
@@ -931,7 +931,7 @@ router.get("/add_subject", function(req, res) {
 });
 
 
-router.get('/:something', function(req, res) {
+router.get('/:Something', function(req, res) {
 
 	if (!req.isAuthenticated()) {
 		res.redirect("/teacher/login");

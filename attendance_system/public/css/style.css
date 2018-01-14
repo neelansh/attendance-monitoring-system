@@ -213,6 +213,13 @@
   font-size:1.5em;
 }
 
+.student-batch {
+  font-size: 14px;
+  color: #999;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+}
 .sub-nav {
   background-color:#283593!important;
 }
@@ -321,15 +328,39 @@ nav,footer {
 .currlink {
   color : #ccc;
   border-bottom: 1px dotted darkslategray;
-  font-style: italic;
   font-size: 14px;
   font-family: 'Lato';
 }
 .navpath {
   padding-top: 10px;
   border-bottom: 2px solid #f2f2f2;
-  margin-bottom: 2em;
-  font-style: italic;
+  margin-bottom: 1rem;
   font-size: 14px; 
   font-family: 'Lato';
 }
+.bottomnav {
+    height: 45px;
+    background-color: #ccc;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    margin: 0;
+    z-index: 1000;
+    transition: .2s ease-out;
+    transition-property: initial;
+    transition-duration: 0.2s;
+    transition-timing-function: ease-out;
+    transition-delay: initial;
+    -webkit-box-shadow: 0px -1px 6px 0px rgba(128,128,128,1);
+-moz-box-shadow: 0px -1px 6px 0px rgba(128,128,128,1);
+box-shadow: 0px -1px 6px 0px rgba(128,128,128,1);
+  }
+  .navbottomicon {
+    width: 30%;
+    padding-top: 10px;
+    display: inline-block;
+    height: 100%;
+  }
+  .navbottomlink {
+    color: #888!important;
+  }

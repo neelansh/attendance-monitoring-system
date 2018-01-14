@@ -7,15 +7,15 @@
       <% if(user != null && user.isDean){ %>
         <a href="/teacher/dean" class="logout btn waves-effect waves-light">DEAN PANEL</a>
       <% } %>
-      <a href="/teacher/dashboard" class="logout btn waves-effect waves-light">DASHBOARD</a>
+      <a href="/teacher/dashboard" class="logout btn waves-effect waves-light hide-on-med-and-down">DASHBOARD</a>
     </div>
     <div class="col-sm-6">
       <div clas="row">
         <div class="col-sm-8">
-          <a href="/teacher/profile" class="logout btn waves-effect waves-light pull-right">MY ACCOUNT</a>
+          <a href="/teacher/profile" class="logout btn waves-effect waves-light pull-right hide-on-med-and-down">MY ACCOUNT</a>
         </div>
         <div class="col-sm-4">
-          <a href="/teacher/logout" class="logout btn waves-effect waves-light pull-right">LOG OUT</a>
+          <a href="/teacher/logout" class="logout btn waves-effect waves-light pull-right hide-on-med-and-down">LOG OUT</a>
         </div>
       </div>
     </div>
@@ -149,13 +149,15 @@
       <div class='greeting'>HELLO</div>
       <div class="student-name details-field"><%=user.name%></div>
       <div class="student-enroll details-field"><%=user.enrollment_no%></div>
+      <div class="student-batch"><%= user.course %> <%= user.stream %> | <%=user.school%> </div>
+      
       <% } %>
     </div>
     <div class="col-md-4">
     </div>
     <div class="col-md-4">
-      <a href="/student/dashboard" class="logout btn waves-effect waves-light">DASHBOARD</a>
-      <a href="/student/logout" class="logout btn waves-effect waves-light">LOG OUT</a>
+      <a href="/student/profile" class="logout btn waves-effect waves-light hide-on-med-and-down">MYACCOUNT</a>
+      <a href="/student/logout" class="logout btn waves-effect waves-light hide-on-med-and-down">LOG OUT</a>
     </div>
   </div>
 </div>
