@@ -70,6 +70,8 @@ router.get('/get_course', function(req, res) {
 })
 
 router.get('/get_stream', function(req, res) {
+
+
 	if (!req.isAuthenticated()) {
 		res.redirect("/teacher/login")
 	}
@@ -78,6 +80,7 @@ router.get('/get_stream', function(req, res) {
 		res.redirect("/teacher/login");
 	}
 
+	console.log(req.query);
 	if (!req.query.school || !req.query.course) {
 		req.flash("error_msg", "something went wrong please select dropdown in correct manner");
 		return;
@@ -102,7 +105,7 @@ router.get("/get_subjects", function(req, res) {
 	  	res.redirect("/teacher/login");
 	}
 
-	if (!req.query.school || !req.query.stream_id || !req.query.semester || !req.query.course) {
+	if (!req.query.school || !req.query.stream || !req.query.semester || !req.query.course) {
 		req.flash("error_msg", "something went wrong please select dropdown in correct manner");
 		return;
 	}
@@ -118,7 +121,11 @@ router.get("/get_subjects", function(req, res) {
 
 })
 
-router.post("add_subject_to_teacher", function(req, res) {
+router.post("/add_subject_to_teacher", function(req, res) {
+
+	console.log(req.body);
+
+
 	if (!req.isAuthenticated()) {
 		res.redirect("/teacher/login");
 	}
@@ -127,12 +134,20 @@ router.post("add_subject_to_teacher", function(req, res) {
 	  	res.redirect("/teacher/login");
 	}
 
-	if (!req.params.school || !req.params.batch_id || !req.params.subject_name) {
+	if (!req.body.school || !req.body.course || !req.body.stream || !req.body.semester || !req.body.subjects) {
 		req.flash("error_msg", "something went wrong please select dropdown in correct manner");
 		return;
 	}
 
-	subjects.addSubjectToTeacher(req.params.school, req.params.batch_id, req.user.instructor_id, req.params.subject_name, function(err, results) {
+	var subjectDetails = {
+		school 			: req.body.school,
+		course 			: req.body.course,
+		stream 			: req.body.stream,
+		semester		: req.body.semester,
+		subject_name	: req.body.subjects
+	}
+
+	subjects.addSubjectToTeacher(subjectDetails, req.user.instructor_id, function(err, results) {
 		if (err) {
 			console.log(err);
 			throw err;

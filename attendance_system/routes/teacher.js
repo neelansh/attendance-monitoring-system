@@ -495,6 +495,16 @@ router.put('/update_information', function(req, res) {
 	});
 });
 
+router.get('/change_password', function(req, res){
+	if(!req.isAuthenticated()){
+		res.redirect("/teacher/login");
+	}
+	if(req.user.instructor_id == null){
+		res.redirect("/teacher/login");
+	}
+	res.render('change_password');
+});
+
 router.post('/change_password', function(req, res){
 	if(!req.isAuthenticated()){
 		res.redirect("/teacher/login");
@@ -580,9 +590,6 @@ router.get('/edit_attendance/:batch_id/:subject_id', function(req, res){
 });
 
 router.get("/delete/:batch_id/:subject_id", function(req, res) {
-
-	console.log("asssss");
-
 
 	if (req.isAuthenticated() || req.user.instructor_id == null) {
 		res.redirect("/teacher/login");

@@ -58,7 +58,7 @@
     color: darkcyan;
     letter-spacing: 0.2em;
   }
-  
+
 </style>
 
 
@@ -69,10 +69,10 @@
 
 
   <div class="row">
-    
+
 
     <div class="col-md-4 card">
-      
+
     <div id="lecture_details" class="">
       <p class="marked-heading">LECTURE DETAILS :</p>
       <label for="datepicker" >Date:</label>
@@ -125,7 +125,7 @@
     <table>
       <tr><td style="font-weight: bold;">Subject Name :</td>
       <td class="subject_name"></td></tr>
-      
+
       <tr><td style="font-weight: bold;">Teacher Name :</td>
       <td class="teacher_name"></td></tr>
 
@@ -143,7 +143,11 @@
 
       <tr><td style="font-weight: bold;">Semester : </td>
       <td class="semester"></td></tr>
-      
+
+      <tr><td style="font-weight: bold;">Type : </td>
+      <td class="type"></td></tr>
+
+
     </table>
     <script type="text/javascript">
       $(document).ready(function(){
@@ -157,6 +161,7 @@
           $(".course").append(data.course);
           $(".stream").append(data.stream);
           $(".semester").append(data.semester);
+          $(".type").append(data.type);
         })
 
       })
@@ -164,7 +169,7 @@
 
 
   </div>
- 
+
 
 
     <div class="col-md-8">
@@ -200,7 +205,7 @@
                 <% }else{ %>
                   <input id="absent_<%=students[i]['enrollment_no']%>" type="radio" class="attendance_absent" name="<%=students[i]['enrollment_no']%>" value="A" checked/>
                 <% } %>
-                
+
                 <label for="absent_<%=students[i]['enrollment_no']%>">A</label>
                 <input id="na_<%=students[i]['enrollment_no']%>" type="radio" class="attendance_na" name="<%=students[i]['enrollment_no']%>" value="NA" />
                 <label for="na_<%=students[i]['enrollment_no']%>">N/A</label>
@@ -294,7 +299,7 @@
     var na = [];
 
     $("#confirm_submit").click(function(event){
-      
+
       $("#confirm_submit").attr('disabled', true)
       var bid = <%- JSON.stringify(batch_id) %>
       var sid = <%- JSON.stringify(subject_id) %>
@@ -327,7 +332,7 @@
     })
 
     $("#submit").click(function(event){
-      
+
       date="";
       time="";
       hours="";
@@ -360,13 +365,13 @@
       table.$("input[class=attendance_present]:checked").each(function(){
         present.push(this.name);
       })
-      
-      
+
+
       table.$("input[class=attendance_absent]:checked").each(function(){
         absent.push(this.name);
       })
-      
-      
+
+
       table.$("input[class=attendance_na]:checked").each(function(){
         na.push(this.name);
       })
@@ -381,8 +386,8 @@
 
       $('#confirm_modal').modal('open');
 
-    });   
-    
+    });
+
 
   })
 

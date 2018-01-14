@@ -20,65 +20,57 @@
           </div>
         </div>
 
-        <form class="login-box-form" action="/teacher/change_password" method="post">
+        <form class="login-box-form" action="/api/add_subject_to_teacher" method="post">
           <div class="container-fluid">
-
             <div class="row">
               <div class="input-field col s12">
-                <select id="school" >
+                <select id="school" name="school">
                   <option value="" disabled selected>Choose School</option>
-                  <option value="1">usict</option>
+                  <option value="usict">USICT</option>
                 </select>
                 <label>School Selection</label>
               </div>
             </div>
 
-            <div class="row">
+            <div class="row" id="course_div" style="display: none">
               <div class="input-field col s12">
-                <select id="course">
+                <select id="course" name="course">
                   <option value="" disabled selected>Choose  course</option>
-                  <option value="1">Option 1</option>
                 </select>
                 <label>Course Selection</label>
               </div>
             </div>
 
-            <div class="row">
+            <div class="row" id="stream_div" style="display: none">
               <div class="input-field col s12">
-                <select id="stream">
+                <select id="stream" name="stream">
                   <option value="" disabled selected>Choose stream</option>
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
                 </select>
                 <label>Stream Selection</label>
               </div>
             </div>
 
-            <div class="row">
+            <div class="row" id="semester_div" style="display: none">
               <div class="input-field col s12">
-                <select id="semester">
+                <select id="semester" name="semester">
                   <option value="" disabled selected>Choose semester</option>
                   <option value="1">1</option>
                   <option value="2">2</option>
                   <option value="3">3</option>
-                  <option value="1">4</option>
-                  <option value="2">5</option>
-                  <option value="3">6</option>
-                  <option value="1">7</option>
-                  <option value="2">8</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                  <option value="7">7</option>
+                  <option value="8">8</option>
                 </select>
                 <label>Semester Selection</label>
               </div>
             </div>
 
-            <div class="row">
+            <div class="row" id="subjects_div" style="display: none">
               <div class="input-field col s12">
-                <select id="subjects">
+                <select id="subjects" name="subjects">
                   <option value="" disabled selected>Choose subject</option>
-                  <option value="1">Option 1</option>
-                  <option value="2">Option 2</option>
-                  <option value="3">Option 3</option>
                 </select>
                 <label>Subject Selection</label>
               </div>
@@ -102,41 +94,23 @@
   });
 
   $('#school').change(function () {
-    var school = $('#school').find(":selected").text();
+    var school = $('#school').find(":selected").text().toLowerCase();
 
     $.ajax({
       url: "/api/get_course",
       type: 'GET',
       data: { school: school },
       success: function(result) {
-        console.log(result);
 
-          var _options =""
-          var count = 2;
+        $("#course_div").css("display", "block");
+        $('select').material_select();
 
-          var output = [];
+        $.each(result, function(key, value) {
 
-          // $.each(result, function(key, value)
-          // {
-          //   output.push('<option value="'+ key +'">'+ value.course +'</option>');
-          // });
+            $('#course').append($("<option></option>").attr("value",value.course).text(value.course));
+            $('select').material_select();
 
-          // $('#course').html(output.join(''));
-
-          $.each(result, function(key, value) {
-            console.log(value.course);
-            // $('#course').html(output.join(''));
-
-            //$('#school').append($("<option></option>").attr("value",key).text(value.course));
-            console.log('<option value="'+ count+'">'+ value.course +'</option>');
-            $('select').append('<option value="'+ count+'">'+ value.course +'</option>');
-            // _options +=('<option value="'+ count+'">'+ value.couremose +'</option>');
-            count++;
           });
-
-        // for (var x = 0;x<result.length;x++) {
-        //   ;
-        // }
       },
       error: function(result) {
         alert("there is some error .")
@@ -144,39 +118,24 @@
    });
   });
 
-
   $('#course').change(function () {
-    var school = $('#school').find(":selected").text();
+    var school = $('#school').find(":selected").text().toLowerCase();
     var course = $('#course').find(":selected").text();
+
+    $("#stream_div").css("display", "block");
+    $("#semester_div").css("display", "block");
+
 
     $.ajax({
       url: "/api/get_stream",
       type: 'GET',
       data: { school: school, course: course },
       success: function(result) {
-        console.log(result);
-
-          // $.each(result, function(key, value)
-          // {
-          //   output.push('<option value="'+ key +'">'+ value.course +'</option>');
-          // });
-
-          // $('#course').html(output.join(''));
 
           $.each(result, function(key, value) {
-            console.log(value.stream);
-            // $('#course').html(output.join(''));
-
-             $('#school').append($("<option></option>").attr("value",key).text(value.stream));
-
-            // $('#course').append('<option value="'+ count+'">'+ value.course +'</option>');
-            // _options +=('<option value="'+ count+'">'+ value.course +'</option>');
-            count++;
+            $('#stream').append($("<option></option>").attr("value",value.stream).text(value.stream));
+            $('select').material_select();
           });
-
-        // for (var x = 0;x<result.length;x++) {
-        //   ;
-        // }
       },
       error: function(result) {
         alert("there is some error .")
@@ -184,42 +143,27 @@
    });
   });
 
-  $('#stream').change(function () {
-    var school = $('#school').find(":selected").text();
-    var course = $('#course').find(":selected").text();
-    var stream = $('$stream').find(":selected").text();
+  $('#semester').change(function () {
+    var school    = $('#school').find(":selected").text().toLowerCase();
+    var course    = $('#course').find(":selected").text();
+    var stream    = $('#stream').find(":selected").text();
+    var semester  = $('#semester').find(":selected").text();
+
+    $("#subjects_div").css("display", "block");
 
     $.ajax({
-      url: "/api/get_stream",
+      url: "/api/get_subjects",
       type: 'GET',
-      data: { school: school, course: course, stream: stream },
+      data: { school: school, course: course, stream: stream, semester: semester },
       success: function(result) {
-        console.log(result);
-
-          // $.each(result, function(key, value)
-          // {
-          //   output.push('<option value="'+ key +'">'+ value.course +'</option>');
-          // });
-
-          // $('#course').html(output.join(''));
 
           $.each(result, function(key, value) {
-            console.log(value.subject_name);
-            // $('#course').html(output.join(''));
-
-             $('#school').append($("<option></option>").attr("value",key).text(value.subject_name));
-
-            // $('#course').append('<option value="'+ count+'">'+ value.course +'</option>');
-            // _options +=('<option value="'+ count+'">'+ value.course +'</option>');
-            count++;
+             $('#subjects').append($("<option></option>").attr("value",value.subject_name).text(value.subject_name));
+             $('select').material_select();
           });
-
-        // for (var x = 0;x<result.length;x++) {
-        //   ;
-        // }
       },
       error: function(result) {
-        alert("there is some error .")
+        alert("there is some error.")
       }
    });
   });
