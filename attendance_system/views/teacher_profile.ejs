@@ -1,59 +1,67 @@
 <!DOCTYPE html>
 <% include partials/header %>
-<div id="grad" class="container student-card card">
-	<div class=" card-content row">
+	<div id="grad" class="container student-card card">
+		<div class=" card-content row">
 
-		<div class="col-md-4">
-			<% if(user != null && user.instructor_id != null) {%>
+			<div class="col-md-4">
+				<% if(user != null && user.instructor_id != null) {%>
 
-			<div class='greeting'>HELLO</div>
+				<div class='greeting'>HELLO</div>
 
-			<div class="student-name details-field"><%=user.name%></div>
+				<div class="student-name details-field"><%=user.name%></div>
 
-			<div class="student-enroll details-field"><%=user.instructor_id%></div>
-			<% } %>
+				<div class="student-enroll details-field"><%=user.instructor_id%></div>
+				<% } %>
+			</div>
+			<div class="col-md-4">
+			</div>
+			<div class="col-md-4">
+				<a href="/teacher/dashboard" class="logout btn waves-effect waves-light">DASHBOARD</a>
+				<a href="/teacher/logout" class="logout btn waves-effect waves-light right">LOG OUT </a>
+			</div>
 		</div>
-		<div class="col-md-4">
+
+		<div class="card-action">
+			<div class="row">
+
+
+				<div class="input-field col-md-3">
+					<div class="small-title">DESIGNATION</div>
+					<div class="small-content course"><%= user.designation %></div>
+				</div>
+
+				<div class="input-field col-md-3">
+					<div class="small-title">DATE OF JOINING</div>
+
+					<div class="small-contenty yoa"><%= user.date_of_joining %></div>
+
+				</div>
+
+				<div class="input-field col-md-3">
+					<div class="small-title">EMAIL ID</div>
+					<div class="details-field small-content email-id"><%= user.email %></div>
+				</div>
+
+				<div class="input-field col-md-3">
+					<div class="small-title">PHONE</div>
+					<div class="details-field small-content phone"><%= user.phone %></div>
+				</div>
+			</div>
 		</div>
-		<div class="col-md-4">
-			<a href="/teacher/dashboard" class="logout btn waves-effect waves-light">DASHBOARD</a>
-			<a href="/teacher/logout" class="logout btn waves-effect waves-light right">LOG OUT </a>
+		<div class="card-action">
+			<div class="row">
+				<div class="col-sm-offset-6 col-sm-3" >
+					<a href="/teacher/update_information" class="change-password btn waves-effect waves-light right">
+						update Information
+					</a>
+				</div>
+				<div class="col-sm-3">
+					<a href="/teacher/change_password" class="change-password btn waves-effect waves-light right">CHANGE
+						PASSWORD
+					</a>
+				</div>
+			</div>
+			</div>
 		</div>
 	</div>
-
-	<div class="card-action">
-		<div class="row">
-
-
-			<div class="input-field col-md-3">
-				<div class="small-title">DESIGNATION</div>
-				<div class="small-content course"><%= user.designation %></div>
-			</div>
-
-			<div class="input-field col-md-3">
-				<div class="small-title">DATE OF JOINING</div>
-
-				<div class="small-contenty yoa"><%= user.date_of_joining %></div>
-
-			</div>
-
-			<div class="input-field col-md-3">
-				<div class="small-title">EMAIL ID</div>
-				<div class="details-field small-content email-id"><%= user.email %></div>
-			</div>
-
-			<div class="input-field col-md-3">
-				<div class="small-title">PHONE</div>
-				<div class="details-field small-content phone"><%= user.phone %></div>
-			</div>
-		</div>
-	</div>
-	<div class="card-action">
-		<div class="row">
-			<a href="/teacher/update_information" class="change-password btn waves-effect waves-light right">
-				update Information
-			</a>
-			</div>
-		</div>
-	</div>
-	<% include partials/footer %>
+<% include partials/footer %>

@@ -65,6 +65,7 @@
     letter-spacing: 0.2em;
     text-transform: uppercase;
   }
+
  .headingsub {
     text-align: center;
     font-weight: 700;
@@ -135,6 +136,7 @@
 .strong {
   font-weight: bold;
 }
+
 </style>
 
   <div class="container-fluid">
@@ -157,10 +159,10 @@
 
 
   <div class="row">
-    
+
 
     <div class="col-md-4 card">
-      
+
     <div id="lecture_details" class="">
       <br>
       <p class="marked-heading">LECTURE DETAILS :</p>
@@ -215,7 +217,7 @@
     <table>
       <tr><td style="font-weight: bold;">Subject Name :</td>
       <td class="subject_name"></td></tr>
-      
+
       <tr><td style="font-weight: bold;">Teacher Name :</td>
       <td class="teacher_name"></td></tr>
 
@@ -233,7 +235,11 @@
 
       <tr><td style="font-weight: bold;">Semester : </td>
       <td class="semester"></td></tr>
-      
+
+      <tr><td style="font-weight: bold;">Type : </td>
+      <td class="type"></td></tr>
+
+
     </table>
   </div>
     <script type="text/javascript">
@@ -248,6 +254,7 @@
           $(".course").append(data.course);
           $(".stream").append(data.stream);
           $(".semester").append(data.semester);
+          $(".type").append(data.type);
         })
 
       })
@@ -255,7 +262,7 @@
 
 
   </div>
- 
+
 
 
     <div class="col-md-8 card">
@@ -292,7 +299,7 @@
                 <% }else{ %>
                   <input id="absent_<%=students[i]['enrollment_no']%>" type="radio" class="attendance_absent" name="<%=students[i]['enrollment_no']%>" value="A" checked/>
                 <% } %>
-                
+
                 <label for="absent_<%=students[i]['enrollment_no']%>">A</label>
                 <input id="na_<%=students[i]['enrollment_no']%>" type="radio" class="attendance_na" name="<%=students[i]['enrollment_no']%>" value="NA" />
                 <label for="na_<%=students[i]['enrollment_no']%>">N/A</label>
@@ -393,7 +400,7 @@
     var na = [];
 
     $("#confirm_submit").click(function(event){
-      
+
       $("#confirm_submit").attr('disabled', true)
       var bid = <%- JSON.stringify(batch_id) %>
       var sid = <%- JSON.stringify(subject_id) %>
@@ -424,8 +431,13 @@
       });
     })
 
+<<<<<<< HEAD
     $(".submit").click(function(event){
       
+=======
+    $("#submit").click(function(event){
+
+>>>>>>> 6509598d544847ae20fbccef1dd792e9d9bfbaa6
       date="";
       time="";
       hours="";
@@ -458,13 +470,13 @@
       table.$("input[class=attendance_present]:checked").each(function(){
         present.push(this.name);
       })
-      
-      
+
+
       table.$("input[class=attendance_absent]:checked").each(function(){
         absent.push(this.name);
       })
-      
-      
+
+
       table.$("input[class=attendance_na]:checked").each(function(){
         na.push(this.name);
       })
@@ -479,8 +491,8 @@
 
       $('#confirm_modal').modal('open');
 
-    });   
-    
+    });
+
 
   })
 

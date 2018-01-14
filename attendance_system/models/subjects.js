@@ -47,5 +47,37 @@ module.exports = {
 			if(err)throw err;
 			callback(null, rows);
 		});
+	},
+
+	getCourse: function(school, callback) {
+
+		var query = db.get().query("select distinct course from ?? " ,[school + "_batch_allocation"], function(err, rows) {
+			if (err) throw err;
+
+			callback(null, rows);
+		});
+	},
+
+	getStream: function(school, course, callback) {
+		var query = db.get().query("select distinct stream from ?? where course = ? ",[school + "_batch_allocation", course], function(err, rows) {
+			if (err) throw err;
+			callback(null , rows);
+		})
+	},
+
+	getSubjects : function(school, stream, semester, course, callback) {
+		var query = db.get().query("select distinct subject_name from ??  t1 inner join ?? t2 on t1.batch_id = t2.batch_id where course  = ? and stream = ? and semester = ?",[school+"_subject_allocation", school + "_batch_allocation", course, stream, semester],function(err, rows) {
+			if(err)throw err;
+			callback(null, rows);
+		});
+	},
+
+	addSubjectToTeacher: function(subjectDetails, instructor_id, callback) {
+		var query = db.get().query("update ?? t1 inner join ??  set instructor_code  = ? where course = ? and stream = ? and semester = ? and  subject_name = ?", [subjectDetails.school + "_subject_allocation", subjectDetails.school + "_batch_allocation", instructor_id, subjectDetails.course, subjectDetails.stream, subjectDetails.semester, subjectDetails.subject_name], function(err, rows) {
+			if (err) throw err;
+
+			callback(null, "updated successfully");
+		})
 	}
+
 }

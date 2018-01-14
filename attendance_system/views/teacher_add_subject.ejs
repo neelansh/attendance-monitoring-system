@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<% include partials/header %>
+
+<div class="container drop-down-school">
+  <div class="row login-sel-cont">
+    <div class="col-sm-offset-4 col-sm-4">
+      <div class="card">
+      <!-- <div class="row"> -->
+        <div class="col-lg-12">
+        </div>
+       <!-- Card Content -->
+        <div class="container-fluid custom-container">
+          <div class="row custom-full-row">
+
+            <div class="verticalLine">
+              <div class="login-card-title">
+                Add Subject
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <form class="login-box-form" action="/api/add_subject_to_teacher" method="post">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="input-field col s12">
+                <select id="school" name="school">
+                  <option value="" disabled selected>Choose School</option>
+                  <option value="usict">USICT</option>
+                </select>
+                <label>School Selection</label>
+              </div>
+            </div>
+
+            <div class="row" id="course_div" style="display: none">
+              <div class="input-field col s12">
+                <select id="course" name="course">
+                  <option value="" disabled selected>Choose  course</option>
+                </select>
+                <label>Course Selection</label>
+              </div>
+            </div>
+
+            <div class="row" id="stream_div" style="display: none">
+              <div class="input-field col s12">
+                <select id="stream" name="stream">
+                  <option value="" disabled selected>Choose stream</option>
+                </select>
+                <label>Stream Selection</label>
+              </div>
+            </div>
+
+            <div class="row" id="semester_div" style="display: none">
+              <div class="input-field col s12">
+                <select id="semester" name="semester">
+                  <option value="" disabled selected>Choose semester</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                  <option value="7">7</option>
+                  <option value="8">8</option>
+                </select>
+                <label>Semester Selection</label>
+              </div>
+            </div>
+
+            <div class="row" id="subjects_div" style="display: none">
+              <div class="input-field col s12">
+                <select id="subjects" name="subjects">
+                  <option value="" disabled selected>Choose subject</option>
+                </select>
+                <label>Subject Selection</label>
+              </div>
+            </div>
+            <button style="margin-bottom: 1em;" class="btn waves-effect waves-light right" type="submit" name="action">Submit
+             <i class="material-icons right">send</i>
+           </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="col-sm-">
+
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+   $(document).ready(function() {
+    $('select').material_select();
+  });
+
+  $('#school').change(function () {
+    var school = $('#school').find(":selected").text().toLowerCase();
+
+    $.ajax({
+      url: "/api/get_course",
+      type: 'GET',
+      data: { school: school },
+      success: function(result) {
+
+        $("#course_div").css("display", "block");
+        $('select').material_select();
+
+        $.each(result, function(key, value) {
+
+            $('#course').append($("<option></option>").attr("value",value.course).text(value.course));
+            $('select').material_select();
+
+          });
+      },
+      error: function(result) {
+        alert("there is some error .")
+      }
+   });
+  });
+
+  $('#course').change(function () {
+    var school = $('#school').find(":selected").text().toLowerCase();
+    var course = $('#course').find(":selected").text();
+
+    $("#stream_div").css("display", "block");
+    $("#semester_div").css("display", "block");
+
+
+    $.ajax({
+      url: "/api/get_stream",
+      type: 'GET',
+      data: { school: school, course: course },
+      success: function(result) {
+
+          $.each(result, function(key, value) {
+            $('#stream').append($("<option></option>").attr("value",value.stream).text(value.stream));
+            $('select').material_select();
+          });
+      },
+      error: function(result) {
+        alert("there is some error .")
+      }
+   });
+  });
+
+  $('#semester').change(function () {
+    var school    = $('#school').find(":selected").text().toLowerCase();
+    var course    = $('#course').find(":selected").text();
+    var stream    = $('#stream').find(":selected").text();
+    var semester  = $('#semester').find(":selected").text();
+
+    $("#subjects_div").css("display", "block");
+
+    $.ajax({
+      url: "/api/get_subjects",
+      type: 'GET',
+      data: { school: school, course: course, stream: stream, semester: semester },
+      success: function(result) {
+
+          $.each(result, function(key, value) {
+             $('#subjects').append($("<option></option>").attr("value",value.subject_name).text(value.subject_name));
+             $('select').material_select();
+          });
+      },
+      error: function(result) {
+        alert("there is some error.")
+      }
+   });
+  });
+
+
+</script>
+
+<% include partials/footer %>

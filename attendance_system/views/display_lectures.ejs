@@ -1,16 +1,13 @@
 <!DOCTYPE html>
 <% include partials/header %>
 
-
-
 <div class="container">
+
   <% if(lectures.length==0){ %>
   <h4 class="marked-heading">
     YOU HAVE NOT MARKED ANY ATTENDANCE FOR THIS SUBJECT
   </h4>
   <% } %>
-  
-  
 
   <div class="row">
 
@@ -20,7 +17,7 @@
     <table>
       <tr><td style="font-weight: bold;">Subject Name :</td>
       <td class="subject_name"></td></tr>
-      
+
       <tr><td style="font-weight: bold;">Teacher Name :</td>
       <td class="teacher_name"></td></tr>
 
@@ -38,7 +35,10 @@
 
       <tr><td style="font-weight: bold;">Semester : </td>
       <td class="semester"></td></tr>
-      
+
+      <tr><td style="font-weight: bold">Type: </td>
+      <td class="type"></td></tr>
+
     </table>
     <script type="text/javascript">
       $(document).ready(function(){
@@ -52,14 +52,12 @@
           $(".course").append(data.course);
           $(".stream").append(data.stream);
           $(".semester").append(data.semester);
+          $(".type").append(data.type);
         })
 
       })
     </script>
     </div>
-
-
-
     <div class="col-sm-12 col-md-8">
       <div class="row hide-on-large-only">
         <div class="heading col-sm-12 subject_name"></div>
@@ -88,7 +86,7 @@
             </tr>
           </thead>
           <tbody>
-            <% for(var i=0; i<lectures.length ; ++i){ 
+            <% for(var i=0; i<lectures.length ; ++i){
             var date = new Date(lectures[i].lecture_timestamp);%>
             <tr class="responsive-rows">
               <td class="responsive-td strong"><%=  moment(date).format('DD/MM/YYYY')  %></td>
@@ -101,12 +99,15 @@
           </tbody>
         </table>
 
-      </div>
-
     </div>
+          <a style="margin-bottom: 1em;" class="pull-left btn waves-effect waves-light right " type="submit" name="action" href ="/teacher/delete/<%=bid%>/<%=sid%>"> Delete Whole
+            <i class="material-icons right">delete_forever</i>
+          </a>
+      </div>
   </div>
 
-  <% for(var i=0; i<lectures.length ; ++i){ 
+
+  <% for(var i=0; i<lectures.length ; ++i){
       var date = new Date(lectures[i].lecture_timestamp);%>
   <div id="modal_<%=lectures[i].lecture_timestamp%>" class="modal">
     <div class="modal-content">
@@ -198,14 +199,14 @@
 		<th>Delete this lecture</th>
 	</thead>
 	<tbody>
-		<% for(var i=lectures.length-1; i>=0 ; --i){ 
+		<% for(var i=lectures.length-1; i>=0 ; --i){
 		var lecture = new Date(lectures[i].lecture_timestamp);%>
 		<tr>
 			<td><%=lecture.toUTCString()%></td>
 			<td><a href="/teacher/edit_attendance/<%=bid%>/<%=sid%>/<%=lectures[i].lecture_timestamp%>">Edit</a></td>
 			<td><a class="delete" href="#modal1">Delete</a></td>
 		</tr>
-     
+
 		<% } %>
 	</tbody>
 </table>
@@ -252,7 +253,7 @@
     });
   });
 
-</script>  
+</script>
 </div> -->
 
 <% include partials/footer %>
