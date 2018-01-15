@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <% if(user != null && user.isTeacher){ %>
 <div id="grad" class="container student-card card">
-  <div class=" card-content row">
+  <div class="card-content row">
     <div class="col-sm-6">
 
       <% if(user != null && user.isDean){ %>
@@ -137,6 +137,7 @@
       margin-left: 20%;
       width: 60%;
     }
+
   }
 </style>
 <% } %>
@@ -156,7 +157,7 @@
     <div class="col-md-4">
     </div>
     <div class="col-md-4">
-      <a href="/student/profile" class="logout btn waves-effect waves-light hide-on-med-and-down">MYACCOUNT</a>
+      <a href="/student/profile" class="logout btn waves-effect waves-light hide-on-med-and-down">MY ACCOUNT<i class="material-icons">settings</i></a>
       <a href="/student/logout" class="logout btn waves-effect waves-light hide-on-med-and-down">LOG OUT</a>
     </div>
   </div>
@@ -176,5 +177,8 @@
       width: 60%;
     }
   }
+  .card-content {
+      padding: 15px!important;
+    }
 </style>
 <% } %>
