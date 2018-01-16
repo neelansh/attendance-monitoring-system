@@ -591,14 +591,15 @@ router.get('/edit_attendance/:batch_id/:subject_id', function(req, res){
 
 router.get("/delete/:batch_id/:subject_id", function(req, res) {
 
-	if (req.isAuthenticated() || req.user.instructor_id == null) {
+
+	if (!req.isAuthenticated() || req.user.instructor_id == null) {
 		res.redirect("/teacher/login");
 	}
 
 	var batch_id 	= req.params.batch_id;
 	var subject_id 	= req.params.subject_id;
 
-	sub.check_teaching(req.user.school, req.user.instructor_id, subject_id, function(err, is_teaching){
+	sub.check_teaching(req.user.school, req.user.instructor_id, req.params.subject_id, function(err, is_teaching){
 		if(err) {
 			throw new Error(err);
 			res.sendStatus(500);
@@ -619,11 +620,11 @@ router.get("/delete/:batch_id/:subject_id", function(req, res) {
 				throw new Error(err);
 			}
 
+			console.log(is_deleted);
+
 			if (is_deleted) {
-				req.header("success_msg", "successfully deleted");
 				res.redirect("/teacher/dashboard");
 			} else {
-				req.header("error_msg", "Something went wrong. Please try again");
 				res.redirect("/teacher/edit_attendance/" + batch_id + "/" + subject_id + "/");
 			}
 		})
