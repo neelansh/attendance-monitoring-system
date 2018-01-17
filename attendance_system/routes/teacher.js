@@ -134,8 +134,8 @@ router.get('/attendance/:batch_id/:subject_id', function(req, res) {
 	if(req.user.instructor_id == null){
 		res.redirect("/teacher/login");
 	}
-	req.checkParams('batch_id', 'invalid batch id parameter').notEmpty().isInt();
-	req.checkParams('subject_id', 'invalid subject id parameter').notEmpty().isInt();
+	req.checkParams('batch_id', 'Invalid parameter.').notEmpty().isInt();
+	req.checkParams('subject_id', 'Invalid Subject code.').notEmpty().isInt();
 	var errors = req.validationErrors();
 	if(errors){
 		res.locals.errors = errors;
@@ -155,7 +155,7 @@ router.get('/attendance/:batch_id/:subject_id', function(req, res) {
 			return;
 		}
 
-		var subjects = sub.getStudentsByBatch(req.user.school, req.params.batch_id, function(err, results){
+		var subjects = sub.getStudentsBySubject(req.user.school, req.params.subject_id, function(err, results){
 			if(err) throw new Error(err);
 			if(results == null){
 				res.sendStatus(404);
@@ -187,11 +187,11 @@ router.post('/attendance/:batch_id/:subject_id', function(req, res) {
 		res.redirect("/teacher/login");
 		return;
 	}
-	req.checkParams('batch_id', 'invalid batch id parameter').notEmpty().isInt();
-	req.checkParams('subject_id', 'invalid subject id parameter').notEmpty().isInt();
-	req.checkBody('hours','teaching hours invalid').notEmpty().isInt();
-	req.checkBody('date','attendance date is empty').notEmpty();
-	req.checkBody('time','attendance time is empty').notEmpty();
+	req.checkParams('batch_id', 'Invalid parameter.').notEmpty().isInt();
+	req.checkParams('subject_id', 'Invalid Subject code.').notEmpty().isInt();
+	req.checkBody('hours','Teaching hours invalid.').notEmpty().isInt();
+	req.checkBody('date','Attendance date is empty.').notEmpty();
+	req.checkBody('time','Attendance time is empty.').notEmpty();
 	var errors = req.validationErrors();
 	if(errors){
 		res.locals.errors = errors;
@@ -224,7 +224,7 @@ router.post('/attendance/:batch_id/:subject_id', function(req, res) {
 				throw new Error(err);
 				res.sendStatus(500);
 			}
-			sub.getStudentsByBatch(req.user.school, req.params.batch_id, function(err, results){
+			sub.getStudentsBySubject(req.user.school, req.params.subject_id, function(err, results){
 				if(err) {
 					throw new Error(err);
 					res.sendStatus(500);
@@ -295,8 +295,8 @@ router.get('/attendance_marked/:batch_id/:subject_id', function(req, res){
 	if(req.user.instructor_id == null){
 		res.redirect("/teacher/login");
 	}
-	req.checkParams('batch_id', 'invalid batch id parameter').notEmpty().isInt();
-	req.checkParams('subject_id', 'invalid subject id parameter').notEmpty().isInt();
+	req.checkParams('batch_id', 'Invalid parameter.').notEmpty().isInt();
+	req.checkParams('subject_id', 'Invalid Subject code.').notEmpty().isInt();
 	var errors = req.validationErrors();
 	if(errors){
 		res.locals.errors = errors;
@@ -315,7 +315,7 @@ router.get('/attendance_marked/:batch_id/:subject_id', function(req, res){
 			res.render('index');
 			return;
 		}
-		sub.getStudentsByBatch(req.user.school, req.params.batch_id, function(err, results){
+		sub.getStudentsBySubject(req.user.school, req.params.subject_id, function(err, results){
 			if(err){
 				throw new Error(err);
 				res.sendStatus(500);
@@ -382,8 +382,8 @@ router.get('/attendance_marked/:batch_id/:subject_id/:enrollment_no', function(r
 	if(req.user.instructor_id == null){
 		res.redirect("/teacher/login");
 	}
-	req.checkParams('batch_id', 'invalid batch id parameter').notEmpty().isInt();
-	req.checkParams('subject_id', 'invalid subject id parameter').notEmpty().isInt();
+	req.checkParams('batch_id', 'Invalid parameter.').notEmpty().isInt();
+	req.checkParams('subject_id', 'Invalid Subject code.').notEmpty().isInt();
 	req.checkParams('enrollment_no', 'invalid enrollment_id parameter').notEmpty().isInt();
 	var errors = req.validationErrors();
 	if(errors){
@@ -555,7 +555,7 @@ router.get('/edit_attendance/:batch_id/:subject_id', function(req, res){
 	if(req.user.instructor_id == null){
 		res.redirect("/teacher/login");
 	}
-	req.checkParams('batch_id', 'invalid batch id parameter').notEmpty().isInt();
+	req.checkParams('batch_id', 'Invalid parameter.').notEmpty().isInt();
 	req.checkParams('subject_id', 'invalid subject id').notEmpty().isInt();
 	var errors = req.validationErrors();
 	if(errors){
@@ -647,8 +647,8 @@ router.get('/edit_attendance/:batch_id/:subject_id/:lecture', function(req, res)
 		res.redirect("/teacher/login");
 		return;
 	}
-	req.checkParams('batch_id', 'invalid batch id parameter').notEmpty().isInt();
-	req.checkParams('subject_id', 'invalid subject id parameter').notEmpty().isInt();
+	req.checkParams('batch_id', 'Invalid parameter.').notEmpty().isInt();
+	req.checkParams('subject_id', 'Invalid Subject code.').notEmpty().isInt();
 	req.checkParams('lecture', 'invalid lecture parameter').notEmpty();
 	var errors = req.validationErrors();
 	if(errors){
@@ -673,12 +673,13 @@ router.get('/edit_attendance/:batch_id/:subject_id/:lecture', function(req, res)
 			res.render('index');
 			return;
 		}
-		sub.getStudentsByBatch(req.user.school, req.params.batch_id, function(err, students){
+		sub.getStudentsBySubject(req.user.school, req.params.subject_id, function(err, students){
 			if(err) throw new Error(err);
 			if(students == null){
 				res.sendStatus(404);
 				return;
 			}
+			console.log(students);
 			att.getAttendanceByLecture(req.user.school, req.params.subject_id, lecture, function(err, attendance){
 				if(err) throw new Error(err);
 				if(attendance.length == 0){
@@ -713,9 +714,9 @@ router.post('/edit_attendance/:batch_id/:subject_id/:lecture', function(req, res
 		return;
 	}
 
-	req.checkParams('batch_id', 'invalid batch id parameter').notEmpty().isInt();
-	req.checkParams('subject_id', 'invalid subject id parameter').notEmpty().isInt();
-	req.checkParams('lecture', 'invalid lecture parameter').notEmpty();
+	req.checkParams('batch_id', 'Invalid parameter.').notEmpty().isInt();
+	req.checkParams('subject_id', 'Invalid Subject code.').notEmpty().isInt();
+	req.checkParams('lecture', 'Invalid lecture Parameter.').notEmpty();
 	var errors = req.validationErrors();
 	if(errors){
 		res.locals.errors = errors;
@@ -750,7 +751,7 @@ router.post('/edit_attendance/:batch_id/:subject_id/:lecture', function(req, res
 				res.sendStatus(500);
 				return;
 			}
-			sub.getStudentsByBatch(req.user.school, req.params.batch_id, function(err, results){
+			sub.getStudentsBySubject(req.user.school, req.params.subject_id, function(err, results){
 				if(err) {
 					throw new Error(err);
 					res.sendStatus(500);
@@ -800,7 +801,7 @@ router.get('/delete_attendance/:batch_id/:subject_id/:lecture', function(req, re
 	if(req.user.instructor_id == null){
 		res.redirect("/teacher/login");
 	}
-	req.checkParams('batch_id', 'invalid batch id parameter').notEmpty().isInt();
+	req.checkParams('batch_id', 'Invalid parameter.').notEmpty().isInt();
 	req.checkParams('subject_id', 'invalid subject id').notEmpty().isInt();
 	req.checkParams('lecture', 'invalid lecture parameter').notEmpty();
 	var errors = req.validationErrors();

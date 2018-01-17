@@ -2,21 +2,21 @@ var express = require('express');
 var router = express.Router();
 var subjects = require("../models/subjects");
 
-router.get('/subjects/:id', function(req, res){
-	if(!req.isAuthenticated()){
-		res.redirect("/");
-	}
-	req.checkParams('id','invalid subject id').notEmpty().isInt();
+// router.get('/subjects/:id', function(req, res){
+// 	if(!req.isAuthenticated()){
+// 		res.redirect("/");
+// 	}
+// 	req.checkParams('id','invalid subject id').notEmpty().isInt();
 
-	subjects.getSubjectById(req.user.school, req.params.id, function(err, results){
-		if(err) throw err;
-		if(results == null){
-			res.sendStatus(404);
-		}
-		// res.setHeader('Content-Type', 'application/json');
-	    res.json(results);
-	});
-});
+// 	subjects.getSubjectById(req.user.school, req.params.id, function(err, results){
+// 		if(err) throw err;
+// 		if(results == null){
+// 			res.sendStatus(404);
+// 		}
+// 		// res.setHeader('Content-Type', 'application/json');
+// 	    res.json(results);
+// 	});
+// });
 
 router.get('/students/:id', function(req, res){
 	if(!req.isAuthenticated()){
