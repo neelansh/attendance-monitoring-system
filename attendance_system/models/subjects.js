@@ -13,6 +13,7 @@ module.exports = {
 	check_teaching : function(school, id, subject_id, callback) {
 		var query = db.get().query("select count(*) from ?? where instructor_code = ? and subject_id = ?",[school+"_subject_allocation", id, subject_id],function(err, rows) {
 			if(err)throw err;
+			console.log(rows)
 			if(rows[0]['count(*)'] === 1) {
 				callback(null, true);
 			}else{
