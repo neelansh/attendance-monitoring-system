@@ -201,16 +201,14 @@ var enableForm = function() {
   $(".preloader-wrapper").css({display : 'none'});
 }
 
-$(function(){
-    $("#upload_link").on('click', function(e){
-        e.preventDefault();
-        $("#uploadstudents:hidden").trigger('click');
-    });
+$("#upload_link").on('click', function(e){
+    e.preventDefault();
+    $("#uploadstudents:hidden").trigger('click');
 });
 
-var ExcelToJSON = function(file) {
-    var reader = new FileReader();
 
+var ExcelToJSON = function(file, type) {
+    var reader = new FileReader();
     reader.onload = function(e) {
       var data = e.target.result;
       var workbook = XLSX.read(data, {
@@ -239,17 +237,17 @@ $('#uploadstudents').change(function(oEvent) {
   console.log('File being verified');
   var oFile = oEvent.target.files[0];
   var sFilename = oFile.name.toLowerCase();
-  console.log(sFilename)
-
+  console.log(sFilename);
+  var filetype = '';
   var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.xlsx|.xls)$/; 
   if(regex.test(sFilename)) {   
-         var xlsxflag = false; 
+         filetype = 'xls'; 
          /*Flag for checking whether excel is .xls format or .xlsx format*/  
          if (sFilename.indexOf(".xlsx") > 0) {  
-             xlsxflag = true;  
+             filetype = 'xlsx';
          }
-         
-    ExcelToJSON(oFile);  
+
+    ExcelToJSON(oFile, filetype);  
   } 
   else {
     console.log('Invalid file');
