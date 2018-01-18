@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <% include partials/header %>
-
 <div class="container drop-down-school">
   <div class="row login-sel-cont">
     <div class="col-sm-offset-4 col-sm-4">
@@ -75,9 +74,32 @@
                 <label>Subject Selection</label>
               </div>
             </div>
+            <div class="row">
+              <input id="uploadstudents" type="file"/>
+              <a href="" class="submit submitbtn-bottom" id="upload_link" type="file" name="studentslist">
+                    UPLOAD STUDENT LIST
+              </a>
+            </div>
+            <div class="row">
+             <div class="col-sm-6"> 
+            <div class="preloader-wrapper small active" style="display: none">
+              <div class="spinner-layer spinner-green-only">
+                <div class="circle-clipper left">
+                  <div class="circle"></div>
+                </div><div class="gap-patch">
+                  <div class="circle"></div>
+                </div><div class="circle-clipper right">
+                  <div class="circle"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6">
             <button style="margin-bottom: 1em;" class="btn waves-effect waves-light right" type="submit" name="action">Submit
              <i class="material-icons right">send</i>
            </button>
+         </div>
+         </div>
           </div>
         </form>
       </div>
@@ -87,7 +109,8 @@
     </div>
   </div>
 </div>
-
+<script src="/javascripts/jszip.js"></script>
+<script src="/javascripts/xlsx.min.js"></script>
 <script type="text/javascript">
    $(document).ready(function() {
     $('select').material_select();
@@ -168,7 +191,99 @@
    });
   });
 
+var disableForm = function() {
+  $(".login-box-form :input").prop("disabled", true);
+  $(".preloader-wrapper").css({display : 'block'});
+}
+
+var enableForm = function() {
+  $(".login-box-form :input").prop("disabled", false);
+  $(".preloader-wrapper").css({display : 'none'});
+}
+
+$(function(){
+    $("#upload_link").on('click', function(e){
+        e.preventDefault();
+        $("#uploadstudents:hidden").trigger('click');
+    });
+});
+
+var ExcelToJSON = function(file) {
+    var reader = new FileReader();
+
+    reader.onload = function(e) {
+      var data = e.target.result;
+      var workbook = XLSX.read(data, {
+        type: 'binary'
+      });
+      workbook.SheetNames.forEach(function(sheetName) {
+        // Here is your object
+        var XL_row_object = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
+        var json_object = JSON.stringify(XL_row_object);
+        console.log(json_object);
+
+      })
+
+    };
+
+    reader.onerror = function(ex) {
+      console.log(ex);
+    };
+
+    reader.readAsBinaryString(file);
+
+};
+
+
+$('#uploadstudents').change(function(oEvent) {
+  console.log('File being verified');
+  var oFile = oEvent.target.files[0];
+  var sFilename = oFile.name.toLowerCase();
+  console.log(sFilename)
+
+  var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.xlsx|.xls)$/; 
+  if(regex.test(sFilename)) {   
+         var xlsxflag = false; 
+         /*Flag for checking whether excel is .xls format or .xlsx format*/  
+         if (sFilename.indexOf(".xlsx") > 0) {  
+             xlsxflag = true;  
+         }
+         
+    ExcelToJSON(oFile);  
+  } 
+  else {
+    console.log('Invalid file');
+  }    
+});
+
+
 
 </script>
+<style type="text/css">
+.submitbtn-bottom:hover {
+  box-shadow: 0 3px 3px 0 rgba(0,0,0,0.14), 0 1px 7px 0 rgba(0,0,0,0.12), 0 3px 1px -1px rgba(0,0,0,0.2);
+}
+
+.submitbtn-bottom {
+  display: inline-block;
+  padding: 8px 12px 8px 12px;
+  text-align: center;
+  width: 100%;
+  background-color: crimson;
+  border-radius: 5px;
+  cursor: pointer;
+  color: white;
+  box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);
+  transition: .2s ease-out;
+    transition-property: initial;
+    transition-duration: 0.2s;
+    transition-timing-function: ease-out;
+}
+
+#upload{
+    display:none
+}
+
+</style>
 
 <% include partials/footer %>
