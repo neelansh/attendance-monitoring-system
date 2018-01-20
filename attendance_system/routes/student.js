@@ -2,57 +2,91 @@ var express = require('express');
 var router = express.Router();
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
-
+var GoogleStrategy =require('passport-google-oauth').OAuth2Strategy;
 var student = require('../models/students');
 var att = require('../models/attendance');
 var sub = require("../models/subjects");
 
 /* GET student login page. */
-router.get('/login', function(req, res, next) {
-	if(req.isAuthenticated() && req.user.enrollment_no != null){
-		res.redirect("/student/dashboard");
-	}
-	if(req.isAuthenticated() && req.user.instructor_id != null){
-		res.redirect("/teacher/dashboard");
-		return;
-	}
-	res.render("student_login");
-});
+// router.get('/login', function(req, res, next) {
+// 	if(req.isAuthenticated() && req.user.enrollment_no != null){
+// 		res.redirect("/student/dashboard");
+// 	}
+// 	if(req.isAuthenticated() && req.user.instructor_id != null){
+// 		res.redirect("/teacher/dashboard");
+// 		return;
+// 	}
+// 	res.render("student_login");
+// });
 
 
-passport.use('local.student',new LocalStrategy({
-	usernameField: 'enrollment_no',
-	passwordField: 'password',
-	passReqToCallback: true
-},
-function(req, username, password, done) {
-	if(req.body.school !== 'usict'){
-		return done(null, false, {message: 'Unknown School'});
-	}
-	var school = req.body.school;
-	student.getUserById(school, username, function(err, user){
-		if(err) throw err;
-		if(!user){
-			console.log("Unknown user");
-			return done(null, false, {message: 'Unknown User'});
-		}
+// passport.use('google.student',new LocalStrategy({
+// 	usernameField: 'enrollment_no',
+// 	passwordField: 'password',
+// 	passReqToCallback: true
+// },
+// function(req, username, password, done) {
+// 	if(req.body.school !== 'usict'){
+// 		return done(null, false, {message: 'Unknown School'});
+// 	}
+// 	var school = req.body.school;
+// 	student.getUserById(school, username, function(err, user){
+// 		if(err) throw err;
+// 		if(!user){
+// 			console.log("Unknown user");
+// 			return done(null, false, {message: 'Unknown User'});
+// 		}
 
-		student.comparePassword(password, user.password, function(err, isMatch){
-			if(err) throw err;
-			if(isMatch){
-				console.log("valid password");
-				user.school = school;
-				return done(null, user);
-			} else {
-				console.log("invalid pass");
-				return done(null, false, {message: 'Invalid password'});
-			}
-		});
-	});
-}));
+// 		student.comparePassword(password, user.password, function(err, isMatch){
+// 			if(err) throw err;
+// 			if(isMatch){
+// 				console.log("valid password");
+// 				user.school = school;
+// 				return done(null, user);
+// 			} else {
+// 				console.log("invalid pass");
+// 				return done(null, false, {message: 'Invalid password'});
+// 			}
+// 		});
+// 	});
+// }));
 
-router.post('/login',
-	passport.authenticate('local.student',{successRedirect: "/student/dashboard", failureRedirect: "/student/login",failureFlash: true}));
+// router.post('/login',
+// 	passport.authenticate('google.student',{successRedirect: "/student/dashboard", failureRedirect: "/student/login",failureFlash: true}));
+
+passport.use(new GoogleStrategy({
+    clientID: '502588801094-k02hi8pp2p7og5v55ga6pfam7g5qs7b2.apps.googleusercontent.com',
+    clientSecret: '',
+    callbackURL: "http://localhost:9000/student/auth/google/callback"
+  },
+  function(accessToken, refreshToken, profile, done) {
+    // student.findOrCreate({ googleId: profile.id }, function (err, user) {
+    //   return done(err, user);
+    // });
+  	console.log("accessToken");
+  	console.log(accessToken);
+  	console.log("refreshToken");
+  	console.log(refreshToken);
+  	console.log("profile");
+  	console.log(profile);
+  	
+  	//To Be Modified as per needs //default user function call
+  	var school="usict";
+  	student.getUserById(school,2816403215,function(err,user){
+  	user.school='usict';
+  	return done(err,user);
+  	});
+  
+  }
+));
+
+router.get('/login',passport.authenticate('google', { scope: ['email profile'] }));
+
+router.get('/auth/google/callback',
+    passport.authenticate('google', { failureRedirect: '/login' , successRedirect:"/student/dashboard" }));
+
+
+
 
 router.get('/logout', function(req, res){
 	req.logout();
