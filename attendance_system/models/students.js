@@ -12,6 +12,12 @@ module.exports = {
 		});
 	},
 
+	getUserByEmail : function(school, email, callback) {
+		var query = db.get().query("select * from ?? where email = ?",[school+"_students", email],function(err, rows) {
+			if(err)throw err;
+			callback(null, rows[0]);
+		});
+	},
 	getUserById : function(school, id, callback) {
 		var query = db.get().query("select * from ?? where enrollment_no = ?",[school+"_students", id],function(err, rows) {
 			if(err)throw err;

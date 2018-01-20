@@ -13,7 +13,8 @@ var methodOverride      = require('method-override');
 var multer              = require("multer");
 var upload              = multer({ dest: 'public/test_images' });
 
-
+//Env File
+require('dotenv').config();
 var routes = require('./routes/index');
 // var users = require('./routes/users');
 
