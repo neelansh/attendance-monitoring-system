@@ -13,8 +13,6 @@ module.exports = {
 	},
 
 	getUserById : function(school, id, callback) {
-		console.log("School Is :- " + school);
-		console.log("id Is:- "+id);
 		var query = db.get().query("select * from ?? where enrollment_no = ?",[school+"_students", id],function(err, rows) {
 			if(err)throw err;
 			callback(null, rows[0]);
