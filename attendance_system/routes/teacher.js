@@ -424,7 +424,7 @@ router.get('/attendance_marked/:batch_id/:subject_id/:enrollment_no', function(r
 router.get('/update_information', function(req, res) {
 		var prev_links = [
 		{'text' : '<i class="tiny material-icons">home</i> Home','link' :'/'},
-		{'text' : 'My Account' , 'link': '/teacher/profile' + req.params.batch_id + '/' + req.params.subject_id}
+		{'text' : 'My Account' , 'link': '/teacher/profile'}
 		];
 		var curr_link = 'Update Profile';
 

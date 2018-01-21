@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<% include partials/header %>
+
+<div class="container drop-down-school">
+  <div class="row login-sel-cont">
+    <div class="col-sm-offset-4 col-sm-4">
+      <div class="card">
+        <div class="col-lg-12">
+        </div>
+       <!-- Card Content -->
+        <div class="container-fluid custom-container">
+          <div class="row custom-full-row">
+            <div class="verticalLine">
+                <div class="login-card-title">
+                  Update Information
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <form class="login-box-form" action="update_information?_method=PUT" method="POST">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="input-field col s12">
+                <input name="name" value="<%= studentInformation.name %>" id="name" type="text" class="validate" required>
+                <label class="active" for="name">Name</label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="input-field col s12">
+                <input name="phone" minlength=10 maxlength=10 id="phone" value="<%= studentInformation.phone %>" type="text" class="validate" required>
+                <label class="active" for="phone">Mobile number</label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="input-field col s12">
+                <input name="email" id="email" type="text" value="<%= studentInformation.email %>" class="validate" required>
+                <label class="active" for="email" data-error="wrong" data-success="right">Email</label>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="input-field col s12">
+                <input name="course" id="course" type="text" value="<%= studentInformation.course %>" class="validate" required>
+                <label class="active" for="course" data-error="wrong" data-success="right">Course</label>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="input-field col s12">
+                <input name="stream" id="stream" type="text" value="<%= studentInformation.stream %>" class="validate" required>
+                <label class="active" for="stream" data-error="wrong" data-success="right">Stream</label>
+              </div>
+            </div>
+
+            <div class="row">
+            </div>
+
+            <button style="margin-bottom: 1em;" class="btn waves-effect waves-light right" type="submit" name="action">               Update
+            <i class="material-icons right">send</i>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="col-sm-2">
+
+    </div>
+
+  </div>
+</div>
+
+<% include partials/footer %>
