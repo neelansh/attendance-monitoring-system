@@ -177,7 +177,6 @@
 
   $('#school').change(function () {
     var school = $('#school').find(":selected").text().toLowerCase();
-    console.log(json_object);
     var input = jQuery('<input name="student_list" value="student_list" style="display: none" id="student_list">');
     jQuery('form').append(input);
 
@@ -203,7 +202,7 @@
    });
   });
 
-  $('#subject_code').keyup(function() {
+  $('#subject_code').change(function() {
     var subject_code = $('#subject_code').val().toUpperCase().trim();
     var final_subject_code = "";
     var checkdash = false;
@@ -234,6 +233,7 @@
         $("#stream option").remove();
 
         if (result.length != 0) {
+          $('#stream_input').css("display", "none");
           for (var x = 0;x< result.length;x++) {
             if (x == 0) {
               $('#type').val(result[x].type);
@@ -274,7 +274,7 @@
 
   })
 
-  $('#course').keyup(function () {
+  $('#course').change(function () {
     var course = $('#course').val().toUpperCase().trim();
     var final_course = "";
 
@@ -292,20 +292,20 @@
     $('#semester_div').css("display", "block");
   });
 
-  $('#semester').keyup(function () {
+  $('#semester').change(function () {
     $("#subject_name_div").css("display", "block");
   });
 
-  $('#stream_input').keyup(function() {
+  $('#stream_input').change(function() {
     var stream = $('#stream_input').val();
     $('#stream_input').val(stream.toUpperCase());
   })
 
-  $('#subject_name').keyup(function() {
+  $('#subject_name').change(function() {
     $('#type_div').css("display", "block");
   })
 
-  $('#type').keyup(function() {
+  $('#type').change(function() {
     var type = $('#type').val().toUpperCase();
     $('#type').val(type);
 
@@ -319,7 +319,7 @@
     }
   })
 
-  $('.with-gap').keyup(function() {
+  $('.with-gap').change(function() {
     var value = $('')
     var subject_name = $('#subject_name').val();
     $('#subject_name').val(subject_name.slice(0, -8));
@@ -356,11 +356,9 @@ var ExcelToJSON = function(file, type) {
         var XL_row_object = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
         json_object = JSON.stringify(XL_row_object);
 
-        console.log(typeof json_object);
         var input = jQuery('<input name="student_list" value="student_list" style="display: none" id="student_list">');
         jQuery('form').append(input);
         $('#student_list').val(json_object);
-        console.log($('#student_list').val());
       })
     };
 
