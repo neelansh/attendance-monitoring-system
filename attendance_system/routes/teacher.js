@@ -142,7 +142,7 @@ router.get('/attendance/:batch_id/:subject_id', function(req, res) {
 		res.render('index');
 		return;
 	}
-
+	
 	sub.check_teaching(req.user.school, req.user.instructor_id, req.params.subject_id, function(err, is_teaching){
 		if(err) {
 			throw new Error(err);

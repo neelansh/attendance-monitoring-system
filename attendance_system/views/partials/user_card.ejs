@@ -20,6 +20,7 @@
       </div>
     </div>
     <div class="col-sm-6">
+      <br>
       <% if(user != null && user.instructor_id != null) {%>
       <div class='greeting'>HELLO</div>
       <div class="student-name details-field"><%=user.name%></div>
@@ -27,6 +28,7 @@
       <% } %>
     </div>
     <div class="col-sm-6">
+      <br>
       <img src="/instructor_images/<%=user.school%>/<%-user.instructor_id%>.jpg" class="instructor_image">
       <div>
         <form action="/upload" method="post" enctype ="multipart/form-data">

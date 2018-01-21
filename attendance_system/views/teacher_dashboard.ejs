@@ -38,6 +38,7 @@
 				<span class="sub-course">ACTIONS:</span>
 			</div>
 		</div>
+		<% if(subjects.length) { %>
 		<% for(var i=0; i<subjects.length ; ++i){ %>
 		<div class="card valign-wrapper" style="width: 100%; padding: 10px;">
 			<div class="col-md-4 valign center-align">
@@ -55,7 +56,9 @@
 				<a href="/teacher/edit_attendance/<%=subjects[i].batch_id%>/<%=subjects[i].subject_id%>/" class=" btn waves-effect waves-light actionbtn">Edit</a>
 			</div>
 		</div>
-		
+		<% } %>
+		<% } else { %>
+		<h4 class="marked-heading">You have not added your subjects yet. Please add your subjects to be listed here.</h4>
 		<% } %>
 	</div>
 </div>
@@ -63,6 +66,16 @@
 <% include partials/footer %>
 
 <style type="text/css">
+ .marked-heading{
+  font-size: 1em;
+  line-height: 110%;
+  margin: 1.14rem 0 0.912rem 0;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  text-align: center;
+  font-weight: 900;
+  color: #999;
+}
 	.parent-wrapper {
 		height:100%;
 	}
