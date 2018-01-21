@@ -62,7 +62,7 @@ class UsictStudents(models.Model):
 
 
 class UsictSubjectAllocation(models.Model):
-    subject_id = models.IntegerField(primary_key=True)
+    subject_id = models.AutoField(primary_key=True)
     batch_id = models.ForeignKey('UsictBatchAllocation', on_delete=models.DO_NOTHING, db_column='batch_id')
     subject_code = models.CharField(max_length=20)
     instructor_code = models.ForeignKey('UsictTeacher', on_delete=models.DO_NOTHING, db_column='instructor_code')

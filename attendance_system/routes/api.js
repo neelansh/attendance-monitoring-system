@@ -44,6 +44,37 @@ router.get('/students/:id', function(req, res){
 	});
 });
 
+router.get('/check_subjects', function(req, res) {
+	if (!req.isAuthenticated()) {
+		res.redirect("/teacher/login");
+	}
+
+	if (req.user.instructor_id == null) {
+		res.redirect("/teacher/login");
+	}
+
+	if (!req.query.subject_code) {
+		req.flash("error_msg", "please fill the form correctly");
+		return;
+	}
+
+
+	var subject_code = req.query.subject_code;
+
+	subjects.check_subjects(req.user.school, subject_code, function(err, results) {
+		if (err) {
+			throw err;
+		}
+		if (results ==  null) {
+			res.sendStatus(404);
+		}
+
+		console.log(results);
+		res.json(results);
+
+	})
+});
+
 router.get('/get_course', function(req, res) {
 	if (!req.isAuthenticated()) {
 		res.redirect("/teacher/login")
@@ -125,7 +156,6 @@ router.post("/add_subject_to_teacher", function(req, res) {
 
 	console.log(req.body);
 
-
 	if (!req.isAuthenticated()) {
 		res.redirect("/teacher/login");
 	}
@@ -134,17 +164,29 @@ router.post("/add_subject_to_teacher", function(req, res) {
 	  	res.redirect("/teacher/login");
 	}
 
-	if (!req.body.school || !req.body.course || !req.body.stream || !req.body.semester || !req.body.subjects) {
+	if (!req.body.school || !req.body.subject_code || !req.body.course || !req.body.type || !req.body.semester || !req.body.subject_name) {
 		req.flash("error_msg", "something went wrong please select dropdown in correct manner");
 		return;
 	}
 
 	var subjectDetails = {
 		school 			: req.body.school,
+		subject_code	: req.body.subject_code,
 		course 			: req.body.course,
-		stream 			: req.body.stream,
 		semester		: req.body.semester,
-		subject_name	: req.body.subjects
+		subject_name	: req.body.subject_name,
+		type 			: req.body.type
+	}
+
+	if (req.body.stream_input) {
+		subjectDetails.stream = req.body.stream_input;
+
+	} else if (req.body.stream_select) {
+		subjectDetails.stream = req.body.stream_select;
+
+	} else {
+		req.flash("error_msg", "stream input is not properly filled. Please fill it again properly");
+		return;
 	}
 
 	subjects.addSubjectToTeacher(subjectDetails, req.user.instructor_id, function(err, results) {
@@ -161,6 +203,9 @@ router.post("/add_subject_to_teacher", function(req, res) {
 			res.redirect("/teacher/dashboard");
 		}
 	})
+
 })
+
+
 
 module.exports = router;

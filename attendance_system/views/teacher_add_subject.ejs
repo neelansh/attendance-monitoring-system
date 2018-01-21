@@ -31,7 +31,72 @@
               </div>
             </div>
 
+            <div class="row" id="subject_code_div" style="display: none">
+              <div class="input-field col s12">
+                <input name="subject_code" class="validate" type="text" id="subject_code" placeholder="">
+                <label class="active">Enter Subject code</label>
+              </div>
+
+            </div>
+
             <div class="row" id="course_div" style="display: none">
+              <div class="input-field col s12">
+                <input name="course" class="validate" type="text" id="course" placeholder="">
+                <label class="active">Course</label>
+              </div>
+            </div>
+
+            <div class="row" id="stream_div" style="display: none">
+              <div class="input-field col s12">
+                <select id="stream_select" name="stream_select">
+                </select>
+              </div>
+            </div>
+
+            <div class="row" id="stream_input_div" style="display: none">
+              <div class="input-field col s12">
+                <input name="stream_input" class="validate" type="text" id="stream_input" placeholder="">
+                <label class="active">Stream</label>
+              </div>
+            </div>
+
+
+            <div class="row" id="semester_div" style="display: none">
+              <div class="input-field col s12">
+                <input name="semester" class="validate" type="text" id="semester" minlength="1" maxlength="1" placeholder="">
+                <label class="active">Semester</label>
+              </div>
+            </div>
+
+            <div class="row" id="subject_name_div" style="display: none">
+              <div class="input-field col s12">
+                <input name="subject_name" class="validate" type="text" id="subject_name" placeholder="">
+                <label class="active">Subject name</label>
+              </div>
+            </div>
+
+            <div class="row" id="type_div" style="display: none">
+              <div class="input-field col s12">
+                <input name="type" class="validate" type="text" id="type" placeholder="">
+                <label class="active">Type</label>
+              </div>
+            </div>
+
+            <div class="row" id="group_div" style="display: none">
+              <div class="col s4">
+                <input  class="with-gap" name="group1" type="radio" id="test1" value="Group A" />
+                <label for="test1">Group A</label>
+              </div>
+              <div class="col s4">
+                <input class="with-gap" name="group1" type="radio" id="test2" value="Group B" />
+                <label for="test2">Group B</label>
+              </div>
+              <div class="col s4">
+                <input  class="with-gap" name="group1" type="radio" id="test3" value="Group C" />
+                <label for="test3">Group C</label>
+              </div>
+            </div>
+<!--             <div class="row" id="course_div" style="display: none">
               <div class="input-field col s12">
                 <select id="course" name="course">
                   <option value="" disabled selected>Choose course</option>
@@ -40,14 +105,6 @@
               </div>
             </div>
 
-            <div class="row" id="stream_div" style="display: none">
-              <div class="input-field col s12">
-                <select id="stream" name="stream">
-                  <option value="" disabled selected>Choose stream</option>
-                </select>
-                <label>Stream Selection</label>
-              </div>
-            </div>
 
             <div class="row" id="semester_div" style="display: none">
               <div class="input-field col s12">
@@ -73,15 +130,15 @@
                 </select>
                 <label>Subject Selection</label>
               </div>
-            </div>
+            </div> -->
             <div class="row">
-              <input id="uploadstudents" type="file"/>
+              <input name="" id="uploadstudents" type="file"/>
               <a href="" class="submit submitbtn-bottom" id="upload_link" type="file" name="studentslist">
                     UPLOAD STUDENT LIST
               </a>
             </div>
             <div class="row">
-             <div class="col-sm-6"> 
+             <div class="col-sm-6">
             <div class="preloader-wrapper small active" style="display: none">
               <div class="spinner-layer spinner-green-only">
                 <div class="circle-clipper left">
@@ -112,20 +169,23 @@
 <script src="/javascripts/jszip.js"></script>
 <script src="/javascripts/xlsx.min.js"></script>
 <script type="text/javascript">
+
+  var json_object;
    $(document).ready(function() {
     $('select').material_select();
   });
 
   $('#school').change(function () {
     var school = $('#school').find(":selected").text().toLowerCase();
-
+    console.log(json_object);
+    console.log("************************");
     $.ajax({
       url: "/api/get_course",
       type: 'GET',
       data: { school: school },
       success: function(result) {
 
-        $("#course_div").css("display", "block");
+        $("#subject_code_div").css("display", "block");
         $('select').material_select();
 
         $.each(result, function(key, value) {
@@ -141,55 +201,130 @@
    });
   });
 
-  $('#course').change(function () {
-    var school = $('#school').find(":selected").text().toLowerCase();
-    var course = $('#course').find(":selected").text();
+  $('#subject_code').keyup(function() {
+    var subject_code = $('#subject_code').val().toUpperCase().trim();
+    var final_subject_code = "";
+    var checkdash = false;
 
-    $("#stream_div").css("display", "block");
-    $("#semester_div").css("display", "block");
+    for (var x = 0; x<subject_code.length;) {
+      while (x<subject_code.length && subject_code.charAt(x) == ' '|| subject_code.charAt(x) == '-') {
+        x++;
+      }
 
+      if (x<subject_code.length && !checkdash && subject_code.charCodeAt(x)>= 48 && subject_code.charCodeAt(x)<=57) {
+        final_subject_code = final_subject_code + "-";
+        checkdash = true;
+      }
+      final_subject_code = final_subject_code + subject_code.charAt(x);
+      x++;
+    }
+
+    $('#subject_code').val(final_subject_code);
+
+    $('#course_div').css("display", "block");
 
     $.ajax({
-      url: "/api/get_stream",
+      url: '/api/check_subjects',
       type: 'GET',
-      data: { school: school, course: course },
+      data: { subject_code: final_subject_code },
       success: function(result) {
 
-          $.each(result, function(key, value) {
-            $('#stream').append($("<option></option>").attr("value",value.stream).text(value.stream));
+        $("#stream option").remove();
+
+        if (result.length != 0) {
+          for (var x = 0;x< result.length;x++) {
+            if (x == 0) {
+              $('#type').val(result[x].type);
+              $('#course').val(result[x].course);
+              $('#semester').val(result[x].semester);
+              $('#type_div').css("display", "block");
+              $('#subject_name_div').css("display", "block");
+              $('#course_div').css("display", "block");
+              $('#semester_div').css("display", "block");
+              $("#stream_div").css("display", "block");
+              $('#subject_name').val(result[x].subject_name);
+
+              $(':radio[value="' + result[x].subject_name.slice(-7) +  '"]').attr('checked', 'checked');
+
+
+              if(result[x].type.toUpperCase() == "PRACTICAL") {
+                $('#group_div').css("display", "block");
+              }
+
+            }
+
+            $('#stream_select').append($("<option></option>").attr("value",result[x].stream).text(result[x].stream));
             $('select').material_select();
-          });
-      },
-      error: function(result) {
-        alert("there is some error .")
+          }
+        } else {
+              // $('#type_div').css("display", "block");
+              // $('#subject_name_div').css("display", "block");
+              $('#course_div').css("display", "block");
+              // $('#semester_div').css("display", "block");
+              // $("#stream_div").css("display", "block");
+
+        }
+
+      }, error: function(result) {
+         alert("there is some error.")
       }
-   });
+    })
+
+  })
+
+  $('#course').keyup(function () {
+    var course = $('#course').val().toUpperCase().trim();
+    var final_course = "";
+
+    for (var x = 0; x<course.length;) {
+      while (x<course.length && course.charAt(x) == ' '|| course.charAt(x) == '.') {
+        x++;
+      }
+
+      final_course = final_course + course.charAt(x);
+      x++;
+    }
+
+    $('#course').val(final_course);
+    $('#stream_input_div').css('display', 'block');
+    $('#semester_div').css("display", "block");
   });
 
-  $('#semester').change(function () {
-    var school    = $('#school').find(":selected").text().toLowerCase();
-    var course    = $('#course').find(":selected").text();
-    var stream    = $('#stream').find(":selected").text();
-    var semester  = $('#semester').find(":selected").text();
-
-    $("#subjects_div").css("display", "block");
-
-    $.ajax({
-      url: "/api/get_subjects",
-      type: 'GET',
-      data: { school: school, course: course, stream: stream, semester: semester },
-      success: function(result) {
-
-          $.each(result, function(key, value) {
-             $('#subjects').append($("<option></option>").attr("value",value.subject_name).text(value.subject_name));
-             $('select').material_select();
-          });
-      },
-      error: function(result) {
-        alert("there is some error.")
-      }
-   });
+  $('#semester').keyup(function () {
+    $("#subject_name_div").css("display", "block");
   });
+
+  $('#stream_input').keyup(function() {
+    var stream = $('#stream_input').val();
+    $('#stream_input').val(stream.toUpperCase());
+  })
+
+  $('#subject_name').keyup(function() {
+    $('#type_div').css("display", "block");
+  })
+
+  $('#type').keyup(function() {
+    var type = $('#type').val().toUpperCase();
+    $('#type').val(type);
+
+    if (type == "THEORY") {
+      $('#group_div').css("display", "block");
+    }
+
+    if(type == "PRACTICAL") {
+      $('#group_div').css("display", "block");
+
+    }
+  })
+
+  $('.with-gap').keyup(function() {
+    var value = $('')
+    var subject_name = $('#subject_name').val();
+    $('#subject_name').val(subject_name.slice(0, -8));
+    subject_name = $('#subject_name').val() + "_" + $(this).val();
+    $('#subject_name').val(subject_name)
+
+  })
 
 var disableForm = function() {
   $(".login-box-form :input").prop("disabled", true);
@@ -217,11 +352,10 @@ var ExcelToJSON = function(file, type) {
       workbook.SheetNames.forEach(function(sheetName) {
         // Here is your object
         var XL_row_object = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
-        var json_object = JSON.stringify(XL_row_object);
+        json_object = JSON.stringify(XL_row_object);
+
         console.log(json_object);
-
       })
-
     };
 
     reader.onerror = function(ex) {
@@ -233,25 +367,25 @@ var ExcelToJSON = function(file, type) {
 };
 
 
-$('#uploadstudents').change(function(oEvent) {
+$('#uploadstudents').keyup(function(oEvent) {
   console.log('File being verified');
   var oFile = oEvent.target.files[0];
   var sFilename = oFile.name.toLowerCase();
   console.log(sFilename);
   var filetype = '';
-  var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.xlsx|.xls)$/; 
-  if(regex.test(sFilename)) {   
-         filetype = 'xls'; 
-         /*Flag for checking whether excel is .xls format or .xlsx format*/  
-         if (sFilename.indexOf(".xlsx") > 0) {  
+  var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.xlsx|.xls)$/;
+  if(regex.test(sFilename)) {
+         filetype = 'xls';
+         /*Flag for checking whether excel is .xls format or .xlsx format*/
+         if (sFilename.indexOf(".xlsx") > 0) {
              filetype = 'xlsx';
          }
 
-    ExcelToJSON(oFile, filetype);  
-  } 
+    ExcelToJSON(oFile, filetype);
+  }
   else {
     console.log('Invalid file');
-  }    
+  }
 });
 
 
