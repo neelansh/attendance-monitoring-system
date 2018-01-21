@@ -131,12 +131,12 @@ router.get('/get_attendance', function(req, res){
 });
 
 router.get('/profile', function(req, res){
-	
+
 	var prev_links = [
 	{'text' : '<i class="tiny material-icons">home</i> Home','link' :'/'},
 	];
 	var curr_link = 'profile';
-	
+
 
 	if(!req.isAuthenticated()){
 		res.redirect("/student/login");
@@ -201,12 +201,12 @@ router.post('/change_password', function(req, res){
 
 
 router.get('/attendance/:subject_id', function(req, res){
-	
+
 	var prev_links = [
 	{'text' : '<i class="tiny material-icons">home</i> Home','link' :'/'},
 	];
-	
-	
+
+
 	if(!req.isAuthenticated()){
 		res.redirect("/student/login");
 	}
@@ -232,10 +232,10 @@ router.get('/attendance/:subject_id', function(req, res){
 					res.sendStatus(404);
 				}
 			subject = {
-				
+
 				'subjectName' : subject[0].subject_name,
 				'subjectCode' : subject[0].subject_code,
-				'subjectType' : subject[0].type,			
+				'subjectType' : subject[0].type,
 				'instructor' : subject[0].name
 			}
 			var curr_link = subject['subjectName'] + ' ( ' + subject['subjectCode'] + ' )';
@@ -256,6 +256,5 @@ router.get('/:something', function(req, res) {
 
 	res.redirect("/student/dashboard");
 });
-
 
 module.exports = router;
