@@ -366,6 +366,7 @@ router.get('/attendance_marked/:batch_id/:subject_id', function(req, res){
 					}
 					absent = dict_absent;
 
+					console.log(students);
 					res.render('view_marked_attendance_teacher',{'prevLinks':prev_links, 'currLink' : curr_link, 'students': students, 'present': present, 'absent': absent, 'subject_id': req.params.subject_id, 'from_date': from_date, 'to_date': to_date, 'moment': moment});
 				});
 			});
@@ -613,7 +614,7 @@ router.get("/delete/:batch_id/:subject_id", function(req, res) {
 		}
 
 
-		att.deleteWholeAttendance(req.user.school, "30742", subject_id, batch_id, function(err, is_deleted) {
+		att.deleteWholeAttendance(req.user.school,subject_id, batch_id, function(err, is_deleted) {
 			if (err) {
 				console.log(err);
 				res.sendStatus(500);

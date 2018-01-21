@@ -77,10 +77,10 @@ WSGI_APPLICATION = 'deanmodule.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'sdc2',
+        'NAME': 'sdc_ams',
         'HOST': 'localhost',
         'PORT': 3306,
-        'PASSWORD': 'food$1969',
+        'PASSWORD': '9630',
         'USER': 'root',
     }
 }
