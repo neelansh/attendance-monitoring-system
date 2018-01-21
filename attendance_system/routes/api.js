@@ -1,7 +1,9 @@
 var express = require('express');
 var router = express.Router();
 var subjects = require("../models/subjects");
+var att = require('../models/attendance');
 
+var _ = require('underscore');
 // router.get('/subjects/:id', function(req, res){
 // 	if(!req.isAuthenticated()){
 // 		res.redirect("/");
@@ -151,6 +153,25 @@ router.get("/get_subjects", function(req, res) {
 	})
 
 })
+
+router.get('/:subject_id/attendance', function(req,res) {
+	if (!req.isAuthenticated()) {
+		res.redirect("/teacher/login");
+	}
+
+	if (req.user.instructor_id == null) {
+	  	res.redirect("/teacher/login");
+	}
+	att.getAttendanceBySubject(req.user.school, req.params.subject_id,function(err, attendance){
+			attendance = _.chain(attendance).groupBy("student").value();
+			for (var key in attendance){
+				for (var i in attendance[key])
+					delete attendance[key][i]['student'];
+			}
+			res.json(attendance);
+	});
+})
+
 
 router.post("/add_subject_to_teacher", function(req, res) {
 

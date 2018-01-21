@@ -177,7 +177,8 @@
             today: 'Today',
             clear: 'Clear',
             close: 'Ok',
-            closeOnSelect: true // Close upon selecting a date,
+            closeOnSelect: true, // Close upon selecting a date,
+            max: 'Today'
           });
       </script>
 
@@ -282,6 +283,8 @@
             <tr>
               <th class="responsive-td">Roll No.</th>
               <th class="responsive-td">Name</th>
+              <th class="responsive-td">Past Attendance</th>
+
               <th class="responsive-td">Attendance</th>
             </tr>
           </thead>
@@ -291,6 +294,7 @@
              
               <td class="responsive-td"><%=students[i]['enrollment_no']%></td>
               <td class="responsive-td strong"><%=students[i]['name']%></td>
+              <td class="responsive-td attendance_history" style="overflow-x: scroll; text-overflow: '-'!important"><%=students[i]['enrollment_no']%></td>
               <td class="responsive-td">
               <form id="radio_<%=students[i]['enrollment_no']%>">
                 <input id="present_<%=students[i]['enrollment_no']%>" type="radio" class="attendance_present" name="<%=students[i]['enrollment_no']%>" value="P"/>
@@ -298,11 +302,11 @@
                 <% if(typeof edit_mode  !== 'undefined' && edit_mode){ %>
                   <input id="absent_<%=students[i]['enrollment_no']%>" type="radio" class="attendance_absent" name="<%=students[i]['enrollment_no']%>" value="A"/>
                 <% }else{ %>
-                  <input id="absent_<%=students[i]['enrollment_no']%>" type="radio" class="attendance_absent" name="<%=students[i]['enrollment_no']%>" value="A" checked/>
+                  <input id="absent_<%=students[i]['enrollment_no']%>" type="radio" class="attendance_absent" name="<%=students[i]['enrollment_no']%>" value="A"/>
                 <% } %>
 
                 <label for="absent_<%=students[i]['enrollment_no']%>">A</label>
-                <input id="na_<%=students[i]['enrollment_no']%>" type="radio" class="attendance_na" name="<%=students[i]['enrollment_no']%>" value="NA" />
+                <input id="na_<%=students[i]['enrollment_no']%>" type="radio" class="attendance_na" name="<%=students[i]['enrollment_no']%>" value="NA" checked/>
                 <label for="na_<%=students[i]['enrollment_no']%>">N/A</label>
               </form>
 
@@ -356,12 +360,10 @@
 
 
 </div>
-
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
 <script type="text/javascript">
   <% if(typeof edit_mode  !== 'undefined' && edit_mode){ %>
       $(document).ready(function(){
-
-
       var attendance = <%- JSON.stringify(attendance) %>
       var date = new Date("<%-lecture%>")
       var duration_of_class = attendance[0].duration_of_class;
@@ -399,12 +401,13 @@
     var present = [];
     var absent = [];
     var na = [];
+    var bid = <%- JSON.stringify(batch_id) %>
+    var sid = <%- JSON.stringify(subject_id) %>
 
     $("#confirm_submit").click(function(event){
 
       $("#confirm_submit").attr('disabled', true)
-      var bid = <%- JSON.stringify(batch_id) %>
-      var sid = <%- JSON.stringify(subject_id) %>
+      
 
       $.ajax({
         type: "POST",
@@ -489,8 +492,23 @@
 
     });
 
+    $.ajax({
+        type: "GET",
+        url: '/api/' + sid + '/attendance/',
+        success: function(data, status, err){
+          attendance = {};
+          for(i in data) {
+            attendance[i] =  [];
+            for(k in data[i])
+              attendance[i].push(data[i][k]['att']);
+            $( ".attendance_history:contains('" + i + "')" ).html(attendance[i]);
 
-  })
+          } 
+          
+        }
+      });
+
+  });
 
   // var myEvent = window.attachEvent || window.addEventListener;
   // var chkevent = window.attachEvent ? 'onbeforeunload' : 'beforeunload'; /// make IE7, IE8 compatable

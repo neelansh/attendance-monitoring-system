@@ -67,7 +67,7 @@ module.exports  = {
   },
 
   getAttendanceBySubject : function(school, subject_id, callback) {
-    var query = db.get().query("select * from ?? where subject_id = ?",[school+"_attendance", subject_id],function(err, rows) {
+    var query = db.get().query("select id, lecture_timestamp as lec_time, duration_of_class as dur, attendance as att, student from ?? where subject_id = ?",[school+"_attendance", subject_id],function(err, rows) {
       if(err)throw err;
       callback(null, rows);
     });
