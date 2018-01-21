@@ -196,7 +196,6 @@ router.post('/change_password', function(req, res){
 			res.redirect('/student/change_password');
 		}
 	});
-
 });
 
 
@@ -243,6 +242,66 @@ router.get('/attendance/:subject_id', function(req, res){
 			});
 		});
 
+});
+
+router.get('/update_information', function(req, res) {
+	var prev_links = [
+	{'text' : '<i class="tiny material-icons">home</i> Home','link' :'/'},
+	{'text' : 'My Account' , 'link': '/student/profile'}
+	];
+	var curr_link = 'Update Profile';
+	if (!req.isAuthenticated() || req.user.enrollment_no == null) {
+		req.flash("error_msg", "authentication failed, Please login again");
+		res.redirect("/student/login");
+	}
+
+	student.getInformation(req.user.enrollment_no, req.user.school, function(err, studentInformation) {
+		if (err) {
+			console.log(err);
+			throw new Error(err);
+			return;
+		}
+		res.render('update_information_student', { 'prevLinks':prev_links, 'currLink' : curr_link, studentInformation: studentInformation[0] });
+	})
+});
+
+router.put('/update_information', function(req, res) {
+
+	if (!req.isAuthenticated()) {
+		res.redirect("/student/login");
+	}
+
+	if (req.user.enrollment_no == null) {
+		res.redirect("/student/login");
+	}
+	if (!req.body.name || !req.body.phone || !req.body.email || !req.body.stream || !req.body.course) {
+		req.flash("error_msg", "Some of the fields are missing. Please fill them correctly");
+		res.redirect('/student/update_information');
+		return;
+	}
+
+	var user_information = {
+		name: req.body.name,
+		phone: req.body.phone,
+		email: req.body.email,
+		stream: req.body.stream,
+		course: req.body.course
+	}
+
+	student.update_information(req.user.school, user_information, req.user.enrollment_no, function(err, UpdatedUser) {
+		if (err) {
+			console.log(err);
+			throw new Error(err);
+		}
+
+		if (!UpdatedUser) {
+			req.flash("error_msg", "Something went wrong please try again");
+			res.redirect("/student/update_information");
+		} else {
+			req.flash("success_msg", "Your details has been changed successfully.");
+			res.redirect("/student/profile");
+		}
+	});
 });
 
 router.get('/:something', function(req, res) {
