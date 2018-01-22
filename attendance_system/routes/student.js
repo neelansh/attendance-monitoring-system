@@ -2,22 +2,10 @@ var express = require('express');
 var router = express.Router();
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
-
+var GoogleStrategy =require('passport-google-oauth').OAuth2Strategy;
 var student = require('../models/students');
 var att = require('../models/attendance');
 var sub = require("../models/subjects");
-
-/* GET student login page. */
-router.get('/login', function(req, res, next) {
-	if(req.isAuthenticated() && req.user.enrollment_no != null){
-		res.redirect("/student/dashboard");
-	}
-	if(req.isAuthenticated() && req.user.instructor_id != null){
-		res.redirect("/teacher/dashboard");
-		return;
-	}
-	res.render("student_login");
-});
 
 
 passport.use('local.student',new LocalStrategy({
@@ -51,8 +39,58 @@ function(req, username, password, done) {
 	});
 }));
 
+   
+passport.use(new GoogleStrategy({
+    clientID: process.env.clientId,
+    clientSecret: process.env.clientSecret,
+    callbackURL: "http://localhost:9000/student/auth/google/callback"
+  },
+  function(accessToken, refreshToken, profile, done) {
+    
+    var Obj = {
+    	accessToken:accessToken,
+    	refreshToken:refreshToken,
+    	profile:profile,
+    	email:profile.emails[0].value,
+    }
+  	console.log(Obj);
+  	//As per present database school is required and can't be fetched from google auth
+  	var school="usict";
+  	student.getUserByEmail(school,Obj.email,function(err,user){
+  	if(user)
+  	user.school='usict';
+  	return done(err,user);
+  	});
+  
+  }
+));
+
+// GENEERAL student login page. 
+ router.get('/login', function(req, res, next) {
+	if(req.isAuthenticated() && req.user.enrollment_no != null){
+		res.redirect("/student/dashboard");
+	}
+	if(req.isAuthenticated() && req.user.instructor_id != null){
+		res.redirect("/teacher/dashboard");
+		return;
+	}
+	res.render("student_login");
+});
+
+//For Local Strategy
+
 router.post('/login',
 	passport.authenticate('local.student',{successRedirect: "/student/dashboard", failureRedirect: "/student/login",failureFlash: true}));
+
+//For Google Strategy
+
+router.get('/googlelogin',passport.authenticate('google', { scope: ['email profile'] }));
+
+router.get('/auth/google/callback',
+    passport.authenticate('google', { failureRedirect: '/login' , successRedirect:"/student/dashboard" }));
+
+
+
 
 router.get('/logout', function(req, res){
 	req.logout();
