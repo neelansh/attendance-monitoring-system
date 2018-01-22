@@ -53,5 +53,27 @@ module.exports = {
 			if(err)throw err;
 			callback(null, rows);
 		});
+	},
+
+	getInformation: function(enrollment_no, school, callback) {
+		var query = db.get().query("select name, phone, email, course, stream from ?? where enrollment_no = ?",[ school + "_students", enrollment_no ], function(err, rows) {
+			if (err) {
+				console.log(err);
+				throw err;
+			}
+
+			callback(null, rows)
+		})
+	},
+
+	update_information: function(school, user_information, enrollment_no, callback) {
+		var query = db.get().query("update ?? set email = ?, phone = ?, name = ?, course = ?, stream = ? where enrollment_no = ?",[school + '_students', user_information.email, user_information.phone, user_information.name, user_information.course, user_information.stream, enrollment_no], function(err, rows) {
+			if (err) {
+				console.log(err);
+				throw err;
+			}
+			console.log(rows);
+			callback(null, rows);
+		})
 	}
 }

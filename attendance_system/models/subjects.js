@@ -13,7 +13,6 @@ module.exports = {
 	check_teaching : function(school, id, subject_id, callback) {
 		var query = db.get().query("select count(*) from ?? where instructor_code = ? and subject_id = ?",[school+"_subject_allocation", id, subject_id],function(err, rows) {
 			if(err)throw err;
-			console.log(rows)
 			if(rows[0]['count(*)'] === 1) {
 				callback(null, true);
 			}else{
@@ -37,7 +36,7 @@ module.exports = {
 	// },
 
 	getStudentsBySubject : function(school, id, callback) {
-		var query = db.get().query("select * from ?? where subject_id = ?",[school+"_student_subjects", id],function(err, rows) {
+		var query = db.get().query("select * from ?? as t1 inner join ?? as t2 on t1.enrollment_no = t2.enrollment_no where subject_id = ?",[school+"_student_subjects",school + "_students", id],function(err, rows) {
 			if(err)throw err;
 			callback(null, rows);
 		});
@@ -55,6 +54,29 @@ module.exports = {
 			if(err)throw err;
 			callback(null, rows);
 		});
+	},
+
+	findSubject: function(school, subject_code, instructor_code, stream, callback) {
+		var query = db.get().query("select subject_id from ?? where instructor_code = ?  and subject_code = ? and stream = ?",[school+"_subject_allocation", instructor_code, subject_code, stream],function(err, rows) {
+			if(err)throw err;
+
+			callback(null, rows[0]);
+		});
+	},
+
+	addStudents: function(school, studentList, callback) {
+		var query = db.get().query('INSERT INTO ?? values ' +  studentList + '',[school+"_student_subjects"],function(err, rows) {
+
+			if(err)throw err;
+			callback(null, rows);
+		});
+	},
+
+	check_subjects: function(school, subject_code, callback) {
+		var query = db.get().query("select subject_name, type, course, stream, semester from ?? where subject_code = ?", [ school+"_subject_allocation", subject_code ], function(err, rows) {
+			if (err) throw err;
+			callback(null, rows);
+		})
 	},
 
 	getCourse: function(school, callback) {
@@ -81,11 +103,18 @@ module.exports = {
 	},
 
 	addSubjectToTeacher: function(subjectDetails, instructor_id, callback) {
-		var query = db.get().query("update ?? set instructor_code  = ? where course = ? and stream = ? and semester = ? and subject_name = ?", [subjectDetails.school + "_subject_allocation", instructor_id, subjectDetails.course, subjectDetails.stream, subjectDetails.semester, subjectDetails.subject_name], function(err, rows) {
+		var query = db.get().query("INSERT INTO ?? (batch_id, subject_code, instructor_code, subject_name, type, course, stream, semester) values (1, ?,?,?,?,?,?,? )",[subjectDetails.school + "_subject_allocation", subjectDetails.subject_code, instructor_id, subjectDetails.subject_name, subjectDetails.type, subjectDetails.course, subjectDetails.stream, subjectDetails.semester], function(err, rows) {
 			if (err) throw err;
-
 			callback(null, "updated successfully");
 		})
 	}
+
+	// addSubjectToTeacher: function(subjectDetails, instructor_id, callback) {
+	// 	var query = db.get().query("update ?? set instructor_code  = ? where course = ? and stream = ? and semester = ? and subject_name = ?", [subjectDetails.school + "_subject_allocation", instructor_id, subjectDetails.course, subjectDetails.stream, subjectDetails.semester, subjectDetails.subject_name], function(err, rows) {
+	// 		if (err) throw err;
+
+	// 		callback(null, "updated successfully");
+	// 	})
+	// }
 
 }
