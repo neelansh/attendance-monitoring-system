@@ -858,12 +858,21 @@ router.get('/dean', function(req, res){
 	if( req.user.isDean )
 	{
 
-		sub.getSubjectsWithAllData(req.user.school, function(err, subjects){
+		sub.getSubjectsWithAllData(req.user.school, function(err, subjects) {
 			if(err) throw new Error(err);
 
 			att.getAvgAttendance(req.user.school, function(error, avg_attendance){
 				if(error) throw new Error(error);
-				res.render('dean_panel', {'prevLinks':prev_links, 'currLink' : curr_link, 'subjects' : subjects, 'avg_attendance': avg_attendance});
+
+				sub.getAllStudentData(req.user.school, function(err, studentsData) {
+					if (err) {
+						console.log(err);
+						throw new Error(err)
+					}
+					console.log(studentsData)
+					res.render('dean_panel', {'prevLinks':prev_links, 'currLink' : curr_link, 'subjects' : subjects, 'avg_attendance': avg_attendance, studentsData: studentsData});
+				})
+
 			});
 
 		})

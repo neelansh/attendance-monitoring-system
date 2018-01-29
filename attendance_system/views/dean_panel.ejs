@@ -10,131 +10,247 @@
 	    letter-spacing: 0.2em;
 	  }
 </style>
-
 <div class="container">
-
 	<div class="row">
 		<div class="col m12">
-			<h4 class="heading">FILTER:</h4>
+		  <div class="row">
+		    <div class="col s12">
+		      <ul class="tabs">
+		        <li class="tab col s6 yourTab"><a href="#test1">Teacher</a></li>
+		        <li class="tab col s6 yourTab"><a class="active" href="#test2">Student</a></li>
+		      </ul>
+		    </div>
+		  </div>
 		</div>
-		<div class="input-field col m3">
-          <input id="teacher_search" type="text" class="validate">
-          <label for="teacher_search">Teacher Name</label>
-        </div>
-        <div class="input-field col m3">
-          <input id="subject_search" type="text" class="validate">
-          <label for="subject_search">Subject Name</label>
-        </div>
-        <div class="input-field col m2">
-          <input id="course_search" type="text" class="validate">
-          <label for="course_search">Course Name</label>
-        </div>
-        <div class="input-field col m2">
-          <input id="stream_search" type="text" class="validate">
-          <label for="stream_search">Stream Name</label>
-        </div>
-        <div class="input-field col m2">
-          <input id="semester_search" type="text" class="validate">
-          <label for="semester_search">Semester</label>
-        </div>
-        <div class="input-field col m2">
-          <input id="min" type="text" class="validate">
-          <label for="min">Attendance greater than</label>
-        </div>
-        <div class="input-field col m2">
-          <input id="max" type="text" class="validate">
-          <label for="max">Attendance less than</label>
-        </div>
-
-   	</div>
-
-	<div class="card material-table">
-        <div class="table-header">
-          <span class="table-title" style="text-transform: uppercase;">LIST OF SUBJECTS IN <%=user.school%></span>
-          <div class="actions">
-            <a href="#" class="search-toggle waves-effect btn-flat nopadding"><i class="material-icons">search</i></a>
-          </div>
-        </div>
-
-        <table id="datatable" class="striped centered">
-          <thead>
-            <tr>
-              <th>Teacher Name</th>
-              <th>Subject Name</th>
-              <th>Course</th>
-              <th>Stream</th>
-              <!-- <th>Subject Code</th> -->
-              <th>Semester</th>
-              <th>Avg Attendance(%)</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% for(var i=0; i<subjects.length ; ++i){ %>
-            <tr>
-              <td><%=subjects[i]['name']%></td>
-              <td><%=subjects[i]['subject_name']%></td>
-              <td><%=subjects[i]['course']%></td>
-              <td><%=subjects[i]['stream']%></td>
-              <!-- <td><%=subjects[i]['subject_code']%></td> -->
-              <td><%=subjects[i]['semester']%></td>
-              <% if(subjects[i]['subject_id'] in avg_attendance){ 
-              		var p = avg_attendance[subjects[i].subject_id].hours_present;
-              		var a = avg_attendance[subjects[i].subject_id].hours_absent; %>
-              	<td style="font-weight: bold;"><%= (p/(p+a)*100).toFixed(2) %></td>
-              <% }else{ %>
-              	<td style="font-weight: bold;">0</td>
-              <% } %>
-              <td>
-              	<a href="/teacher/attendance_marked/<%=subjects[i].batch_id%>/<%=subjects[i].subject_id%>/" style="color: blue;">View</a>, &nbsp
-				<a href="/teacher/attendance/<%=subjects[i].batch_id%>/<%=subjects[i].subject_id%>/" style="color: blue;">Mark</a>, &nbsp
-				<a href="/teacher/edit_attendance/<%=subjects[i].batch_id%>/<%=subjects[i].subject_id%>/" style="color: blue;">Edit</a>
-
-              </td>
-              
-            </tr>
-            <% } %>
-          </tbody>
-        </table>
-
-    </div>
-	
+	</div>
 </div>
+<div id="test1">
+	<div class="container">
+		<div class="row">
+			<div class="input-field col m3">
+	          <input class ="teacher_search" type="text" class="validate">
+	          <label for="teacher_search">Teacher Name</label>
+	        </div>
+	        <div class="input-field col m3">
+	          <input class ="subject_search" type="text" class="validate">
+	          <label for="subject_search">Subject Name</label>
+	        </div>
+	        <div class="input-field col m2">
+	          <input class ="course_search" type="text" class="validate">
+	          <label for="course_search">Course Name</label>
+	        </div>
+	        <div class="input-field col m2">
+	          <input class ="stream_search" type="text" class="validate">
+	          <label for="stream_search">Stream Name</label>
+	        </div>
+	        <div class="input-field col m2">
+	          <input class ="semester_search" type="text" class="validate">
+	          <label for="semester_search">Semester</label>
+	        </div>
+	        <div class="input-field col m2">
+	          <input class ="min" type="text" class="validate">
+	          <label for="min">Attendance greater than</label>
+	        </div>
+	        <div class="input-field col m2">
+	          <input class ="max" type="text" class="validate">
+	          <label for="max">Attendance less than</label>
+	        </div>
+	   	</div>
+
+		<div class="card material-table">
+	        <div class="table-header">
+	          <span class="table-title" style="text-transform: uppercase;">LIST OF SUBJECTS IN <%=user.school%></span>
+	          <div class="actions">
+	            <a href="#" class="search-toggle waves-effect btn-flat nopadding"><i class="material-icons">search</i></a>
+	          </div>
+	        </div>
+
+	        <table id="datatable" class="striped centered">
+	          <thead>
+	            <tr>
+	              <th>Teacher Name</th>
+	              <th>Subject Name</th>
+	              <th>Course</th>
+	              <th>Stream</th>
+	              <!-- <th>Subject Code</th> -->
+	              <th>Semester</th>
+	              <th>Avg Attendance(%)</th>
+	              <th>Actions</th>
+	            </tr>
+	          </thead>
+	          <tbody>
+	            <% for(var i=0; i<subjects.length ; ++i){ %>
+	            <tr>
+	              <td><%=subjects[i]['name']%></td>
+	              <td><%=subjects[i]['subject_name']%></td>
+	              <td><%=subjects[i]['course']%></td>
+	              <td><%=subjects[i]['stream']%></td>
+	              <!-- <td><%=subjects[i]['subject_code']%></td> -->
+	              <td><%=subjects[i]['semester']%></td>
+	              <% if(subjects[i]['subject_id'] in avg_attendance){
+	              		var p = avg_attendance[subjects[i].subject_id].hours_present;
+	              		var a = avg_attendance[subjects[i].subject_id].hours_absent; %>
+	              	<td style="font-weight: bold;"><%= (p/(p+a)*100).toFixed(2) %></td>
+	              <% }else{ %>
+	              	<td style="font-weight: bold;">0</td>
+	              <% } %>
+	              <td>
+	              	<a href="/teacher/attendance_marked/<%=subjects[i].batch_id%>/<%=subjects[i].subject_id%>/" style="color: blue;">View Subject</a>
+	              </td>
+
+	            </tr>
+	            <% } %>
+	          </tbody>
+	        </table>
+
+	    </div>
+	</div>
+
+</div>
+<div id="test2">
+	<div class="container">
+		<div class="row">
+	        <div class="input-field col m3">
+	          <input class="enrollment_no" type="text" class="validate">
+	          <label for="enrollment_no">Enrollment number</label>
+	        </div>
+			<div class="input-field col m3">
+	          <input class="student_search" type="text" class="validate">
+	          <label for="student_search">Student Name</label>
+	        </div>
+	        <div class="input-field col m2">
+	          <input class="student_course_search" type="text" class="validate">
+	          <label for="student_course_search">Course Name</label>
+	        </div>
+	        <div class="input-field col m2">
+	          <input class="student_stream_search" type="text" class="validate">
+	          <label for="student_stream_search">Stream Name</label>
+	        </div>
+	        <div class="input-field col m2">
+	          <input class="student_semester_search" type="text" class="validate">
+	          <label for="student_semester_search">Semester</label>
+	        </div>
+	        <div class="input-field col m2">
+	          <input class="min" type="text" class="validate">
+	          <label for="min">Attendance greater than</label>
+	        </div>
+	        <div class="input-field col m2">
+	          <input class="max" type="text" class="validate">
+	          <label for="max">Attendance less than</label>
+	        </div>
+	   	</div>
+
+		<div class="card material-table">
+	        <div class="table-header">
+	          <span class="table-title" style="text-transform: uppercase;">LIST OF SUBJECTS IN <%=user.school%></span>
+	          <div class="actions">
+	            <a href="#" class="search-toggle waves-effect btn-flat nopadding"><i class="material-icons">search</i></a>
+	          </div>
+	        </div>
+
+	        <table id="datatable2" class="striped centered">
+	          <thead>
+	            <tr>
+	              <th>Enrollment number</th>
+	              <th>Student Name</th>
+	              <th>Course</th>
+	              <th>Stream</th>
+	              <!-- <th>Subject Code</th> -->
+	              <th>Semester</th>
+	              <th>Subject Name</th>
+	              <!-- <th>Avg Attendance(%)</th> -->
+	            </tr>
+	          </thead>
+	          <tbody>
+	            <% for(var i=0; i<studentsData.length ; ++i){ %>
+	            <tr>
+	              <td><%=studentsData[i]['enrollment_no']%></td>
+	              <td><a href="#"><%=studentsData[i]['name']%></a></td>
+	              <td><%=studentsData[i]['course']%></td>
+	              <td><%=studentsData[i]['stream']%></td>
+	              <td><%=studentsData[i]['semester']%></td>
+	              <td><%=studentsData[i]['subject_name']%></td>
+	            </tr>
+	            <% } %>
+	          </tbody>
+	        </table>
+
+	    </div>
+	</div>
+
+</div>
+
 
 
 <script type="text/javascript">
 	$(document).ready(function(){
 		var table = dataTable.get_table();
+		console.log(table);
 
-		$('#teacher_search').on( 'keyup', function () {
+		$('.teacher_search').on( 'keyup', function () {
 		    table
 		        .columns( 0 )
 		        .search( this.value )
 		        .draw();
 		} );
 
-		$('#subject_search').on( 'keyup', function () {
+		$('.enrollment_no').on( 'keyup', function () {
+		    datatable2
+		        .columns( 0 )
+		        .search( this.value )
+		        .draw();
+		} );
+
+		$('.student_search').on( 'keyup', function () {
+		    datatable2
+		        .columns( 1 )
+		        .search( this.value )
+		        .draw();
+		} );
+
+		$('.subject_search').on( 'keyup', function () {
 		    table
 		        .columns( 1 )
 		        .search( this.value )
 		        .draw();
 		} );
 
-		$('#course_search').on( 'keyup', function () {
-		    table
+		$('.course_search').on( 'keyup', function () {
+		    datatable2
 		        .columns( 2 )
 		        .search( this.value )
 		        .draw();
 		} );
 
-		$('#stream_search').on( 'keyup', function () {
+		$('.student_course_search').on( 'keyup', function () {
+		    datatable2
+		        .columns( 2 )
+		        .search( this.value )
+		        .draw();
+		} );
+
+		$('.student_stream_search').on( 'keyup', function () {
+		    datatable2
+		        .columns( 3 )
+		        .search( this.value )
+		        .draw();
+		} );
+
+		$('.stream_search').on( 'keyup', function () {
 		    table
 		        .columns( 3 )
 		        .search( this.value )
 		        .draw();
 		} );
 
-		$('#semester_search').on( 'keyup', function () {
+		$('.student_semester_search').on( 'keyup', function () {
+		    datatable2
+		        .columns( 4 )
+		        .search( this.value )
+		        .draw();
+		} );
+
+		$('.semester_search').on( 'keyup', function () {
 		    table
 		        .columns( 4 )
 		        .search( this.value )
@@ -146,7 +262,7 @@
 		        var min = parseInt( $('#min').val(), 10 );
 		        var max = parseInt( $('#max').val(), 10 );
 		        var age = parseFloat( data[5] ) || 0; // use data for the age column
-		 
+
 		        if ( ( isNaN( min ) && isNaN( max ) ) ||
 		             ( isNaN( min ) && age <= max ) ||
 		             ( min <= age   && isNaN( max ) ) ||
@@ -166,9 +282,12 @@
 		    table.draw();
 		} );
 
-
-
+		var datatable2 = $('#datatable2').DataTable();
 	});
+
+
+
+
 
 </script>
 
