@@ -192,7 +192,12 @@
 
   $('#school').change(function () {
     var school = $('#school').find(":selected").text().toLowerCase();
+
     console.log(json_object);
+
+    var input = jQuery('<input name="student_list" value="student_list" style="display: none" id="student_list">');
+    jQuery('form').append(input);
+
     $.ajax({
       url: "/api/get_course",
       type: 'GET',
@@ -252,6 +257,7 @@
         $("#stream option").remove();
 
         if (result.length != 0) {
+          $('#stream_input').css("display", "none");
           for (var x = 0;x< result.length;x++) {
             if (x == 0) {
               $('#type').val(result[x].type);
@@ -292,7 +298,9 @@
 
   })
 
+
   $('#course').on('focusout',function () {
+
     var course = $('#course').val().toUpperCase().trim();
     var final_course = "";
 
@@ -318,21 +326,21 @@
     $("#subject_name_div").css("display", "block");
   });
 
-  $('#stream_input').keyup(function() {
+  $('#stream_input').change(function() {
     var stream = $('#stream_input').val();
     $('#stream_input').val(stream.toUpperCase());
   })
 
-  $('#subject_name').keyup(function() {
+  $('#subject_name').change(function() {
     $('#type_div').css("display", "block");
   })
 
-  $('#type').keyup(function() {
+  $('#type').change(function() {
     var type = $('#type').val().toUpperCase();
     $('#type').val(type);
 
     if (type == "THEORY") {
-      $('#group_div').css("display", "block");
+      $('#group_div').css("display", "none");
     }
 
     if(type == "PRACTICAL") {
@@ -341,7 +349,7 @@
     }
   })
 
-  $('.with-gap').keyup(function() {
+  $('.with-gap').change(function() {
     var value = $('')
     var subject_name = $('#subject_name').val();
     $('#subject_name').val(subject_name.slice(0, -8));
@@ -378,7 +386,9 @@ var ExcelToJSON = function(file, type) {
         var XL_row_object = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
         json_object = JSON.stringify(XL_row_object);
 
-        console.log(json_object);
+        var input = jQuery('<input name="student_list" value="student_list" style="display: none" id="student_list">');
+        jQuery('form').append(input);
+        $('#student_list').val(json_object);
       })
     };
 
@@ -391,8 +401,12 @@ var ExcelToJSON = function(file, type) {
 };
 
 
+<<<<<<< HEAD
 $('#uploadstudents').on('change', function(oEvent) {
   $/('#modal_instruction').modal('close');
+=======
+$('#uploadstudents').change(function(oEvent) {
+>>>>>>> 27e1dc0bf9b4b5ebf76e009d2fa23d2e43321bcd
   console.log('File being verified');
   var oFile = oEvent.target.files[0];
   var sFilename = oFile.name.toLowerCase();

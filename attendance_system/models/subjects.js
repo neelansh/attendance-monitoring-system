@@ -13,7 +13,6 @@ module.exports = {
 	check_teaching : function(school, id, subject_id, callback) {
 		var query = db.get().query("select count(*) from ?? where instructor_code = ? and subject_id = ?",[school+"_subject_allocation", id, subject_id],function(err, rows) {
 			if(err)throw err;
-			console.log(rows)
 			if(rows[0]['count(*)'] === 1) {
 				callback(null, true);
 			}else{
@@ -53,7 +52,22 @@ module.exports = {
 	getSubjectsWithAllData : function(school, callback) {
 		var query = db.get().query("select * from ?? t1 inner join ?? t2 ON t1.instructor_code = t2.instructor_id",[school+"_subject_allocation", school+"_teacher"],function(err, rows) {
 			if(err)throw err;
-			console.log(query);
+			callback(null, rows);
+		});
+	},
+
+	findSubject: function(school, subject_code, instructor_code, stream, callback) {
+		var query = db.get().query("select subject_id from ?? where instructor_code = ?  and subject_code = ? and stream = ?",[school+"_subject_allocation", instructor_code, subject_code, stream],function(err, rows) {
+			if(err)throw err;
+
+			callback(null, rows[0]);
+		});
+	},
+
+	addStudents: function(school, studentList, callback) {
+		var query = db.get().query('INSERT INTO ?? values ' +  studentList + '',[school+"_student_subjects"],function(err, rows) {
+
+			if(err)throw err;
 			callback(null, rows);
 		});
 	},
@@ -91,7 +105,6 @@ module.exports = {
 	addSubjectToTeacher: function(subjectDetails, instructor_id, callback) {
 		var query = db.get().query("INSERT INTO ?? (batch_id, subject_code, instructor_code, subject_name, type, course, stream, semester) values (1, ?,?,?,?,?,?,? )",[subjectDetails.school + "_subject_allocation", subjectDetails.subject_code, instructor_id, subjectDetails.subject_name, subjectDetails.type, subjectDetails.course, subjectDetails.stream, subjectDetails.semester], function(err, rows) {
 			if (err) throw err;
-			console.log(query);
 			callback(null, "updated successfully");
 		})
 	}
