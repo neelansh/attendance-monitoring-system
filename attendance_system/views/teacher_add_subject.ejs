@@ -5,12 +5,22 @@
   <div class="modal-content">
     <h4>Kindly </h4>
     <p></p>
-    <img src="/images/attendance_sample.png">
+    <img src="/images/attendance_sample.png" class="img-responsive">
   </div>
   <div class="modal-footer">
      <a class="submit submitbtn-bottom" id="upload_link" name="studentslist">
-                    UPLOAD STUDENT LIST
+                    UPLOAD EXCEL FILE.
               </a>
+  </div>
+</div>
+
+<div id="modal_list" class="modal modal-fixed-footer">
+  <div class="modal-content">
+    <h4>Student list</h4>
+    <p></p>
+  </div>
+  <div class="modal-footer">
+     <button class="btn waves-effect waves-light modal-action modal-close" id="acceptStudents" data-target="modal_list">Agree</button>
   </div>
 </div>
 
@@ -55,7 +65,7 @@
 
             <div class="row" id="course_div" style="display: none">
               <div class="input-field col s12">
-                <input name="course" class="validate" type="text" id="course" placeholder="">
+                <input name="course" class="validate" type="text" id="course" placeholder="BTECH, BALLB etc.">
                 <label class="active">Course</label>
               </div>
             </div>
@@ -69,7 +79,7 @@
 
             <div class="row" id="stream_input_div" style="display: none">
               <div class="input-field col s12">
-                <input name="stream_input" class="validate" type="text" id="stream_input" placeholder="">
+                <input name="stream_input" class="validate" type="text" id="stream_input" placeholder="CSE, IT etc.">
                 <label class="active">Stream</label>
               </div>
             </div>
@@ -77,7 +87,7 @@
 
             <div class="row" id="semester_div" style="display: none">
               <div class="input-field col s12">
-                <input name="semester" class="validate" type="text" id="semester" minlength="1" maxlength="1" placeholder="">
+                <input name="semester" class="validate" type="tel" id="semester" minlength="1" maxlength="1" placeholder="">
                 <label class="active">Semester</label>
               </div>
             </div>
@@ -91,7 +101,10 @@
 
             <div class="row" id="type_div" style="display: none">
               <div class="input-field col s12">
-                <input name="type" class="validate" type="text" id="type" placeholder="">
+                <select name="type" class="validate" type="text" id="type" placeholder="">
+                  <option value="THEORY">THEORY</option>
+                  <option value="PRACTICAL">PRACTICAL</option>
+                </select>
                 <label class="active">Type</label>
               </div>
             </div>
@@ -182,12 +195,14 @@
 </div>
 <script src="/javascripts/jszip.js"></script>
 <script src="/javascripts/xlsx.min.js"></script>
+<script src="/javascripts/xls.min.js"></script>
 <script type="text/javascript">
 
   var json_object;
    $(document).ready(function() {
     $('select').material_select();
     $('#modal_instruction').modal();
+    $('#modal_list').modal();
   });
 
   $('#school').change(function () {
@@ -197,27 +212,8 @@
 
     var input = jQuery('<input name="student_list" value="student_list" style="display: none" id="student_list">');
     jQuery('form').append(input);
-
-    $.ajax({
-      url: "/api/get_course",
-      type: 'GET',
-      data: { school: school },
-      success: function(result) {
-
-        $("#subject_code_div").css("display", "block");
-        $('select').material_select();
-
-        $.each(result, function(key, value) {
-
-            $('#course').append($("<option></option>").attr("value",value.course).text(value.course));
-            $('select').material_select();
-
-          });
-      },
-      error: function(result) {
-        alert("There was some error. Please reload and try again.")
-      }
-   });
+    $("#subject_code_div").css("display", "block");
+    $('select').material_select();
   });
 
   $('#subject_code').keyup(function(){
@@ -226,7 +222,7 @@
 
   });
 
-  $('#subject_code').on('focusout',function() {
+  $('#subject_code').change(function() {
     var subject_code = $('#subject_code').val().toUpperCase().trim();
     var final_subject_code = "";
     var checkdash = false;
@@ -246,21 +242,35 @@
 
     $('#subject_code').val(final_subject_code);
 
-    
+    disableForm();
 
     $.ajax({
       url: '/api/check_subjects',
       type: 'GET',
       data: { subject_code: final_subject_code },
       success: function(result) {
-
+        console.log(result);
+        enableForm();
         $("#stream option").remove();
+        $("#subject_code").removeClass('invalid');
 
-        if (result.length != 0) {
-          $('#stream_input').css("display", "none");
-          for (var x = 0;x< result.length;x++) {
+        
+ 
+         $('#stream_input_div').css("display", "none");
+         if(!result.length)
+         {
+            $('#type').val('');
+            $('#course').val('');
+            $('#stream_select').html('');
+            $('#stream_select').material_select();
+            $('#stream_div').css('display','none');
+            $('#stream_input_div').css('display', 'block');
+            $('#semester').val('');
+            $('#subject_name').val('');
+         }
+          for (var x = 0;x< result.length ;x++) {
             if (x == 0) {
-              $('#type').val(result[x].type);
+              $('#type').val(result[x].type.toUpperCase());
               $('#course').val(result[x].course);
               $('#semester').val(result[x].semester);
               $('#type_div').css("display", "block");
@@ -268,9 +278,9 @@
               $('#course_div').css("display", "block");
               $('#semester_div').css("display", "block");
               $("#stream_div").css("display", "block");
-              $('#subject_name').val(result[x].subject_name);
+              $('#subject_name').val(result[x].subject_name.split("_")[0]);
 
-              $(':radio[value="' + result[x].subject_name.slice(-7) +  '"]').attr('checked', 'checked');
+              $(':radio[value="' + result[x].subject_name +  '"]').attr('checked', 'checked');
 
 
               if(result[x].type.toUpperCase() == "PRACTICAL") {
@@ -279,18 +289,18 @@
 
             }
 
-            $('#stream_select').append($("<option></option>").attr("value",result[x].stream).text(result[x].stream));
+            $('#stream_select').html($("<option></option>").attr("value",result[x].stream).text(result[x].stream));
             $('select').material_select();
           }
-        } else {
+      
               // $('#type_div').css("display", "block");
               // $('#subject_name_div').css("display", "block");
               $('#course_div').css("display", "block");
               // $('#semester_div').css("display", "block");
               // $("#stream_div").css("display", "block");
 
-        }
 
+      
       }, error: function(result) {
          alert("there is some error.")
       }
@@ -299,7 +309,7 @@
   })
 
 
-  $('#course').on('focusout',function () {
+  $('#course').change(function () {
 
     var course = $('#course').val().toUpperCase().trim();
     var final_course = "";
@@ -351,9 +361,7 @@
 
   $('.with-gap').change(function() {
     var value = $('')
-    var subject_name = $('#subject_name').val();
-    $('#subject_name').val(subject_name.slice(0, -8));
-    subject_name = $('#subject_name').val() + "_" + $(this).val();
+    var subject_name = $('#subject_name').val().split("_")[0] + "_" + $(this).val();
     $('#subject_name').val(subject_name)
 
   })
@@ -371,10 +379,11 @@ var enableForm = function() {
 $("#upload_link").on('click', function(e){
     e.preventDefault();
     $("#uploadstudents:hidden").trigger('click');
+    disableForm();
 });
 
 
-var ExcelToJSON = function(file, type) {
+var ExcelXToJSON = function(file, type) {
     var reader = new FileReader();
     reader.onload = function(e) {
       var data = e.target.result;
@@ -385,29 +394,81 @@ var ExcelToJSON = function(file, type) {
         // Here is your object
         var XL_row_object = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
         json_object = JSON.stringify(XL_row_object);
-
+        for( var i = 0; i < XL_row_object.length ; i++)
+           {  if(!XL_row_object[i].hasOwnProperty('Enrollment number'))
+                {
+                  alert('Invalid format. Please try again.');
+                  return;
+                }
+            }
+          
         var input = jQuery('<input name="student_list" value="student_list" style="display: none" id="student_list">');
         jQuery('form').append(input);
         $('#student_list').val(json_object);
+        console.log(json_object);
+        var studentList = '<ul>';
+        for(var i = 0; i < XL_row_object.length; i++)
+          studentList += '<li>' + XL_row_object[i]['Enrollment number'] + '</li>';
+        studentList += '</ul>'
+        $('#modal_list > .modal-content').append(studentList);
+        $('#modal_list').modal('open');
       })
     };
 
     reader.onerror = function(ex) {
-      console.log(ex);
+      alert(ex);
+      enableForm();
     };
 
     reader.readAsBinaryString(file);
+    enableForm();
 
 };
 
+var ExcelToJSON = function(file, type) {
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      var data = e.target.result;
+      var workbook = XLS.read(data, {
+        type: 'binary'
+      });
+      workbook.SheetNames.forEach(function(sheetName) {
+        // Here is your object
+        var XL_row_object = XLS.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
+        json_object = JSON.stringify(XL_row_object);
+       for( var i = 0; i < XL_row_object.length ; i++)
+         {  if(!XL_row_object[i].hasOwnProperty('Enrollment number'))
+              {
+                alert('Invalid format. Please try again.');
+                return;
+              }
+          }
 
-<<<<<<< HEAD
+        var input = jQuery('<input name="student_list" value="student_list" style="display: none" id="student_list">');
+        jQuery('form').append(input);
+        $('#student_list').val(json_object);
+        console.log(json_object);
+        $('#modal_list > .modal-content').append(JSON.stringify(json_object));
+        $('#modal_list').modal('open');
+      })
+    };
+
+    reader.onerror = function(ex) {
+      alert(ex);
+      enableForm();
+    };
+
+    reader.readAsBinaryString(file);
+    enableForm();
+
+};
+
 $('#uploadstudents').on('change', function(oEvent) {
-  $/('#modal_instruction').modal('close');
-=======
-$('#uploadstudents').change(function(oEvent) {
->>>>>>> 27e1dc0bf9b4b5ebf76e009d2fa23d2e43321bcd
+  $('#modal_instruction').modal('close');
+  enableForm();
+  $('#modal_instruction').modal('close');
   console.log('File being verified');
+  disableForm();
   var oFile = oEvent.target.files[0];
   var sFilename = oFile.name.toLowerCase();
   console.log(sFilename);
@@ -420,15 +481,22 @@ $('#uploadstudents').change(function(oEvent) {
              filetype = 'xlsx';
          }
 
-    ExcelToJSON(oFile, filetype);
+    if(filetype == 'xlsx') 
+      ExcelXToJSON(oFile, filetype);
+    else
+      ExcelToJSON(oFile, filetype);
   }
   else {
     console.log('Invalid file');
+    enableForm();
   }
 });
 
 
-
+$('#acceptStudents').click(function() {
+  $('.submitbtn-bottom').css('background-color','green');
+  $('.submitbtn-bottom').append('<i class="material-icons tiny">check_circle</i>');
+})
 </script>
 <style type="text/css">
 .submitbtn-bottom:hover {

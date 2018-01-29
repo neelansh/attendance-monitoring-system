@@ -32,7 +32,7 @@
     "passport-http": "^0.3.0",
     "passport-local": "^1.0.0",
     "request": "^2.83.0",
-    "serve-favicon": "~2.3.0"
+    "serve-favicon": "~2.3.0",
     "underscore": "^1.8.3"
   },
   "devDependencies": {

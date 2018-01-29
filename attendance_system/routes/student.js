@@ -40,30 +40,30 @@ function(req, username, password, done) {
 }));
 
    
-passport.use(new GoogleStrategy({
-    clientID: process.env.clientId,
-    clientSecret: process.env.clientSecret,
-    callbackURL: "http://localhost:9000/student/auth/google/callback"
-  },
-  function(accessToken, refreshToken, profile, done) {
+// passport.use(new GoogleStrategy({
+//     clientID: process.env.clientId,
+//     clientSecret: process.env.clientSecret,
+//     callbackURL: "http://localhost:9000/student/auth/google/callback"
+//   },
+//   function(accessToken, refreshToken, profile, done) {
     
-    var Obj = {
-    	accessToken:accessToken,
-    	refreshToken:refreshToken,
-    	profile:profile,
-    	email:profile.emails[0].value,
-    }
-  	console.log(Obj);
-  	//As per present database school is required and can't be fetched from google auth
-  	var school="usict";
-  	student.getUserByEmail(school,Obj.email,function(err,user){
-  	if(user)
-  	user.school='usict';
-  	return done(err,user);
-  	});
+//     var Obj = {
+//     	accessToken:accessToken,
+//     	refreshToken:refreshToken,
+//     	profile:profile,
+//     	email:profile.emails[0].value,
+//     }
+//   	console.log(Obj);
+//   	//As per present database school is required and can't be fetched from google auth
+//   	var school="usict";
+//   	student.getUserByEmail(school,Obj.email,function(err,user){
+//   	if(user)
+//   	user.school='usict';
+//   	return done(err,user);
+//   	});
   
-  }
-));
+//   }
+// ));
 
 // GENEERAL student login page. 
  router.get('/login', function(req, res, next) {
