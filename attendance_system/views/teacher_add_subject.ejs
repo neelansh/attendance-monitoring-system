@@ -1,5 +1,19 @@
 <!DOCTYPE html>
 <% include partials/header %>
+<!-- Modal Structure -->
+<div id="modal_instruction" class="modal modal-fixed-footer">
+  <div class="modal-content">
+    <h4>Kindly </h4>
+    <p></p>
+    <img src="/images/attendance_sample.png">
+  </div>
+  <div class="modal-footer">
+     <a class="submit submitbtn-bottom" id="upload_link" name="studentslist">
+                    UPLOAD STUDENT LIST
+              </a>
+  </div>
+</div>
+
 <div class="container drop-down-school">
   <div class="row login-sel-cont">
     <div class="col-sm-offset-4 col-sm-4">
@@ -133,7 +147,7 @@
             </div> -->
             <div class="row">
               <input name="" id="uploadstudents" type="file"/>
-              <a href="" class="submit submitbtn-bottom" id="upload_link" type="file" name="studentslist">
+              <a href="#modal_instruction" class="modal-trigger submitbtn-bottom" name="studentslist">
                     UPLOAD STUDENT LIST
               </a>
             </div>
@@ -173,12 +187,12 @@
   var json_object;
    $(document).ready(function() {
     $('select').material_select();
+    $('#modal_instruction').modal();
   });
 
   $('#school').change(function () {
     var school = $('#school').find(":selected").text().toLowerCase();
     console.log(json_object);
-    console.log("************************");
     $.ajax({
       url: "/api/get_course",
       type: 'GET',
@@ -196,12 +210,18 @@
           });
       },
       error: function(result) {
-        alert("there is some error .")
+        alert("There was some error. Please reload and try again.")
       }
    });
   });
 
-  $('#subject_code').keyup(function() {
+  $('#subject_code').keyup(function(){
+
+      $('#course_div').css("display", "block");
+
+  });
+
+  $('#subject_code').on('focusout',function() {
     var subject_code = $('#subject_code').val().toUpperCase().trim();
     var final_subject_code = "";
     var checkdash = false;
@@ -221,7 +241,7 @@
 
     $('#subject_code').val(final_subject_code);
 
-    $('#course_div').css("display", "block");
+    
 
     $.ajax({
       url: '/api/check_subjects',
@@ -272,7 +292,7 @@
 
   })
 
-  $('#course').keyup(function () {
+  $('#course').on('focusout',function () {
     var course = $('#course').val().toUpperCase().trim();
     var final_course = "";
 
@@ -286,10 +306,14 @@
     }
 
     $('#course').val(final_course);
-    $('#stream_input_div').css('display', 'block');
-    $('#semester_div').css("display", "block");
+    
   });
 
+  $('#course').keyup(function () {
+  $('#stream_input_div').css('display', 'block');
+    $('#semester_div').css("display", "block");
+  });
+  
   $('#semester').keyup(function () {
     $("#subject_name_div").css("display", "block");
   });
@@ -367,7 +391,8 @@ var ExcelToJSON = function(file, type) {
 };
 
 
-$('#uploadstudents').keyup(function(oEvent) {
+$('#uploadstudents').on('change', function(oEvent) {
+  $/('#modal_instruction').modal('close');
   console.log('File being verified');
   var oFile = oEvent.target.files[0];
   var sFilename = oFile.name.toLowerCase();

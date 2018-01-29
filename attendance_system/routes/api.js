@@ -154,7 +154,7 @@ router.get("/get_subjects", function(req, res) {
 
 })
 
-router.get('/:subject_id/attendance', function(req,res) {
+router.get('/:subject_id/attendanceByStudent', function(req,res) {
 	if (!req.isAuthenticated()) {
 		res.redirect("/teacher/login");
 	}

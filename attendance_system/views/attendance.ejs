@@ -494,7 +494,7 @@
 
     $.ajax({
         type: "GET",
-        url: '/api/' + sid + '/attendance/',
+        url: '/api/' + sid + '/attendanceByStudent/',
         success: function(data, status, err){
           attendance = {};
           for(i in data) {
