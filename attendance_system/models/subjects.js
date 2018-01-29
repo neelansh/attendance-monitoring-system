@@ -106,6 +106,17 @@ module.exports = {
 		var query = db.get().query("INSERT INTO ?? (batch_id, subject_code, instructor_code, subject_name, type, course, stream, semester) values (1, ?,?,?,?,?,?,? )",[subjectDetails.school + "_subject_allocation", subjectDetails.subject_code, instructor_id, subjectDetails.subject_name, subjectDetails.type, subjectDetails.course, subjectDetails.stream, subjectDetails.semester], function(err, rows) {
 			if (err) throw err;
 			callback(null, "updated successfully");
+		});
+	},
+
+	getAllStudentData: function(school, callback) {
+		var query = db.get().query("SELECT * FROM  ??  as t1 inner join ??  as t2 on t1.subject_id = t2.subject_id inner JOIN ??  as t3 on t3.enrollment_no = t2.enrollment_no",[school + "_subject_allocation", school + "_student_subjects", school + "_students"], function(err, results) {
+			if (err) {
+				console.log(err);
+				throw err;
+			}
+
+			callback(null, results);
 		})
 	}
 

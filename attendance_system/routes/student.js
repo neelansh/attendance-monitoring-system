@@ -39,14 +39,14 @@ function(req, username, password, done) {
 	});
 }));
 
-   
+
 // passport.use(new GoogleStrategy({
 //     clientID: process.env.clientId,
 //     clientSecret: process.env.clientSecret,
 //     callbackURL: "http://localhost:9000/student/auth/google/callback"
 //   },
 //   function(accessToken, refreshToken, profile, done) {
-    
+
 //     var Obj = {
 //     	accessToken:accessToken,
 //     	refreshToken:refreshToken,
@@ -61,11 +61,15 @@ function(req, username, password, done) {
 //   	user.school='usict';
 //   	return done(err,user);
 //   	});
+
   
 //   }
 // ));
 
 // GENEERAL student login page. 
+
+
+
  router.get('/login', function(req, res, next) {
 	if(req.isAuthenticated() && req.user.enrollment_no != null){
 		res.redirect("/student/dashboard");
@@ -84,10 +88,10 @@ router.post('/login',
 
 //For Google Strategy
 
-router.get('/googlelogin',passport.authenticate('google', { scope: ['email profile'] }));
+// router.get('/googlelogin',passport.authenticate('google', { scope: ['email profile'] }));
 
-router.get('/auth/google/callback',
-    passport.authenticate('google', { failureRedirect: '/login' , successRedirect:"/student/dashboard" }));
+// router.get('/auth/google/callback',
+//     passport.authenticate('google', { failureRedirect: '/login' , successRedirect:"/student/dashboard" }));
 
 
 
