@@ -3,9 +3,14 @@
 <!-- Modal Structure -->
 <div id="modal_instruction" class="modal modal-fixed-footer">
   <div class="modal-content">
-    <h4>Kindly </h4>
-    <p></p>
-    <img src="/images/attendance_sample.png" class="img-responsive">
+    <h4>Upload student list.
+ </h4>
+ <strong><p>INSTRUCTIONS FOR UPLOAD:</p></strong>
+    <p>Please make sure that the list is an excel (.xls or .xlsx) file in the following format:</p>
+    <p>1. First column of excel file should contain the heading "Enrollment number".</p>
+    <p>2. No other student details need to be supplied.</p>
+    <p>Kindly verify that the enrollment numbers are valid. </p>
+    <div class="center"><img src="/images/attendance_sample.png" width="60%" style="border: 2px solid #999;"></div>
   </div>
   <div class="modal-footer">
      <a class="submit submitbtn-bottom" id="upload_link" name="studentslist">
@@ -66,7 +71,7 @@
             <div class="row" id="course_div" style="display: none">
               <div class="input-field col s12">
                 <input name="course" class="validate" type="text" id="course" placeholder="BTECH, BALLB etc.">
-                <label class="active">Course</label>
+                <label class="active">Programme</label>
               </div>
             </div>
 
@@ -394,12 +399,20 @@ var ExcelXToJSON = function(file, type) {
         // Here is your object
         var XL_row_object = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
         json_object = JSON.stringify(XL_row_object);
+        var roll_is = false;
         for( var i = 0; i < XL_row_object.length ; i++)
-           {  if(!XL_row_object[i].hasOwnProperty('Enrollment number'))
+           {  for(key in XL_row_object[i]){
+              if(key.match('roll'))
                 {
+                  roll_is = true;
+                  break;
+                }
+              }
+              if(!roll_is)
+              {
                   alert('Invalid format. Please try again.');
                   return;
-                }
+              }
             }
           
         var input = jQuery('<input name="student_list" value="student_list" style="display: none" id="student_list">');
@@ -436,13 +449,21 @@ var ExcelToJSON = function(file, type) {
         // Here is your object
         var XL_row_object = XLS.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
         json_object = JSON.stringify(XL_row_object);
-       for( var i = 0; i < XL_row_object.length ; i++)
-         {  if(!XL_row_object[i].hasOwnProperty('Enrollment number'))
-              {
-                alert('Invalid format. Please try again.');
-                return;
+        for( var i = 0; i < XL_row_object.length ; i++)
+           {  for(key in XL_row_object[i]){
+              if(key.match('roll'))
+                {
+                  roll_is = true;
+                  break;
+                }
               }
-          }
+              if(!roll_is)
+              {
+                  alert('Invalid format. Please try again.');
+                  return;
+              }
+           }
+
 
         var input = jQuery('<input name="student_list" value="student_list" style="display: none" id="student_list">');
         jQuery('form').append(input);
@@ -487,7 +508,7 @@ $('#uploadstudents').on('change', function(oEvent) {
       ExcelToJSON(oFile, filetype);
   }
   else {
-    console.log('Invalid file');
+    alert('Invalid file');
     enableForm();
   }
 });
