@@ -8,6 +8,7 @@ var teacher = require('../models/teacher');
 var student = require('../models/students');
 var sub = require("../models/subjects");
 var att = require("../models/attendance");
+var _ = require("underscore");
 
 /* GET teacher login page. */
 router.get('/login', function(req, res, next) {
@@ -869,7 +870,23 @@ router.get('/dean', function(req, res){
 						console.log(err);
 						throw new Error(err)
 					}
-					console.log(studentsData)
+					// console.log(studentsData)
+
+				  //  	var seggregatedSubject_id = _.groupBy(studentsData, function(result) {
+						// return result.subject_id;
+				  //   });
+
+
+				  //  	_.each(seggregatedSubject_id, function(value, key) {
+
+				  //  		console.log(value);
+				  //  	})
+
+				  //  	// console.log(seggregatedSubject);
+
+
+
+
 					res.render('dean_panel', {'prevLinks':prev_links, 'currLink' : curr_link, 'subjects' : subjects, 'avg_attendance': avg_attendance, studentsData: studentsData});
 				})
 
