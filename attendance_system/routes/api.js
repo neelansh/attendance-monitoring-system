@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var subjects = require("../models/subjects");
 var att = require('../models/attendance');
+var students = require("../models/students");
 
 var _ = require('underscore');
 // router.get('/subjects/:id', function(req, res){
@@ -20,6 +21,40 @@ var _ = require('underscore');
 // 	});
 // });
 
+
+router.get("/student_mapping", function(req, res) {
+	if(!req.isAuthenticated()){
+		res.redirect("/teacher/login");
+	}
+	if(req.user.instructor_id == null){
+		res.redirect("/teacher/login");
+	}
+
+	console.log(req.query.data);
+
+	students.getStudent(req.user.school, function(err, studentList) {
+		if (err) {
+			console.log(err);
+			throw err;
+		}
+
+		var student = [];
+
+		_.each(req.query.data, function(Enrollment_number) {
+			_.each(studentList, function(singleStudent) {
+				if (Enrollment_number['Enrollment number'] == singleStudent.enrollment_no) {
+					student.push(singleStudent);
+				}
+			})
+		})
+
+		console.log(student);
+
+		res.json(student);
+	})
+
+})
+
 router.get('/students/:id', function(req, res){
 	if(!req.isAuthenticated()){
 		res.redirect("/teacher/login");
@@ -27,7 +62,6 @@ router.get('/students/:id', function(req, res){
 	if(req.user.instructor_id == null){
 		res.redirect("/teacher/login");
 	}
-	var students = require("../models/students");
 	req.checkParams('id','invalid student id').notEmpty();
 
 	var errors = req.validationErrors();

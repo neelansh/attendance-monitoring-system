@@ -15,7 +15,7 @@
   <div class="modal-footer">
      <a class="submit submitbtn-bottom" id="upload_link" name="studentslist">
                     UPLOAD EXCEL FILE.
-              </a>
+      </a>
   </div>
 </div>
 
@@ -420,12 +420,29 @@ var ExcelXToJSON = function(file, type) {
         jQuery('form').append(input);
         $('#student_list').val(json_object);
         console.log(json_object);
-        var studentList = '<ul>';
-        for(var i = 0; i < XL_row_object.length; i++)
-          studentList += '<li>' + XL_row_object[i]['Enrollment number'] + '</li>';
-        studentList += '</ul>'
-        $('#modal_list > .modal-content').append(studentList);
-        $('#modal_list').modal('open');
+
+        $.ajax({
+          method:"get",
+          url:"/api/student_mapping",
+          data: { data: XL_row_object },
+          success: function (result) {
+
+            var studentList = '<ul>';
+            for(var i = 0; i < result.length; i++)
+              studentList += '<li>' + result[i]['enrollment_no'] +  ' &nbsp; &nbsp;&nbsp;' + result[i]['name'] + '</li>';
+            studentList += '</ul>'
+            $('#modal_list > .modal-content').append(studentList);
+            $('#modal_list').modal('open');
+
+          },
+          error: function (argument) {
+            alert("something went wrong.")
+          }
+        })
+
+
+
+
       })
     };
 
