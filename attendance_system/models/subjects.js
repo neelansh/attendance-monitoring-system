@@ -110,7 +110,7 @@ module.exports = {
 	},
 
 	getAllStudentData: function(school, callback) {
-		var query = db.get().query("SELECT * FROM  ??  as t1 inner join ??  as t2 on t1.subject_id = t2.subject_id inner JOIN ??  as t3 on t3.enrollment_no = t2.enrollment_no inner join ?? as t4 on t2.enrollment_no = t4.student",[school + "_subject_allocation", school + "_student_subjects", school + "_students", school + "_attendance"], function(err, results) {
+		var query = db.get().query("SELECT * FROM  ??  as t1 inner join ??  as t2 on t1.subject_id = t2.subject_id inner JOIN ??  as t3 on t3.enrollment_no = t2.enrollment_no ",[school + "_subject_allocation", school + "_student_subjects", school + "_students"], function(err, results) {
 			if (err) {
 				console.log(err);
 				throw err;

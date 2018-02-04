@@ -56,14 +56,30 @@ module.exports  = {
 
   deleteWholeAttendance: function(school, subject_id, batch_id , callback) {
 
-    var query = db.get().query("DELETE from ?? where subject_id = ?", [school+"_subject_allocation", subject_id], function(err, rows) {
+    var query1 = db.get().query("DELETE from ?? where subject_id = ?", [school + "_attendance", subject_id], function(err, rows) {
       if(err) {
         console.log(err);
         throw err;
       }
 
-      callback(null, "successfull");
+      var query2 = db.get().query("DELETE from ?? where subject_id = ?", [school+ "_student_subjects", subject_id], function(err, rows) {
+        if (err) {
+          console.log(err);
+          throw err;
+        }
+
+        var query3 = db.get().query("DELETE from ?? where subject_id = ?", [school+"_subject_allocation", subject_id], function(err, rows) {
+          if (err) {
+            console.log(err);
+            throw err;
+          }
+
+          callback(null, "successfull");
+        })
+      })
     })
+
+
   },
 
   getAttendanceBySubject : function(school, subject_id, callback) {
@@ -139,7 +155,6 @@ var query = db.get().query("select student, sum(duration_of_class) from ?? where
     });
   },
 
-
   getAvgAttendance: function(school, done) {
     var query = db.get().query("SELECT SUM(duration_of_class) as hours, attendance, subject_id FROM ?? GROUP BY attendance, subject_id",[school+"_attendance"],function(err, rows) {
       if(err)throw err;
@@ -168,5 +183,15 @@ var query = db.get().query("select student, sum(duration_of_class) from ?? where
       }
       done(null, avg_attendance);
     });
+  },
+
+  getAllStudentAttendance: function(school, callback) {
+    var query = db.get().query("select duration_of_class, attendance, student, subject_id from ?? ", [school + "_attendance"], function(err, list) {
+      if (err) {
+        throw err;
+      }
+
+      callback(null, list);
+    })
   }
 }

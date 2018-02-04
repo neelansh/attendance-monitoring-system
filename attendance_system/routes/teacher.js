@@ -9,6 +9,7 @@ var student = require('../models/students');
 var sub = require("../models/subjects");
 var att = require("../models/attendance");
 var _ = require("underscore");
+var async  = require("async");
 
 /* GET teacher login page. */
 router.get('/login', function(req, res, next) {
@@ -856,38 +857,77 @@ router.get('/dean', function(req, res){
 	if(!req.isAuthenticated() || req.user.instructor_id == null){
 		res.redirect("/teacher/login");
 	}
+
 	if( req.user.isDean )
 	{
 
 		sub.getSubjectsWithAllData(req.user.school, function(err, subjects) {
 			if(err) throw new Error(err);
 
-			att.getAvgAttendance(req.user.school, function(error, avg_attendance){
+			att.getAvgAttendance(req.user.school, function(error, avg_attendance) {
 				if(error) throw new Error(error);
 
 				sub.getAllStudentData(req.user.school, function(err, studentsData) {
-					if (err) {
-						console.log(err);
-						throw new Error(err)
-					}
-					// console.log(studentsData)
+					if (err) { console.log(err);throw new Error(err) }
 
-				  //  	var seggregatedSubject_id = _.groupBy(studentsData, function(result) {
-						// return result.subject_id;
-				  //   });
+					att.getAllStudentAttendance(req.user.school, function(err, studentsAttendance) {
+						if (err) {
+							console.log(err);
+							throw err;
+						}
+
+					_.each(studentsData, function(singleStudent) {
+						var enrollment_no = singleStudent.enrollment_no;
+						var subject_id = singleStudent.subject_id;
+						var present = 0;
+						var absent = 0;
+
+						_.each(studentsAttendance, function(singleAttendance) {
+							if (singleAttendance.student == enrollment_no && singleAttendance.subject_id == subject_id) {
+								if (singleAttendance.attendance == "P") {
+									present += singleAttendance.duration_of_class;
+								} else {
+									absent += singleAttendance.duration_of_class;
+								}
+							}
+						})
+						singleStudent.present = present;
+						singleStudent.absent  = absent;
+
+					})
+
+						console.log(studentsData);
+						res.render('dean_panel', {'prevLinks':prev_links, 'currLink' : curr_link, 'subjects' : subjects, 'avg_attendance': avg_attendance, studentsData: studentsData});
+					})
+					// console.log(studentsData);
 
 
-				  //  	_.each(seggregatedSubject_id, function(value, key) {
 
-				  //  		console.log(value);
-				  //  	})
+					// for ()
 
-				  //  	// console.log(seggregatedSubject);
+			  //   	var subject_id = $(this).find("td.subject_id").html();
+			  //   	var enrollment_no = $(this).find("td.enrollment_no").html();
+			  //   	console.log(subject_id + " " + enrollment_no);
+			  //   	var present = 0;
+			  //   	var absent 	= 0;
+			  //   	for(var x=0;x<result.length;x++) {
+
+			  //   		if (result[x].subject_id == subject_id && result[x].student == enrollment_no) {
+
+			  //   			if (result[x].attendance == 'P') {
+			  //   				present +=  result[x].duration_of_class;
+			  //   			} else if (result[x].attendance == 'A') {
+			  //   				absent += result[x].duration_of_class;
+			  //   			}
+			  //   		}
+			  //   	}
+
+			  //   	$(this).find("td.attendance").html('<div class="row"><div class="col s6 present" style="color: green">' + present + '</div> <div class="col s6 absent" style="color: red">' + absent + '</div> </div>');
 
 
+					// })
 
 
-					res.render('dean_panel', {'prevLinks':prev_links, 'currLink' : curr_link, 'subjects' : subjects, 'avg_attendance': avg_attendance, studentsData: studentsData});
 				})
 
 			});

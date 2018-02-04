@@ -77,6 +77,26 @@ router.get('/check_subjects', function(req, res) {
 	})
 });
 
+router.get('/allStudentAttendance', function(req, res) {
+	if (!req.isAuthenticated()) {
+		res.redirect("/teacher/login")
+	}
+
+	if(req.user.instructor_id ==  null) {
+		res.redirect("/teacher/login");
+	}
+
+	att.getAllStudentAttendance(req.user.school, function(err, results) {
+		if (err) {
+			console.log(err);
+			throw err;
+		}
+
+		res.json(results);
+	});
+
+});
+
 router.get('/get_course', function(req, res) {
 	if (!req.isAuthenticated()) {
 		res.redirect("/teacher/login")
