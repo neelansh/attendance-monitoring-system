@@ -489,10 +489,10 @@ router.put('/update_information', function(req, res) {
 		}
 
 		if (!UpdatedUser) {
-			req.flash("error_msg", "Something went wrong please try again");
+			req.flash("error_msg", "Something went wrong. Please try again.");
 			res.redirect("/teacher/update_information");
 		} else {
-			req.flash("success_msg", "Your details has been changed successfully.");
+			req.flash("success_msg", "Your details have been changed successfully.");
 			res.redirect("/teacher/profile");
 		}
 	});
@@ -515,9 +515,9 @@ router.post('/change_password', function(req, res){
 	if(req.user.instructor_id == null){
 		res.redirect("/teacher/login");
 	}
-	req.checkBody('old_password', 'old password empty').notEmpty().isAlpha();
-	req.checkBody('new_password', 'new password empty').notEmpty().isAlpha();
-	req.checkBody('confirm_password', 'confirm password empty').notEmpty().isAlpha();
+	req.checkBody('old_password', 'old password empty').notEmpty();
+	req.checkBody('new_password', 'new password empty').notEmpty();
+	req.checkBody('confirm_password', 'confirm password empty').notEmpty();
 	var errors = req.validationErrors();
 	if(errors){
 		res.locals.errors = errors;
@@ -536,7 +536,7 @@ router.post('/change_password', function(req, res){
 			teacher.setPassword(req.user.school, req.body.new_password, req.user.instructor_id, function(err, result){
 				if(err) throw new Error(err);
 				req.flash('success_msg', 'Password Successfully Changed');
-				res.redirect('/teacher/change_password');
+				res.redirect('/teacher/profile');
 			});
 		} else if(!isMatch){
 			req.flash('error_msg', 'Incorrect password');
