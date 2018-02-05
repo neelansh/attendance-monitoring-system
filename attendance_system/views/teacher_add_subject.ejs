@@ -14,7 +14,7 @@
   </div>
   <div class="modal-footer">
      <a class="submit submitbtn-bottom" id="upload_link" name="studentslist">
-                    UPLOAD EXCEL FILE.
+        UPLOAD EXCEL FILE.
       </a>
   </div>
 </div>
@@ -22,7 +22,7 @@
 <div id="modal_list" class="modal modal-fixed-footer">
   <div class="modal-content">
     <h4>Student list</h4>
-    <p></p>
+    <p>Confirm the list of students before proceeding.</p>
   </div>
   <div class="modal-footer">
      <button class="btn waves-effect waves-light modal-action modal-close" id="acceptStudents" data-target="modal_list">Agree</button>
@@ -384,8 +384,8 @@ var enableForm = function() {
 
 $("#upload_link").on('click', function(e){
     e.preventDefault();
+    $("#uploadstudents").val("");
     $("#uploadstudents:hidden").trigger('click');
-    disableForm();
 });
 
 
@@ -427,10 +427,11 @@ var ExcelXToJSON = function(file, type) {
           data: { data: XL_row_object },
           success: function (result) {
 
-            var studentList = '<ul>';
+            var studentList = '<table class="striped"><thead><th>Enrollment Number</th><th>Name</th></thead><tbody>';
+
             for(var i = 0; i < result.length; i++)
-              studentList += '<li>' + result[i]['enrollment_no'] +  ' &nbsp; &nbsp;&nbsp;' + result[i]['name'] + '</li>';
-            studentList += '</ul>'
+              studentList += '<tr><td>' + result[i]['enrollment_no'] +  '</td><td>'+ result[i]['name'] + '</td></tr>';
+            studentList += '</tbody></table>'
             $('#modal_list > .modal-content').append(studentList);
             $('#modal_list').modal('open');
 
@@ -505,7 +506,6 @@ var ExcelToJSON = function(file, type) {
 $('#uploadstudents').on('change', function(oEvent) {
   $('#modal_instruction').modal('close');
   enableForm();
-  $('#modal_instruction').modal('close');
   console.log('File being verified');
   disableForm();
   var oFile = oEvent.target.files[0];
