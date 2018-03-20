@@ -52,7 +52,7 @@
           <div class="container-fluid">
             <div class="row">
               <div class="input-field col s12">
-                <select id="school" name="school">
+                <select id="school" name="school" required>
                   <option value="" disabled selected>Choose School</option>
                   <option value="usict">USICT</option>
                 </select>
@@ -62,7 +62,7 @@
 
             <div class="row" id="subject_code_div" style="display: none">
               <div class="input-field col s12">
-                <input name="subject_code" class="validate" type="text" id="subject_code" placeholder="">
+                <input name="subject_code" class="validate" type="text" id="subject_code" placeholder="" required>
                 <label class="active">Enter Subject code</label>
               </div>
 
@@ -70,7 +70,7 @@
 
             <div class="row" id="course_div" style="display: none">
               <div class="input-field col s12">
-                <input name="course" class="validate" type="text" id="course" placeholder="BTECH, BALLB etc.">
+                <input name="course" class="validate" type="text" id="course" placeholder="BTECH, BALLB etc." required>
                 <label class="active">Programme</label>
               </div>
             </div>
@@ -84,7 +84,7 @@
 
             <div class="row" id="stream_input_div" style="display: none">
               <div class="input-field col s12">
-                <input name="stream_input" class="validate" type="text" id="stream_input" placeholder="CSE, IT etc.">
+                <input name="stream_input" class="validate" type="text" id="stream_input" placeholder="CSE, IT etc." required>
                 <label class="active">Stream</label>
               </div>
             </div>
@@ -92,21 +92,21 @@
 
             <div class="row" id="semester_div" style="display: none">
               <div class="input-field col s12">
-                <input name="semester" class="validate" type="tel" id="semester" minlength="1" maxlength="1" placeholder="">
+                <input name="semester" class="validate" type="tel" id="semester" minlength="1" maxlength="1" placeholder="" required>
                 <label class="active">Semester</label>
               </div>
             </div>
 
             <div class="row" id="subject_name_div" style="display: none">
               <div class="input-field col s12">
-                <input name="subject_name" class="validate" type="text" id="subject_name" placeholder="">
+                <input name="subject_name" class="validate" type="text" id="subject_name" placeholder="" required>
                 <label class="active">Subject name</label>
               </div>
             </div>
 
             <div class="row" id="type_div" style="display: none">
               <div class="input-field col s12">
-                <select name="type" class="validate" id="type">
+                <select name="type" class="validate" id="type" required>
                   <option value="" disabled selected>Select Subject Type</option>
                   <option value="THEORY">THEORY</option>
                   <option value="PRACTICAL">PRACTICAL</option>
@@ -165,7 +165,7 @@
               </div>
             </div> -->
             <div class="row">
-              <input name="" id="uploadstudents" type="file"/>
+              <input name="" id="uploadstudents" type="file" required/>
               <a href="#modal_instruction" class="modal-trigger submitbtn-bottom" name="studentslist">
                     UPLOAD STUDENT LIST
               </a>
