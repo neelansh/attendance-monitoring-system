@@ -273,7 +273,6 @@ router.get('/attendance/:subject_id', function(req, res){
 					res.sendStatus(404);
 				}
 			subject = {
-
 				'subjectName' : subject[0].subject_name,
 				'subjectCode' : subject[0].subject_code,
 				'subjectType' : subject[0].type,
