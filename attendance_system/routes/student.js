@@ -212,9 +212,9 @@ router.post('/change_password', function(req, res){
 	if(req.user.enrollment_no == null){
 		res.redirect("/student/login");
 	}
-	req.checkBody('old_password', 'old password empty').notEmpty().isAlpha();
-	req.checkBody('new_password', 'new password empty').notEmpty().isAlpha();
-	req.checkBody('confirm_password', 'confirm password empty').notEmpty().isAlpha();
+	req.checkBody('old_password', 'old password empty').notEmpty();
+	req.checkBody('new_password', 'new password empty').notEmpty();
+	req.checkBody('confirm_password', 'confirm password empty').notEmpty();
 	var errors = req.validationErrors();
 	if(errors){
 		res.locals.errors = errors;

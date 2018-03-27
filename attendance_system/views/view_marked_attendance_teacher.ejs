@@ -44,7 +44,7 @@
     font-weight: 700;
     letter-spacing: 0.2em;
     text-transform: uppercase;
-  }  
+  }
 
 #piechart {
   margin-top: 30px;
@@ -68,7 +68,7 @@
     <table>
       <tr><td style="font-weight: bold;">Subject Name :</td>
       <td class="subject_name"></td></tr>
-      
+
       <tr><td style="font-weight: bold;">Teacher Name :</td>
       <td class="teacher_name"></td></tr>
 
@@ -86,7 +86,7 @@
 
       <tr><td style="font-weight: bold;">Semester : </td>
       <td class="semester"></td></tr>
-      
+
     </table>
 
   </div> -->
@@ -156,7 +156,8 @@
             today: 'Today',
             clear: 'Clear',
             close: 'Ok',
-            closeOnSelect: true ,
+            closeOnSelect: true,
+            max: 'Today'
             // formatSubmit: 'dd/mm/yyyy'
           });
         </script>
@@ -191,7 +192,7 @@
             </tr>
           </thead>
           <tbody>
-            <% for(var i=0; i<students.length ; ++i){ 
+            <% for(var i=0; i<students.length ; ++i){
             var hours_absent = 0;
             var hours_present = 0;
             %>
@@ -200,7 +201,7 @@
 
               <td style="padding: 0"><a href="<%=students[i]['enrollment_no']%>" target="_blank" style="color: blue;"><%=students[i]['name']%></a></td>
 
-              <% if(present[students[i]['enrollment_no']]){ 
+              <% if(present[students[i]['enrollment_no']]){
               hours_present = present[students[i]['enrollment_no']]
               %>
               <td style="color: green;" class="hide-on-med-and-down"><span style="font-weight: bold;"><%=present[students[i]['enrollment_no']]%></span></td>
@@ -208,7 +209,7 @@
               <td style="color: green;" class="hide-on-med-and-down"><span style="font-weight: bold;">0</span></td>
               <% } %>
 
-              <% if(absent[students[i]['enrollment_no']]){ 
+              <% if(absent[students[i]['enrollment_no']]){
               hours_absent = absent[students[i]['enrollment_no']]
               %>
               <td style="color: red;" class="hide-on-med-and-down"><span style="font-weight: bold;"><%=absent[students[i]['enrollment_no']]%></span></td>
@@ -217,12 +218,8 @@
               <% } %>
 
               <td><span style="font-weight: bold;"><%= (hours_present*100/(hours_present+hours_absent)).toFixed(2) %> %</span></td>
-
-
-            </tr>    
+            </tr>
             <% } %>
-
-
           </tbody>
         </table>
 
@@ -244,7 +241,7 @@
      <tr>
       <td><a href="<%=absent[i]['student']%>"><%=absent[i]['student']%></a></td>
       <td><%=absent[i]['sum(duration_of_class)']%></td>
-    </tr>    
+    </tr>
     <% } %>
   </tbody>
 </table>

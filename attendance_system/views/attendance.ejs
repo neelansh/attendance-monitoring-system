@@ -71,7 +71,7 @@
     font-weight: 700;
     letter-spacing: 0.2em;
     text-transform: uppercase;
-  } 
+  }
  .submitbtn {
   display: inline-block;
   padding: 8px 12px 8px 12px;
@@ -135,6 +135,26 @@
 
 .strong {
   font-weight: bold;
+}
+
+footer.app-bg {
+  background-color: red;
+}
+
+
+.attendance_present[type="radio"]:checked + label:after{
+     border: 2px solid green;
+     background-color: green;
+}
+
+.attendance_absent[type="radio"]:checked + label:after{
+     border: 2px solid red;
+     background-color: red;
+}
+
+.attendance_na[type="radio"]:checked + label:after{
+     border: 2px solid grey;
+     background-color: grey;
 }
 
 
@@ -281,24 +301,29 @@
         <table id="datatable" class="striped centered responsive-table">
           <thead class="hide-on-med-and-down">
             <tr>
-              <th class="responsive-td">Roll No.</th>
+              <th class="responsive-td">Enrollment No.</th>
               <th class="responsive-td">Name</th>
-              <th class="responsive-td">Past Attendance</th>
-
+              <th class="responsive-td">
+                Past Attendance
+              </th>
               <th class="responsive-td">Attendance</th>
             </tr>
           </thead>
           <tbody>
+
             <% for(var i=0; i<students.length ; ++i){ %>
             <tr class="responsive-rows">
-             
+
               <td class="responsive-td"><%=students[i]['enrollment_no']%></td>
               <td class="responsive-td strong"><%=students[i]['name']%></td>
-              <td class="responsive-td attendance_history" style="overflow-x: scroll; text-overflow: '-'!important"><%=students[i]['enrollment_no']%></td>
+              <td class="responsive-td attendance_history" style="overflow-x: scroll; text-overflow: '-'!important">
+
+              <%= students[i]['enrollment_no'] %> </td>
+<!--               <%=students[i]['enrollment_no']%></td> -->
               <td class="responsive-td">
               <form id="radio_<%=students[i]['enrollment_no']%>">
-                <input id="present_<%=students[i]['enrollment_no']%>" type="radio" class="attendance_present" name="<%=students[i]['enrollment_no']%>" value="P"/>
-                <label for="present_<%=students[i]['enrollment_no']%>">P</label>
+                <input id="present_<%=students[i]['enrollment_no']%>" type="radio" class="attendance_present" name="<%=students[i]['enrollment_no']%>" value="P"/ >
+                <label for="present_<%=students[i]['enrollment_no']%>" id="hanu">P</label>
                 <% if(typeof edit_mode  !== 'undefined' && edit_mode){ %>
                   <input id="absent_<%=students[i]['enrollment_no']%>" type="radio" class="attendance_absent" name="<%=students[i]['enrollment_no']%>" value="A"/>
                 <% }else{ %>
@@ -315,7 +340,7 @@
             <% } %>
           </tbody>
         </table>
-        
+
       </div>
       <br>
       <div class="submit submitbtn-bottom" >
@@ -327,8 +352,8 @@
 
     </div>
 
-         
-  
+
+
 
 
 <div class="submit fixed-action-btn hide-on-med-and-down">
@@ -407,7 +432,7 @@
     $("#confirm_submit").click(function(event){
 
       $("#confirm_submit").attr('disabled', true)
-      
+
 
       $.ajax({
         type: "POST",
@@ -436,7 +461,7 @@
     })
 
     $(".submit").click(function(event){
-      
+
       date="";
       time="";
       hours="";
@@ -470,12 +495,12 @@
         present.push(this.name);
       })
 
-
+      console.log(present);
       table.$("input[class=attendance_absent]:checked").each(function(){
         absent.push(this.name);
       })
 
-
+      console.log(absent);
       table.$("input[class=attendance_na]:checked").each(function(){
         na.push(this.name);
       })
@@ -496,15 +521,33 @@
         type: "GET",
         url: '/api/' + sid + '/attendanceByStudent/',
         success: function(data, status, err){
-          attendance = {};
+            attendance = {};
+
           for(i in data) {
             attendance[i] =  [];
-            for(k in data[i])
+            for(k in data[i]) {
+              console.log(data[i][k]);
               attendance[i].push(data[i][k]['att']);
-            $( ".attendance_history:contains('" + i + "')" ).html(attendance[i]);
+            }
+            var total_present = 0;
+            var total_absent =0
+            for (var x = 0;x<attendance[i].length;x++) {
 
-          } 
-          
+              if(attendance[i][x] == 'P')
+                total_present++;
+              if(attendance[i][x] == 'A')
+                total_absent++;
+            }
+
+
+
+            var string = "<div class='row' style='margin-top:auto; margin-bottom:auto'><div class='col s3'></div><div class='col s3' style='color: green'> " + total_present + "</div> <div class='col s3' style='color: red'>" + total_absent + "</div></div>";
+
+
+            $( ".attendance_history:contains('" + i + "')" ).html(string);
+
+          }
+
         }
       });
 

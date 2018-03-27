@@ -16,8 +16,8 @@
 		  <div class="row">
 		    <div class="col s12">
 		      <ul class="tabs">
-		        <li class="tab col s6 yourTab"><a href="#test1">Search by Teacher</a></li>
-		        <li class="tab col s6 yourTab"><a class="active" href="#test2">Search by Student</a></li>
+		        <li class="tab col s6 yourTab"><a class="active" href="#test1" style="color:#293592">Search by Teacher</a></li>
+		        <li class="tab col s6 yourTab"><a href="#test2" style="color:#293592">Search by Student</a></li>
 		      </ul>
 		    </div>
 		  </div>
@@ -68,6 +68,7 @@
 	        <table id="datatable" class="striped centered">
 	          <thead>
 	            <tr>
+	              <th></th>
 	              <th>Teacher Name</th>
 	              <th>Subject Name</th>
 	              <th>Course</th>
@@ -81,6 +82,7 @@
 	          <tbody>
 	            <% for(var i=0; i<subjects.length ; ++i){ %>
 	            <tr>
+	              <td><img src="/instructor_images/usict/<%= subjects[i]['instructor_code'] %>.jpg" style="height: 4.5em; width: 4.5em; border-radius: 50%" > </td>
 	              <td><%=subjects[i]['name']%></td>
 	              <td><%=subjects[i]['subject_name']%></td>
 	              <td><%=subjects[i]['course']%></td>
@@ -155,29 +157,40 @@
 	              <th>Student Name</th>
 	              <th>Course</th>
 	              <th>Stream</th>
-	              <!-- <th>Subject Code</th> -->
 	              <th>Semester</th>
+	              <th>Subject Code</th>
 	              <th>Subject Name</th>
-	              <!-- <th>Avg Attendance(%)</th> -->
+	              <th>Attendance</th>
 	            </tr>
 	          </thead>
 	          <tbody>
 	            <% for(var i=0; i<studentsData.length ; ++i){ %>
-	            <tr>
-	              <td><%=studentsData[i]['enrollment_no']%></td>
+	            <tr class="item">
+	              <td class="enrollment_no"><%=studentsData[i]['enrollment_no']%></td>
 	              <td><a href="#"><%=studentsData[i]['name']%></a></td>
 	              <td><%=studentsData[i]['course']%></td>
 	              <td><%=studentsData[i]['stream']%></td>
 	              <td><%=studentsData[i]['semester']%></td>
+	              <td><%=studentsData[i]['subject_code']%></td>
 	              <td><%=studentsData[i]['subject_name']%></td>
+	              <td>
+	              	<div class="row">
+	              		<div class="col s3">
+	              		</div>
+	              		<div class="col s3" style="color: green">
+	              			<%= studentsData[i]['present']%>
+	              		</div>
+	              		<div class="col s3" style="color: red">
+	              			<%= studentsData[i]['absent']%>
+	              		</div>
+	              	</div>
+	              </td>
 	            </tr>
 	            <% } %>
 	          </tbody>
 	        </table>
-
 	    </div>
 	</div>
-
 </div>
 
 
@@ -283,6 +296,7 @@
 		} );
 
 		var datatable2 = $('#datatable2').DataTable();
+
 	});
 
 

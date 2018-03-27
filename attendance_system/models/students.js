@@ -75,5 +75,16 @@ module.exports = {
 			console.log(rows);
 			callback(null, rows);
 		})
+	},
+
+	getStudent: function(school, callback) {
+		var query = db.get().query("select enrollment_no, name from ?? ", [school + "_students"], function(err, rows) {
+			if (err) {
+				console.log(err);
+				throw err;
+			}
+
+			callback(null, rows);
+		})
 	}
 }

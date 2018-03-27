@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var subjects = require("../models/subjects");
 var att = require('../models/attendance');
+var students = require("../models/students");
 
 var _ = require('underscore');
 // router.get('/subjects/:id', function(req, res){
@@ -20,6 +21,40 @@ var _ = require('underscore');
 // 	});
 // });
 
+
+router.get("/student_mapping", function(req, res) {
+	if(!req.isAuthenticated()){
+		res.redirect("/teacher/login");
+	}
+	if(req.user.instructor_id == null){
+		res.redirect("/teacher/login");
+	}
+
+	console.log(req.query.data);
+
+	students.getStudent(req.user.school, function(err, studentList) {
+		if (err) {
+			console.log(err);
+			throw err;
+		}
+
+		var student = [];
+
+		_.each(req.query.data, function(Enrollment_number) {
+			_.each(studentList, function(singleStudent) {
+				if (Enrollment_number['Enrollment number'] == singleStudent.enrollment_no) {
+					student.push(singleStudent);
+				}
+			})
+		})
+
+		console.log(student);
+
+		res.json(student);
+	})
+
+})
+
 router.get('/students/:id', function(req, res){
 	if(!req.isAuthenticated()){
 		res.redirect("/teacher/login");
@@ -27,7 +62,6 @@ router.get('/students/:id', function(req, res){
 	if(req.user.instructor_id == null){
 		res.redirect("/teacher/login");
 	}
-	var students = require("../models/students");
 	req.checkParams('id','invalid student id').notEmpty();
 
 	var errors = req.validationErrors();
@@ -75,6 +109,26 @@ router.get('/check_subjects', function(req, res) {
 		res.json(results);
 
 	})
+});
+
+router.get('/allStudentAttendance', function(req, res) {
+	if (!req.isAuthenticated()) {
+		res.redirect("/teacher/login")
+	}
+
+	if(req.user.instructor_id ==  null) {
+		res.redirect("/teacher/login");
+	}
+
+	att.getAllStudentAttendance(req.user.school, function(err, results) {
+		if (err) {
+			console.log(err);
+			throw err;
+		}
+
+		res.json(results);
+	});
+
 });
 
 router.get('/get_course', function(req, res) {
@@ -175,7 +229,7 @@ router.get('/:subject_id/attendanceByStudent', function(req,res) {
 
 router.post("/add_subject_to_teacher", function(req, res) {
 
-	// console.log(req.body)
+	console.log(req.body)
 
 	if (!req.isAuthenticated()) {
 		res.redirect("/teacher/login");
@@ -185,8 +239,8 @@ router.post("/add_subject_to_teacher", function(req, res) {
 	  	res.redirect("/teacher/login");
 	}
 
-	if (!req.body.school || !req.body.subject_code || !req.body.course || !req.body.type || !req.body.semester || !req.body.subject_name || !req.body.student_list) {
-		req.flash("error_msg", "something went wrong please select dropdown in correct manner");
+	if (!req.body.school || !req.body.subject_code || !req.body.type || !req.body.course ||  !req.body.semester || !req.body.subject_name || !req.body.student_list) {
+		res.send("error_msg", "Some of the fields are missing. Go back refresh it and try to fill all the details in correct order");
 		return;
 	}
 
@@ -212,6 +266,7 @@ router.post("/add_subject_to_teacher", function(req, res) {
 		return;
 	}
 
+
 	subjects.addSubjectToTeacher(subjectDetails, req.user.instructor_id, function(err, results) {
 		if (err) {
 			console.log(err);
@@ -230,7 +285,6 @@ router.post("/add_subject_to_teacher", function(req, res) {
 				ans = "(" + student_list[x]['Enrollment number'] + ", " + subject_id + " ), " + ans;
 			}
 			ans = ans.slice(0, -2);
-
 
 			subjects.addStudents(req.body.school, ans,  function(err, results) {
 				if (err) {
