@@ -346,7 +346,7 @@
     $('#stream_input').val(stream.toUpperCase());
   })
 
-  $('#subject_name').change(function() {
+  $('#subject_name').keyup(function() {
     $('#type_div').css("display", "block");
   })
 
@@ -356,6 +356,11 @@
 
     if (type == "THEORY") {
       $('#group_div').css("display", "none");
+      var subject_name = $('#subject_name').val().split("_")[0];
+      $('#subject_name').val(subject_name);
+      $('#test1').prop('checked', false);
+      $('#test2').prop('checked', false);
+      $('#test3').prop('checked', false);
     }
 
     if(type == "PRACTICAL") {
@@ -384,7 +389,6 @@ var enableForm = function() {
 $("#upload_link").on('click', function(e){
     e.preventDefault();
     $("#uploadstudents:hidden").trigger('click');
-    disableForm();
 });
 
 
@@ -485,8 +489,6 @@ var ExcelToJSON = function(file, type) {
 };
 
 $('#uploadstudents').on('change', function(oEvent) {
-  $('#modal_instruction').modal('close');
-  enableForm();
   $('#modal_instruction').modal('close');
   console.log('File being verified');
   disableForm();
