@@ -23,7 +23,10 @@
   <div class="modal-content">
     <h4>Student list</h4>
     <p>Confirm the list of students before proceeding.</p>
+  <div class="modal-table">
   </div>
+  </div>
+
   <div class="modal-footer">
      <button class="btn waves-effect waves-light modal-action modal-close" id="acceptStudents" data-target="modal_list">Agree</button>
   </div>
@@ -31,7 +34,7 @@
 
 <div class="container drop-down-school">
   <div class="row login-sel-cont">
-    <div class="col-sm-offset-4 col-sm-4">
+    <div class="col-sm-offset-3 col-md-offset-4 col-md-4 col-sm-6">
       <div class="card">
       <!-- <div class="row"> -->
         <div class="col-lg-12">
@@ -519,90 +522,38 @@ $("#upload_link").on('click', function(e){
     $("#uploadstudents:hidden").trigger('click');
 });
 
-
-var ExcelXToJSON = function(file, type) {
-    var reader = new FileReader();
-    reader.onload = function(e) {
-      var data = e.target.result;
-      var workbook = XLSX.read(data, {
-        type: 'binary'
-      });
-      workbook.SheetNames.forEach(function(sheetName) {
-        // Here is your object
-        var XL_row_object = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
-        json_object = JSON.stringify(XL_row_object);
-        var roll_is = false;
-        for( var i = 0; i < XL_row_object.length ; i++)
-           {  for(key in XL_row_object[i]){
-              if(key.match('roll'))
-                {
-                  roll_is = true;
-                  break;
-                }
-              }
-              if(!roll_is)
-              {
-                  alert('Invalid format. Please try again.');
-                  return;
-              }
-            }
-
-        var input = jQuery('<input name="student_list" value="student_list" style="display: none" id="student_list">');
-        jQuery('form').append(input);
-        $('#student_list').val(json_object);
-        console.log(json_object);
-
-        $.ajax({
-          method:"get",
-          url:"/api/student_mapping",
-          data: { data: XL_row_object },
-          success: function (result) {
-
-            var studentList = '<table class="striped"><thead><th>Enrollment Number</th><th>Name</th></thead><tbody>';
-
-            for(var i = 0; i < result.length; i++)
-              studentList += '<tr><td>' + result[i]['enrollment_no'] +  '</td><td>'+ result[i]['name'] + '</td></tr>';
-            studentList += '</tbody></table>'
-            $('#modal_list > .modal-content').append(studentList);
-            $('#modal_list').modal('open');
-
-          },
-          error: function (argument) {
-            alert("something went wrong.")
-          }
-        })
-
-
-
-
-      })
-    };
-
-    reader.onerror = function(ex) {
-      alert(ex);
-      enableForm();
-    };
-
-    reader.readAsBinaryString(file);
-    enableForm();
-
-};
-
 var ExcelToJSON = function(file, type) {
     var reader = new FileReader();
     reader.onload = function(e) {
       var data = e.target.result;
-      var workbook = XLS.read(data, {
-        type: 'binary'
-      });
-      workbook.SheetNames.forEach(function(sheetName) {
+      if(type == 'xls')
+       {
+           var workbook = XLS.read(data, {
+            type: 'binary'
+          });
+
+          var XL_row_object = XLS.utils.sheet_to_row_object_array(workbook.Sheets[workbook.SheetNames[0]]);
+        } 
+      else
+      {
+          var workbook = XLSX.read(data, {
+            type: 'binary'
+          });
+          var XL_row_object = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[workbook.SheetNames[0]]);
+      }
+     if(workbook.SheetNames.length > 1) {
+        alert('You have multiple sheets in your file. Please check that only Sheet 1 contains the student data.')
+      }
+      // workbook.SheetNames.forEach(function(sheetName) {
         // Here is your object
-        var XL_row_object = XLS.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
+        
         json_object = JSON.stringify(XL_row_object);
+        studentslistjson = []
         for( var i = 0; i < XL_row_object.length ; i++)
            {  for(key in XL_row_object[i]){
-              if(key.match('roll'))
-                {
+              if(key.match('rol'))
+                { 
+                  studentslistjson.push({'Enrollment number' : XL_row_object[i][key]})
                   roll_is = true;
                   break;
                 }
@@ -614,14 +565,42 @@ var ExcelToJSON = function(file, type) {
               }
            }
 
-
         var input = jQuery('<input name="student_list" value="student_list" style="display: none" id="student_list">');
         jQuery('form').append(input);
         $('#student_list').val(json_object);
         console.log(json_object);
-        $('#modal_list > .modal-content').append(JSON.stringify(json_object));
-        $('#modal_list').modal('open');
-      })
+
+        $.ajax({
+          method:"get",
+          url:"/api/student_mapping",
+          data: { data: studentslistjson },
+          success: function (result) {
+
+            var studentList = '<table class="striped"><thead><th>Enrollment Number</th><th>Name</th></thead><tbody>';
+
+            for(var i = 0; i < result.length; i++)
+            {
+
+              if(result[i]['name'] == false)
+              {
+                studentList += '<tr style="background-color:red"><td>' + result[i]['enrollment_no'] +  '</td><td>'+ Student not found + '</td></tr>';
+              }
+              else
+                studentList += '<tr><td>' + result[i]['enrollment_no'] +  '</td><td>'+ result[i]['name'] + '</td></tr>';
+
+            }  
+            studentList += '</tbody></table>'
+            $('.modal-content > .modal-table').html(studentList);
+
+            $('#modal_list').modal('open');
+
+          },
+          error: function (argument) {
+            alert("Something went wrong. Please try again later.")
+          }
+        })
+
+      // })
     };
 
     reader.onerror = function(ex) {
@@ -651,9 +630,6 @@ $('#uploadstudents').on('change', function(oEvent) {
              filetype = 'xlsx';
          }
 
-    if(filetype == 'xlsx')
-      ExcelXToJSON(oFile, filetype);
-    else
       ExcelToJSON(oFile, filetype);
   }
   else {
