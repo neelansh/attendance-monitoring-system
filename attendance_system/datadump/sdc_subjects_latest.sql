@@ -1,15 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.7.7
--- https://www.phpmyadmin.net/
+-- version 4.5.4.1deb2ubuntu2
+-- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Apr 17, 2018 at 07:17 PM
--- Server version: 5.7.20
--- PHP Version: 7.1.7
+-- Generation Time: Apr 18, 2018 at 03:03 AM
+-- Server version: 5.7.21-0ubuntu0.16.04.1
+-- PHP Version: 5.6.32-1+ubuntu16.04.1+deb.sury.org+2
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
-START TRANSACTION;
 SET time_zone = "+00:00";
 
 
@@ -19,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `sdc`
+-- Database: `sdc_ams`
 --
 
 -- --------------------------------------------------------
@@ -283,7 +281,8 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`session_id`, `expires`, `data`) VALUES
-('HhSnjUr8-5zBaqZwVh_olnF9XKAVk6Uu', 1524078612, '{\"cookie\":{\"originalMaxAge\":null,\"expires\":null,\"httpOnly\":true,\"path\":\"/\"},\"flash\":{},\"passport\":{\"user\":{\"id\":\"30597\",\"school\":\"usict\",\"isTeacher\":true,\"isStudent\":false}}}');
+('DQQm3cZTk_1Gd1Rm8-hr_Upb-lpnrraH', 1524087022, '{"cookie":{"originalMaxAge":null,"expires":null,"httpOnly":true,"path":"/"},"flash":{},"passport":{"user":{"id":"30204","school":"usict","isTeacher":true,"isStudent":false}}}'),
+('HhSnjUr8-5zBaqZwVh_olnF9XKAVk6Uu', 1524078612, '{"cookie":{"originalMaxAge":null,"expires":null,"httpOnly":true,"path":"/"},"flash":{},"passport":{"user":{"id":"30597","school":"usict","isTeacher":true,"isStudent":false}}}');
 
 -- --------------------------------------------------------
 
@@ -299,6 +298,22 @@ CREATE TABLE `usict_attendance` (
   `student` bigint(20) NOT NULL,
   `subject_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `usict_attendance`
+--
+
+INSERT INTO `usict_attendance` (`id`, `lecture_timestamp`, `duration_of_class`, `attendance`, `student`, `subject_id`) VALUES
+(1, '2018-04-12 02:53:00.000000', 1, 'NA', 40816403215, 2),
+(2, '2018-04-12 02:53:00.000000', 1, 'P', 116403215, 2),
+(4, '2018-04-12 02:53:00.000000', 1, 'P', 216403215, 2),
+(6, '2018-04-12 02:53:00.000000', 1, 'P', 816403215, 2),
+(9, '2018-04-12 02:53:00.000000', 1, 'NA', 316403215, 2),
+(11, '2018-04-10 02:57:00.000000', 1, 'P', 116403215, 9),
+(12, '2018-04-10 02:57:00.000000', 1, 'P', 316403215, 9),
+(13, '2018-04-10 02:57:00.000000', 1, 'A', 216403215, 9),
+(14, '2018-04-10 02:57:00.000000', 1, 'NA', 40816403215, 9),
+(15, '2018-04-10 02:57:00.000000', 1, 'P', 816403215, 9);
 
 -- --------------------------------------------------------
 
@@ -1440,13 +1455,6 @@ CREATE TABLE `usict_student_subjects` (
   `subject_id` int(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- Dumping data for table `usict_student_subjects`
---
-
-INSERT INTO `usict_student_subjects` (`enrollment_no`, `subject_id`) VALUES
-(21618715, 21);
-
 -- --------------------------------------------------------
 
 --
@@ -1696,13 +1704,6 @@ CREATE TABLE `usict_subject_allocation` (
   `semester` int(8) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `usict_subject_allocation`
---
-
-INSERT INTO `usict_subject_allocation` (`subject_id`, `batch_id`, `subject_code`, `instructor_code`, `subject_name`, `type`, `course`, `stream`, `semester`) VALUES
-(21, 1, 'DWED', '30597', 'Halua', 'THEORY', 'BTECH', 'CSE', 7);
-
 -- --------------------------------------------------------
 
 --
@@ -1933,73 +1934,61 @@ ALTER TABLE `usict_teacher`
 --
 ALTER TABLE `auth_group`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
 --
 -- AUTO_INCREMENT for table `auth_group_permissions`
 --
 ALTER TABLE `auth_group_permissions`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
 --
 -- AUTO_INCREMENT for table `auth_permission`
 --
 ALTER TABLE `auth_permission`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
-
 --
 -- AUTO_INCREMENT for table `auth_user`
 --
 ALTER TABLE `auth_user`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
 --
 -- AUTO_INCREMENT for table `auth_user_groups`
 --
 ALTER TABLE `auth_user_groups`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
 --
 -- AUTO_INCREMENT for table `auth_user_user_permissions`
 --
 ALTER TABLE `auth_user_user_permissions`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
 --
 -- AUTO_INCREMENT for table `django_admin_log`
 --
 ALTER TABLE `django_admin_log`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
 --
 -- AUTO_INCREMENT for table `django_content_type`
 --
 ALTER TABLE `django_content_type`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
-
 --
 -- AUTO_INCREMENT for table `django_migrations`
 --
 ALTER TABLE `django_migrations`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
-
 --
 -- AUTO_INCREMENT for table `usict_attendance`
 --
 ALTER TABLE `usict_attendance`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 --
 -- AUTO_INCREMENT for table `usict_subjects`
 --
 ALTER TABLE `usict_subjects`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=220;
-
 --
 -- AUTO_INCREMENT for table `usict_subject_allocation`
 --
 ALTER TABLE `usict_subject_allocation`
-  MODIFY `subject_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
-
+  MODIFY `subject_id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- Constraints for dumped tables
 --
@@ -2044,20 +2033,6 @@ ALTER TABLE `django_admin_log`
 ALTER TABLE `usict_attendance`
   ADD CONSTRAINT `usict_attendance_student_dedd8d49_fk_usict_stu` FOREIGN KEY (`student`) REFERENCES `usict_students` (`enrollment_no`),
   ADD CONSTRAINT `usict_attendance_subject_id_c0ffb5d8_fk` FOREIGN KEY (`subject_id`) REFERENCES `usict_subject_allocation` (`subject_id`);
-
---
--- Constraints for table `usict_students`
---
-ALTER TABLE `usict_students`
-  ADD CONSTRAINT `usict_students_batch_id_c3d7c0e8_fk_usict_bat` FOREIGN KEY (`batch_id`) REFERENCES `usict_batch_allocation` (`batch_id`);
-
---
--- Constraints for table `usict_subject_allocation`
---
-ALTER TABLE `usict_subject_allocation`
-  ADD CONSTRAINT `usict_subject_alloca_batch_id_e17d645d_fk_usict_bat` FOREIGN KEY (`batch_id`) REFERENCES `usict_batch_allocation` (`batch_id`),
-  ADD CONSTRAINT `usict_subject_alloca_instructor_code_e0b04125_fk_usict_tea` FOREIGN KEY (`instructor_code`) REFERENCES `usict_teacher` (`instructor_id`);
-COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
