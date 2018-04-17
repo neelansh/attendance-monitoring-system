@@ -204,13 +204,13 @@
                 <select id="semester" name="semester">
                   <option value="" disabled selected>Choose semester</option>
                   <option value="1">1</option>
-                  <option value="2">2</option>
+                  <!-- <option value="2">2</option> -->
                   <option value="3">3</option>
-                  <option value="4">4</option>
+                  <!-- <option value="4">4</option> -->
                   <option value="5">5</option>
-                  <option value="6">6</option>
+                  <!-- <option value="6">6</option> -->
                   <option value="7">7</option>
-                  <option value="8">8</option>
+                  <!-- <option value="8">8</option> -->
                 </select>
                 <label>Semester Selection</label>
               </div>
@@ -285,6 +285,8 @@
 
    $('#school').change(function () {
     var school = $('#school').find(":selected").text().toLowerCase();
+    $('#course').empty();
+    $('#course').append('<option value="" disabled selected>Choose course</option>')
     $.ajax({
       url: "/api/get_course",
       type: 'GET',
@@ -316,6 +318,8 @@
   $('#course').change(function () {
     var school = $('#school').find(":selected").text().toLowerCase();
     var course = $('#course').find(":selected").text();
+    $('#stream').empty();
+    $('#stream').append('<option value="" disabled selected>Choose stream</option>')
     $("#stream_div").css("display", "block");
     $("#semester_div").css("display", "block");
     $.ajax({
@@ -559,7 +563,6 @@ var ExcelToJSON = function(file, type) {
       // workbook.SheetNames.forEach(function(sheetName) {
         // Here is your object
 
-        json_object = JSON.stringify(XL_row_object);
         studentslistjson = []
         for( var i = 0; i < XL_row_object.length ; i++)
            {  for(key in XL_row_object[i]){
@@ -577,6 +580,7 @@ var ExcelToJSON = function(file, type) {
               }
            }
 
+        json_object = JSON.stringify(studentslistjson);
         var input = jQuery('<input name="student_list" value="student_list" style="display: none" id="student_list">');
         jQuery('form').append(input);
         $('#student_list').val(json_object);

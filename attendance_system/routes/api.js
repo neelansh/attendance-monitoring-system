@@ -287,14 +287,13 @@ router.post("/add_subject_to_teacher", function(req, res) {
 			}
 			console.log(ans);
 			ans = ans.slice(0, -2);
-			console.log("--------------------------")
+
 			console.log(ans);
 			subjects.addStudents(req.body.school, ans,  function(err, results) {
 				if (err) {
 					console.log(err);
 					throw err;
 				}
-				console.log("Ssssssssssssssssssssss")
 
 				if (results) {
 					req.flash("success_msg", "subject successfully added.");
