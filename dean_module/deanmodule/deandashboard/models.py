@@ -29,6 +29,21 @@ class UsictAttendance(models.Model):
         unique_together = (("subject_id", "lecture_timestamp", "student"),)
 
 
+class UsictSubjects(models.Model):
+    subject_code = models.CharField(max_length=20)
+    subject_name = models.CharField(max_length=100)
+    type_of_subject = models.CharField(max_length=15, db_column="type")
+    course = models.CharField(max_length=100, null=False)
+    stream = models.CharField(max_length=100, null=False)
+    semester = models.IntegerField(null=False)
+
+    class Meta:
+        db_table = 'usict_subjects'
+
+    def __str__(self):
+        return self.subject_name
+
+
 class UsictBatchAllocation(models.Model):
     batch_id = models.IntegerField(primary_key=True)
     course = models.CharField(max_length=100, null=False)

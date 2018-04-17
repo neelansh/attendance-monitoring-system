@@ -96,7 +96,7 @@ module.exports = {
 	},
 
 	getSubjects : function(school, stream, semester, course, callback) {
-		var query = db.get().query("select distinct subject_name from ?? where course  = ? and stream = ? and semester = ?",[school+"_subject_allocation", course, stream, semester],function(err, rows) {
+		var query = db.get().query("select distinct subject_name from ?? where course  = ? and stream = ? and semester = ?",[school+"_subjects", course, stream, semester],function(err, rows) {
 			if(err)throw err;
 			callback(null, rows);
 		});
