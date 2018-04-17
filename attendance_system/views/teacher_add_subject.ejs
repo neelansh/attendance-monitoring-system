@@ -221,6 +221,18 @@
                 <label>Subject Selection</label>
               </div>
             </div>
+
+            <div class="row" id="subjects_div">
+              <div class="input-field col s12">
+                <select id="type" name="type">
+                  <option value="" disabled selected>Choose subject Type</option>
+                  <option value="Theory"> Theory</option>
+                  <option value="Practical">Practical</option>
+                </select>
+                <label>Subject Type Selection</label>
+              </div>
+            </div>
+
             <div class="row">
               <input name="" id="uploadstudents" type="file" required/>
               <a href="#modal_instruction" class="modal-trigger submitbtn-bottom" name="studentslist">
@@ -328,7 +340,8 @@
       data: { school: school, course: course, stream: stream, semester: semester },
       success: function(result) {
           $.each(result, function(key, value) {
-             $('#subjects').append($("<option></option>").attr("value",value.subject_name).text(value.subject_name));
+             $('#subjects').append($("<option></option>").attr("value",value.subject_code + "_" + value.subject_name).text(value.subject_code+ "_" + value.subject_name));
+             // $('#subject_code').append($("<option>//option>").attr("value", value.subject_code).text(value.subject_code));
              $('select').material_select();
           });
       },
@@ -337,6 +350,7 @@
       }
    });
   });
+
   // $('#school').change(function () {
   //   var school = $('#school').find(":selected").text().toLowerCase();
 

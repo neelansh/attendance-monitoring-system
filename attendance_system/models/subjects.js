@@ -56,8 +56,8 @@ module.exports = {
 		});
 	},
 
-	findSubject: function(school, subject_code, instructor_code, stream, callback) {
-		var query = db.get().query("select subject_id from ?? where instructor_code = ?  and subject_code = ? and stream = ?",[school+"_subject_allocation", instructor_code, subject_code, stream],function(err, rows) {
+	findSubject: function(school, subject_code, course, stream, callback) {
+		var query = db.get().query("select id from ?? where course = ? and subject_code = ? and stream = ?",[school+"_subjects", course, subject_code, stream],function(err, rows) {
 			if(err)throw err;
 
 			callback(null, rows[0]);
@@ -65,6 +65,8 @@ module.exports = {
 	},
 
 	addStudents: function(school, studentList, callback) {
+		console.log(studentList);
+		console.log(school);
 		var query = db.get().query('INSERT INTO ?? values ' +  studentList + '',[school+"_student_subjects"],function(err, rows) {
 
 			if(err)throw err;
@@ -96,7 +98,7 @@ module.exports = {
 	},
 
 	getSubjects : function(school, stream, semester, course, callback) {
-		var query = db.get().query("select distinct subject_name from ?? where course  = ? and stream = ? and semester = ?",[school+"_subjects", course, stream, semester],function(err, rows) {
+		var query = db.get().query("select distinct subject_name, subject_code from ?? where course  = ? and stream = ? and semester = ?",[school+"_subjects", course, stream, semester],function(err, rows) {
 			if(err)throw err;
 			callback(null, rows);
 		});

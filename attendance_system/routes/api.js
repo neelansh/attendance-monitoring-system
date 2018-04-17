@@ -202,7 +202,7 @@ router.get("/get_subjects", function(req, res) {
 			console.log(err);
 			throw err;
 		}
-
+		console.log(results);
 		res.json(results);
 	})
 
@@ -229,7 +229,7 @@ router.get('/:subject_id/attendanceByStudent', function(req,res) {
 
 router.post("/add_subject_to_teacher", function(req, res) {
 
-	console.log(req.body)
+	console.log(req.body);
 
 	if (!req.isAuthenticated()) {
 		res.redirect("/teacher/login");
@@ -239,31 +239,22 @@ router.post("/add_subject_to_teacher", function(req, res) {
 	  	res.redirect("/teacher/login");
 	}
 
-	if (!req.body.school || !req.body.subject_code || !req.body.type || !req.body.course ||  !req.body.semester || !req.body.subject_name || !req.body.student_list) {
+	if (!req.body.school || !req.body.type || !req.body.course ||  !req.body.semester || !req.body.subjects || !req.body.student_list) {
 		res.send("error_msg", "Some of the fields are missing. Go back refresh it and try to fill all the details in correct order");
 		return;
 	}
 
 	var student_list = JSON.parse(req.body.student_list[0]);
-
+	var subject = req.body.subjects.split("_");
+	console.log(subject[0])
 	var subjectDetails = {
 		school 			: req.body.school,
-		subject_code	: req.body.subject_code,
+		subject_code	: subject[0],
 		course 			: req.body.course,
 		semester		: req.body.semester,
-		subject_name	: req.body.subject_name,
-		type 			: req.body.type
-	}
-
-	if (req.body.stream_input) {
-		subjectDetails.stream = req.body.stream_input;
-
-	} else if (req.body.stream_select) {
-		subjectDetails.stream = req.body.stream_select;
-
-	} else {
-		req.flash("error_msg", "stream input is not properly filled. Please fill it again properly");
-		return;
+		subject_name	: subject[1],
+		type 			: req.body.type,
+		stream 			: req.body.stream
 	}
 
 
@@ -272,25 +263,36 @@ router.post("/add_subject_to_teacher", function(req, res) {
 			console.log(err);
 			throw err;
 		}
+		console.log(results)
+		console.log("566465465465465465");
 
-		subjects.findSubject(req.body.school, req.body.subject_code, req.user.instructor_id, subjectDetails.stream, function(err, results) {
+		subjects.findSubject(req.body.school, subjectDetails.subject_code, subjectDetails.course, subjectDetails.stream, function(err, results) {
 			if (err) {
 				console.log(err);
 				throw err;
 			}
-
-			var subject_id = results.subject_id;
+			console.log(results);
+			var subject_id = results.id;
 			var ans = "";
-			for (var x = 0; x < student_list.length; x++) {
-				ans = "(" + student_list[x]['Enrollment number'] + ", " + subject_id + " ), " + ans;
-			}
-			ans = ans.slice(0, -2);
 
+			for (var x = 0; x < student_list.length; x++) {
+				if (student_list[x]['Enrollment number'] != " ") {
+					console.log(typeof student_list[x]['Enrollment number'] );
+					console.log(student_list[x]['Enrollment number']);
+					ans = "(" + student_list[x]['Enrollment number'] + ", " + subject_id + " ), " + ans;
+				}
+
+			}
+			console.log(ans);
+			ans = ans.slice(0, -2);
+			console.log("--------------------------")
+			console.log(ans);
 			subjects.addStudents(req.body.school, ans,  function(err, results) {
 				if (err) {
 					console.log(err);
 					throw err;
 				}
+				console.log("Ssssssssssssssssssssss")
 
 				if (results) {
 					req.flash("success_msg", "subject successfully added.");
