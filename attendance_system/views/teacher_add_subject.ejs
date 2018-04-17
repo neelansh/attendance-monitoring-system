@@ -48,7 +48,7 @@
           </div>
         </div>
 
-        <form class="login-box-form" action="/api/add_subject_to_teacher" method="post">
+        <!-- <form class="login-box-form" action="/api/add_subject_to_teacher" method="post">
           <div class="container-fluid">
             <div class="row">
               <div class="input-field col s12">
@@ -164,6 +164,63 @@
                 <label>Subject Selection</label>
               </div>
             </div> -->
+
+
+        <form class="login-box-form" action="/api/add_subject_to_teacher" method="post">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="input-field col s12">
+                <select id="school" name="school">
+                  <option value="" disabled selected>Choose School</option>
+                  <option value="usict">USICT</option>
+                </select>
+                <label>School Selection</label>
+              </div>
+            </div>
+
+            <div class="row" id="course_div" style="display: none">
+              <div class="input-field col s12">
+                <select id="course" name="course">
+                  <option value="" disabled selected>Choose course</option>
+                </select>
+                <label>Course Selection</label>
+              </div>
+            </div>
+
+            <div class="row" id="stream_div" style="display: none">
+              <div class="input-field col s12">
+                <select id="stream" name="stream">
+                  <option value="" disabled selected>Choose stream</option>
+                </select>
+                <label>Stream Selection</label>
+              </div>
+            </div>
+
+            <div class="row" id="semester_div" style="display: none">
+              <div class="input-field col s12">
+                <select id="semester" name="semester">
+                  <option value="" disabled selected>Choose semester</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                  <option value="7">7</option>
+                  <option value="8">8</option>
+                </select>
+                <label>Semester Selection</label>
+              </div>
+            </div>
+
+            <div class="row" id="subjects_div" style="display: none">
+              <div class="input-field col s12">
+                <select id="subjects" name="subjects">
+                  <option value="" disabled selected>Choose subject</option>
+                </select>
+                <label>Subject Selection</label>
+              </div>
+            </div>
             <div class="row">
               <input name="" id="uploadstudents" type="file" required/>
               <a href="#modal_instruction" class="modal-trigger submitbtn-bottom" name="studentslist">
@@ -211,171 +268,240 @@
     $('#modal_list').modal();
   });
 
-  $('#school').change(function () {
+   $('#school').change(function () {
     var school = $('#school').find(":selected").text().toLowerCase();
+    $.ajax({
+      url: "/api/get_course",
+      type: 'GET',
+      data: { school: school },
+      success: function(result) {
+        $("#course_div").css("display", "block");
+        $('select').material_select();
+        $.each(result, function(key, value) {
+            $('#course').append($("<option></option>").attr("value",value.course).text(value.course));
+            $('select').material_select();
+          });
+      },
+      error: function(result) {
+        alert("there is some error .")
+      }
+   });
 
     console.log(json_object);
 
     var input = jQuery('<input name="student_list" value="student_list" style="display: none" id="student_list">');
-    jQuery('form').append(input);
-    $("#subject_code_div").css("display", "block");
-    $('select').material_select();
-  });
+      jQuery('form').append(input);
+      $("#subject_code_div").css("display", "block");
+      $('select').material_select();
 
-  $('#subject_code').keyup(function(){
-
-      $('#course_div').css("display", "block");
-
-  });
-
-  $('#subject_code').change(function() {
-    var subject_code = $('#subject_code').val().toUpperCase().trim();
-    var final_subject_code = "";
-    var checkdash = false;
-
-    for (var x = 0; x<subject_code.length;) {
-      while (x<subject_code.length && subject_code.charAt(x) == ' '|| subject_code.charAt(x) == '-') {
-        x++;
-      }
-
-      if (x<subject_code.length && !checkdash && subject_code.charCodeAt(x)>= 48 && subject_code.charCodeAt(x)<=57) {
-        final_subject_code = final_subject_code + "-";
-        checkdash = true;
-      }
-      final_subject_code = final_subject_code + subject_code.charAt(x);
-      x++;
-    }
-
-    $('#subject_code').val(final_subject_code);
-
-    disableForm();
-
-    $.ajax({
-      url: '/api/check_subjects',
-      type: 'GET',
-      data: { subject_code: final_subject_code },
-      success: function(result) {
-        console.log(result);
-        enableForm();
-        $("#stream option").remove();
-        $("#subject_code").removeClass('invalid');
-
-
-
-         $('#stream_input_div').css("display", "none");
-         if(!result.length)
-         {
-            $('#type').val('');
-            $('#course').val('');
-            $('#stream_select').html('');
-            $('#stream_select').material_select();
-            $('#stream_div').css('display','none');
-            $('#stream_input_div').css('display', 'block');
-            $('#semester').val('');
-            $('#subject_name').val('');
-         }
-          for (var x = 0;x< result.length ;x++) {
-            if (x == 0) {
-              $('#type').val(result[x].type.toUpperCase());
-              $('#course').val(result[x].course);
-              $('#semester').val(result[x].semester);
-              $('#type_div').css("display", "block");
-              $('#subject_name_div').css("display", "block");
-              $('#course_div').css("display", "block");
-              $('#semester_div').css("display", "block");
-              $("#stream_div").css("display", "block");
-              $('#subject_name').val(result[x].subject_name.split("_")[0]);
-
-              $(':radio[value="' + result[x].subject_name +  '"]').attr('checked', 'checked');
-
-
-              if(result[x].type.toUpperCase() == "PRACTICAL") {
-                $('#group_div').css("display", "block");
-              }
-
-            }
-
-            $('#stream_select').html($("<option></option>").attr("value",result[x].stream).text(result[x].stream));
-            $('select').material_select();
-          }
-
-              // $('#type_div').css("display", "block");
-              // $('#subject_name_div').css("display", "block");
-              $('#course_div').css("display", "block");
-              // $('#semester_div').css("display", "block");
-              // $("#stream_div").css("display", "block");
-
-
-
-      }, error: function(result) {
-         alert("there is some error.")
-      }
-    })
-
-  })
-
+    });
 
   $('#course').change(function () {
-
-    var course = $('#course').val().toUpperCase().trim();
-    var final_course = "";
-
-    for (var x = 0; x<course.length;) {
-      while (x<course.length && course.charAt(x) == ' '|| course.charAt(x) == '.') {
-        x++;
+    var school = $('#school').find(":selected").text().toLowerCase();
+    var course = $('#course').find(":selected").text();
+    $("#stream_div").css("display", "block");
+    $("#semester_div").css("display", "block");
+    $.ajax({
+      url: "/api/get_stream",
+      type: 'GET',
+      data: { school: school, course: course },
+      success: function(result) {
+          $.each(result, function(key, value) {
+            $('#stream').append($("<option></option>").attr("value",value.stream).text(value.stream));
+            $('select').material_select();
+          });
+      },
+      error: function(result) {
+        alert("there is some error .")
       }
-
-      final_course = final_course + course.charAt(x);
-      x++;
-    }
-
-    $('#course').val(final_course);
-
+   });
   });
-
-  $('#course').keyup(function () {
-  $('#stream_input_div').css('display', 'block');
-    $('#semester_div').css("display", "block");
+  $('#semester').change(function () {
+    var school    = $('#school').find(":selected").text().toLowerCase();
+    var course    = $('#course').find(":selected").text();
+    var stream    = $('#stream').find(":selected").text();
+    var semester  = $('#semester').find(":selected").text();
+    $("#subjects_div").css("display", "block");
+    $.ajax({
+      url: "/api/get_subjects",
+      type: 'GET',
+      data: { school: school, course: course, stream: stream, semester: semester },
+      success: function(result) {
+          $.each(result, function(key, value) {
+             $('#subjects').append($("<option></option>").attr("value",value.subject_name).text(value.subject_name));
+             $('select').material_select();
+          });
+      },
+      error: function(result) {
+        alert("there is some error.")
+      }
+   });
   });
+  // $('#school').change(function () {
+  //   var school = $('#school').find(":selected").text().toLowerCase();
 
-  $('#semester').keyup(function () {
-    $("#subject_name_div").css("display", "block");
-  });
+  //   console.log(json_object);
 
-  $('#stream_input').change(function() {
-    var stream = $('#stream_input').val();
-    $('#stream_input').val(stream.toUpperCase());
-  })
+  //   var input = jQuery('<input name="student_list" value="student_list" style="display: none" id="student_list">');
+  //   jQuery('form').append(input);
+  //   $("#subject_code_div").css("display", "block");
+  //   $('select').material_select();
+  // });
 
-  $('#subject_name').keyup(function() {
-    $('#type_div').css("display", "block");
-  })
+  // $('#subject_code').keyup(function(){
 
-  $('#type').change(function() {
-    var type = $('#type').val().toUpperCase();
-    $('#type').val(type);
+  //     $('#course_div').css("display", "block");
 
-    if (type == "THEORY") {
-      $('#group_div').css("display", "none");
-      var subject_name = $('#subject_name').val().split("_")[0];
-      $('#subject_name').val(subject_name);
-      $('#test1').prop('checked', false);
-      $('#test2').prop('checked', false);
-      $('#test3').prop('checked', false);
-    }
+  // });
 
-    if(type == "PRACTICAL") {
-      $('#group_div').css("display", "block");
+  // $('#subject_code').change(function() {
+  //   var subject_code = $('#subject_code').val().toUpperCase().trim();
+  //   var final_subject_code = "";
+  //   var checkdash = false;
 
-    }
-  })
+  //   for (var x = 0; x<subject_code.length;) {
+  //     while (x<subject_code.length && subject_code.charAt(x) == ' '|| subject_code.charAt(x) == '-') {
+  //       x++;
+  //     }
 
-  $('.with-gap').change(function() {
-    var value = $('')
-    var subject_name = $('#subject_name').val().split("_")[0] + "_" + $(this).val();
-    $('#subject_name').val(subject_name)
+  //     if (x<subject_code.length && !checkdash && subject_code.charCodeAt(x)>= 48 && subject_code.charCodeAt(x)<=57) {
+  //       final_subject_code = final_subject_code + "-";
+  //       checkdash = true;
+  //     }
+  //     final_subject_code = final_subject_code + subject_code.charAt(x);
+  //     x++;
+  //   }
 
-  })
+  //   $('#subject_code').val(final_subject_code);
+
+  //   disableForm();
+
+  //   $.ajax({
+  //     url: '/api/check_subjects',
+  //     type: 'GET',
+  //     data: { subject_code: final_subject_code },
+  //     success: function(result) {
+  //       console.log(result);
+  //       enableForm();
+  //       $("#stream option").remove();
+  //       $("#subject_code").removeClass('invalid');
+
+
+
+  //        $('#stream_input_div').css("display", "none");
+  //        if(!result.length)
+  //        {
+  //           $('#type').val('');
+  //           $('#course').val('');
+  //           $('#stream_select').html('');
+  //           $('#stream_select').material_select();
+  //           $('#stream_div').css('display','none');
+  //           $('#stream_input_div').css('display', 'block');
+  //           $('#semester').val('');
+  //           $('#subject_name').val('');
+  //        }
+  //         for (var x = 0;x< result.length ;x++) {
+  //           if (x == 0) {
+  //             $('#type').val(result[x].type.toUpperCase());
+  //             $('#course').val(result[x].course);
+  //             $('#semester').val(result[x].semester);
+  //             $('#type_div').css("display", "block");
+  //             $('#subject_name_div').css("display", "block");
+  //             $('#course_div').css("display", "block");
+  //             $('#semester_div').css("display", "block");
+  //             $("#stream_div").css("display", "block");
+  //             $('#subject_name').val(result[x].subject_name.split("_")[0]);
+
+  //             $(':radio[value="' + result[x].subject_name +  '"]').attr('checked', 'checked');
+
+
+  //             if(result[x].type.toUpperCase() == "PRACTICAL") {
+  //               $('#group_div').css("display", "block");
+  //             }
+
+  //           }
+
+  //           $('#stream_select').html($("<option></option>").attr("value",result[x].stream).text(result[x].stream));
+  //           $('select').material_select();
+  //         }
+
+  //             // $('#type_div').css("display", "block");
+  //             // $('#subject_name_div').css("display", "block");
+  //             $('#course_div').css("display", "block");
+  //             // $('#semester_div').css("display", "block");
+  //             // $("#stream_div").css("display", "block");
+
+
+
+  //     }, error: function(result) {
+  //        alert("there is some error.")
+  //     }
+  //   })
+
+  // })
+
+
+  // $('#course').change(function () {
+
+  //   var course = $('#course').val().toUpperCase().trim();
+  //   var final_course = "";
+
+  //   for (var x = 0; x<course.length;) {
+  //     while (x<course.length && course.charAt(x) == ' '|| course.charAt(x) == '.') {
+  //       x++;
+  //     }
+
+  //     final_course = final_course + course.charAt(x);
+  //     x++;
+  //   }
+
+  //   $('#course').val(final_course);
+
+  // });
+
+  // $('#course').keyup(function () {
+  // $('#stream_input_div').css('display', 'block');
+  //   $('#semester_div').css("display", "block");
+  // });
+
+  // $('#semester').keyup(function () {
+  //   $("#subject_name_div").css("display", "block");
+  // });
+
+  // $('#stream_input').change(function() {
+  //   var stream = $('#stream_input').val();
+  //   $('#stream_input').val(stream.toUpperCase());
+  // })
+
+  // $('#subject_name').keyup(function() {
+  //   $('#type_div').css("display", "block");
+  // })
+
+  // $('#type').change(function() {
+  //   var type = $('#type').val().toUpperCase();
+  //   $('#type').val(type);
+
+  //   if (type == "THEORY") {
+  //     $('#group_div').css("display", "none");
+  //     var subject_name = $('#subject_name').val().split("_")[0];
+  //     $('#subject_name').val(subject_name);
+  //     $('#test1').prop('checked', false);
+  //     $('#test2').prop('checked', false);
+  //     $('#test3').prop('checked', false);
+  //   }
+
+  //   if(type == "PRACTICAL") {
+  //     $('#group_div').css("display", "block");
+
+  //   }
+  // })
+
+  // $('.with-gap').change(function() {
+  //   var value = $('')
+  //   var subject_name = $('#subject_name').val().split("_")[0] + "_" + $(this).val();
+  //   $('#subject_name').val(subject_name)
+
+  // })
 
 var disableForm = function() {
   $(".login-box-form :input").prop("disabled", true);
