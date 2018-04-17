@@ -104,8 +104,9 @@ module.exports = {
 		});
 	},
 
-	addSubjectToTeacher: function(subjectDetails, instructor_id, callback) {
-		var query = db.get().query("INSERT INTO ?? (batch_id, subject_code, instructor_code, subject_name, type, course, stream, semester) values (1, ?,?,?,?,?,?,? )",[subjectDetails.school + "_subject_allocation", subjectDetails.subject_code, instructor_id, subjectDetails.subject_name, subjectDetails.type, subjectDetails.course, subjectDetails.stream, subjectDetails.semester], function(err, rows) {
+	addSubjectToTeacher: function(subjectDetails, subject_id,  instructor_id, callback) {
+
+		var query = db.get().query("INSERT INTO ?? (subject_id, batch_id, subject_code, instructor_code, subject_name, type, course, stream, semester) values (?,1, ?,?,?,?,?,?,? )",[subjectDetails.school + "_subject_allocation", subject_id, subjectDetails.subject_code, instructor_id, subjectDetails.subject_name, subjectDetails.type, subjectDetails.course, subjectDetails.stream, subjectDetails.semester], function(err, rows) {
 			if (err) throw err;
 			callback(null, "updated successfully");
 		});

@@ -300,6 +300,8 @@
       error: function(result) {
         alert("there is some error .")
       }
+
+
    });
 
     console.log(json_object);
@@ -359,11 +361,7 @@
 
   //   console.log(json_object);
 
-  //   var input = jQuery('<input name="student_list" value="student_list" style="display: none" id="student_list">');
-  //   jQuery('form').append(input);
-  //   $("#subject_code_div").css("display", "block");
-  //   $('select').material_select();
-  // });
+
 
   // $('#subject_code').keyup(function(){
 
@@ -547,7 +545,7 @@ var ExcelToJSON = function(file, type) {
           });
 
           var XL_row_object = XLS.utils.sheet_to_row_object_array(workbook.Sheets[workbook.SheetNames[0]]);
-        } 
+        }
       else
       {
           var workbook = XLSX.read(data, {
@@ -560,13 +558,13 @@ var ExcelToJSON = function(file, type) {
       }
       // workbook.SheetNames.forEach(function(sheetName) {
         // Here is your object
-        
+
         json_object = JSON.stringify(XL_row_object);
         studentslistjson = []
         for( var i = 0; i < XL_row_object.length ; i++)
            {  for(key in XL_row_object[i]){
               if(key.match('rol'))
-                { 
+                {
                   studentslistjson.push({'Enrollment number' : XL_row_object[i][key]})
                   roll_is = true;
                   break;
@@ -597,12 +595,12 @@ var ExcelToJSON = function(file, type) {
 
               if(result[i]['name'] == false)
               {
-                studentList += '<tr style="background-color:red"><td>' + result[i]['enrollment_no'] +  '</td><td>'+ Student not found + '</td></tr>';
+                studentList += '<tr style="background-color:red"><td>' + result[i]['enrollment_no'] +  '</td><td> Student not found </td></tr>';
               }
               else
                 studentList += '<tr><td>' + result[i]['enrollment_no'] +  '</td><td>'+ result[i]['name'] + '</td></tr>';
 
-            }  
+            }
             studentList += '</tbody></table>'
             $('.modal-content > .modal-table').html(studentList);
 

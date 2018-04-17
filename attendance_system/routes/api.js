@@ -258,19 +258,21 @@ router.post("/add_subject_to_teacher", function(req, res) {
 	}
 
 
-	subjects.addSubjectToTeacher(subjectDetails, req.user.instructor_id, function(err, results) {
+
+	subjects.findSubject(req.body.school, subjectDetails.subject_code, subjectDetails.course, subjectDetails.stream, function(err, results) {
 		if (err) {
 			console.log(err);
 			throw err;
 		}
-		console.log(results)
-		console.log("566465465465465465");
 
-		subjects.findSubject(req.body.school, subjectDetails.subject_code, subjectDetails.course, subjectDetails.stream, function(err, results) {
+
+		subjects.addSubjectToTeacher(subjectDetails, results.id,  req.user.instructor_id, function(err, check) {
 			if (err) {
 				console.log(err);
 				throw err;
 			}
+
+
 			console.log(results);
 			var subject_id = results.id;
 			var ans = "";
