@@ -296,10 +296,10 @@ router.post("/add_subject_to_teacher", function(req, res) {
 				}
 
 				if (results) {
-					req.flash("success_msg", "subject successfully added.");
+					req.flash("success_msg", "Subject successfully added.");
 					res.redirect("/teacher/dashboard");
 				} else {
-					req.flash("error_msg", "something went wrong. Please try again.");
+					req.flash("error_msg", "Something went wrong. Please try again.");
 					res.redirect("/teacher/dashboard");
 				}
 

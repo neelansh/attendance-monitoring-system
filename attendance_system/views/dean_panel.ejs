@@ -202,9 +202,10 @@
 
 		$('.teacher_search').on( 'keyup', function () {
 		    table
-		        .columns( 0 )
+		        .columns( 1 )
 		        .search( this.value )
 		        .draw();
+		    console.log(this.value);
 		} );
 
 		$('.enrollment_no').on( 'keyup', function () {
@@ -223,14 +224,14 @@
 
 		$('.subject_search').on( 'keyup', function () {
 		    table
-		        .columns( 1 )
+		        .columns( 2 )
 		        .search( this.value )
 		        .draw();
 		} );
 
 		$('.course_search').on( 'keyup', function () {
-		    datatable2
-		        .columns( 2 )
+		    table
+		        .columns( 3 )
 		        .search( this.value )
 		        .draw();
 		} );
@@ -251,7 +252,7 @@
 
 		$('.stream_search').on( 'keyup', function () {
 		    table
-		        .columns( 3 )
+		        .columns( 4 )
 		        .search( this.value )
 		        .draw();
 		} );
@@ -265,7 +266,7 @@
 
 		$('.semester_search').on( 'keyup', function () {
 		    table
-		        .columns( 4 )
+		        .columns( 5 )
 		        .search( this.value )
 		        .draw();
 		} );
